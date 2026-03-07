@@ -1,63 +1,51 @@
 'use client';
 
-/*
- * components/Counter.tsx
- * Pengganti: fungsi animateCounter() + data-counter di app.js & home.blade.php Laravel
- *
- * Client Component karena butuh useEffect + requestAnimationFrame (DOM API).
- */
-
 import { useEffect, useRef, useState } from 'react';
 
-interface CounterProps {
-    target: number;
-    label: string;
-}
+export default function Counter({ target, label }: { target: number; label: string }) {
+  const [count, setCount] = useState(0);
+  const ref     = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
 
-export default function Counter({ target, label }: CounterProps) {
-    const [count, setCount] = useState(0);
-    const ref = useRef<HTMLDivElement>(null);
-    const started = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
 
-    useEffect(() => {
-        // IntersectionObserver — identik dengan observer di app.js Laravel
-        // Animasi hanya mulai saat elemen masuk viewport
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting && !started.current) {
-                    started.current = true;
-                    animateCounter();
-                }
-            });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !started.current) {
+            started.current = true;
+            let start = 0;
+            const duration = 1200;
+            const startTime = performance.now();
+
+            const tick = (now: number) => {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              // Easing out quart
+              const eased = 1 - Math.pow(1 - progress, 4);
+              start = Math.round(eased * target);
+              setCount(start);
+              if (progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }
         });
-
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
-    }, [target]);
-
-    // Identik dengan fungsi animateCounter() di app.js Laravel
-    function animateCounter() {
-        let current = 0;
-        const increment = target / 100;
-
-        const update = () => {
-            current += increment;
-            if (current < target) {
-                setCount(Math.floor(current));
-                requestAnimationFrame(update);
-            } else {
-                setCount(target);
-            }
-        };
-
-        update();
-    }
-
-    return (
-        <div ref={ref}>
-            {/* Identik dengan <h3 data-counter="X"> di home.blade.php */}
-            <h3 className="text-4xl font-bold text-accent">{count}</h3>
-            <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">{label}</p>
-        </div>
+      },
+      { threshold: 0.3 }
     );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target]);
+
+  return (
+    <div ref={ref}>
+      <div className="text-4xl font-bold tabular-nums" style={{ color: 'var(--accent)', fontFamily: 'var(--font-dm-serif)' }}>
+        {count}<span className="text-2xl" style={{ color: 'var(--accent)', opacity: 0.5 }}>+</span>
+      </div>
+      <p className="text-xs mt-1.5 font-medium tracking-wide" style={{ color: 'var(--text-muted)' }}>{label}</p>
+    </div>
+  );
 }

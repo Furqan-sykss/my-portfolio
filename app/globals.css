@@ -2,104 +2,242 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Base ───────────────────────────────────────────────────────────────── */
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
-/* ─── CSS Variables ───────────────────────────────────────────────────────── */
+/* ── Variables ──────────────────────────────────────────────────────────────── */
 :root {
-    /* Light mode tokens */
-    --bg:           #f7f5f2;
-    --bg-card:      #ffffff;
-    --bg-card-alt:  #f0ede8;
-    --bg-subtle:    #ebe8e3;
-    --border:       #e2ddd8;
-    --border-hover: #c4a8e8;
-    --text-primary: #1c1917;
-    --text-secondary: #57534e;
-    --text-muted:   #a8a29e;
-    --accent:       #9333ea;
-    --accent-glow:  rgba(147, 51, 234, 0.12);
+  /* LIGHT — olive green + sage + warm cream */
+  --bg: #fff7e2; /* warm cream — base */
+  --bg-card: #fffdf5; /* slightly cooler white card */
+  --bg-card-2: #f5f0e0; /* warmer card variant */
+  --bg-subtle: #ede8d5; /* muted cream for chips */
+  --border: #ddd5be;
+  --border-mid: #c8bfa5;
+  --border-strong: #4f633d; /* olive on hover */
+  --text-primary: #1c2214; /* near-black with green tint */
+  --text-secondary: #3d4a35; /* dark olive */
+  --text-muted: #7a8b6f; /* medium sage */
+  --text-faint: #a8b89a; /* faint sage */
+  --accent: #4f633d; /* olive green — primary accent */
+  --accent-2: #8ba194; /* sage — secondary accent */
+  --accent-warm: #c17d3c; /* amber — highlight */
+  --accent-glow: rgba(79, 99, 61, 0.09);
+  --line-color: rgba(79, 99, 61, 0.2);
+  --line-color-mid: rgba(79, 99, 61, 0.12);
+  --shadow-sm: 0 1px 3px rgba(28, 34, 20, 0.06), 0 1px 2px rgba(28, 34, 20, 0.04);
+  --shadow-md: 0 6px 20px rgba(28, 34, 20, 0.07), 0 2px 6px rgba(28, 34, 20, 0.04);
+  --shadow-lg: 0 20px 50px rgba(28, 34, 20, 0.1), 0 6px 16px rgba(28, 34, 20, 0.06);
 }
 
 .dark {
-    /* Dark mode tokens */
-    --bg:           #0f0a1a;
-    --bg-card:      #1a1025;
-    --bg-card-alt:  #150d22;
-    --bg-subtle:    #1e1330;
-    --border:       rgba(255,255,255,0.07);
-    --border-hover: rgba(147, 51, 234, 0.4);
-    --text-primary: #f5f0ff;
-    --text-secondary: #c4b5d4;
-    --text-muted:   #7c6d8a;
-    --accent:       #c084fc;
-    --accent-glow:  rgba(192, 132, 252, 0.15);
+  /* DARK — near-black + warm brown + tan + white */
+  --bg: #111712; /* near-black with green undertone */
+  --bg-card: #1a1f1b; /* slightly lighter card */
+  --bg-card-2: #211c17; /* warm card variant */
+  --bg-subtle: #252b22; /* subtle bg for chips */
+  --border: rgba(168, 151, 122, 0.13);
+  --border-mid: rgba(168, 151, 122, 0.22);
+  --border-strong: rgba(168, 151, 122, 0.5);
+  --text-primary: #f5f0e8; /* warm white */
+  --text-secondary: #b8ad9a; /* warm tan */
+  --text-muted: #6b6055; /* dark tan */
+  --text-faint: #443c34; /* very muted */
+  --accent: #a8977a; /* warm tan — primary */
+  --accent-2: #7a8b6f; /* muted olive */
+  --accent-warm: #c17d3c; /* amber */
+  --accent-glow: rgba(168, 151, 122, 0.1);
+  --line-color: rgba(168, 151, 122, 0.22);
+  --line-color-mid: rgba(168, 151, 122, 0.11);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg);
-    color: var(--text-primary);
+  background-color: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Fade-up Animation ───────────────────────────────────────────────────── */
+/* ── Ambient background ─────────────────────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 50% at 0% 0%, rgba(79, 99, 61, 0.06) 0%, transparent 65%), radial-gradient(ellipse 45% 40% at 100% 95%, rgba(139, 161, 148, 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 35% at 50% 110%, rgba(193, 125, 60, 0.04) 0%, transparent 65%);
+}
+.dark body::before {
+  background:
+    radial-gradient(ellipse 65% 50% at 0% 0%, rgba(69, 54, 44, 0.35) 0%, transparent 65%), radial-gradient(ellipse 45% 40% at 100% 95%, rgba(168, 151, 122, 0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 35% at 50% 110%, rgba(69, 54, 44, 0.15) 0%, transparent 65%);
+}
+
+/* ── Noise grain ────────────────────────────────────────────────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 99px;
+}
+
+/* ── Selection ──────────────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--accent-glow);
+  color: var(--accent);
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────────── */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 0.25s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.card:hover {
+  border-color: var(--border-mid);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FADE-UP — bidirectional (muncul saat scroll down, keluar saat scroll up)
+   Menggunakan dua kelas: .visible (scroll in) dan .exit (scroll out atas)
+──────────────────────────────────────────────────────────────────────────────*/
 .fade-up {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Saat elemen ter-scroll keluar ke atas */
+.fade-up.exit {
+  opacity: 0;
+  transform: translateY(-24px);
+  transition:
+    opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fade-up.show {
+/* ── Typed cursor color ─────────────────────────────────────────────────────── */
+.typed-cursor {
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.proj-card {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.proj-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
+  }
 }
 
-/* ─── Light mode grain texture overlay ───────────────────────────────────── */
-/* Adds subtle warmth to the light background */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image:
-        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(147,51,234,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(168,85,247,0.05) 0%, transparent 60%);
-    pointer-events: none;
+.bento-reveal {
+  opacity: 0;
+  animation: fadeSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.dark body::before,
-.dark::before {
-    background-image:
-        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(147,51,234,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(88,28,135,0.15) 0%, transparent 60%);
+@media (max-width: 639px) {
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .bento-grid > div {
+    grid-column: 1 / 2 !important;
+  }
+  .bento-last {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .bento-last .bento-sep {
+    display: none !important;
+  }
 }
 
-/* ─── Card base styles ────────────────────────────────────────────────────── */
-.card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+.cert-row {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.card:hover {
-    border-color: var(--border-hover);
+.cert-row:hover {
+  background-color: var(--bg-subtle);
+  border-color: var(--border-mid);
+  transform: translateX(4px);
 }
 
-/* ─── Light mode card shadow ──────────────────────────────────────────────── */
-/* Cards in light mode need shadow to lift off the warm background */
-:not(.dark) .card {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+.skill-chip {
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+  cursor: default;
 }
 
-:not(.dark) .card:hover {
-    box-shadow: 0 4px 16px rgba(147,51,234,0.08), 0 1px 3px rgba(0,0,0,0.06);
-    transform: translateY(-2px);
+.skill-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--accent);
 }
-
-/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }

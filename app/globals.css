@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ─── CSS Variables ───────────────────────────────────────────────────────── */
+:root {
+    /* Light mode tokens */
+    --bg:           #f7f5f2;
+    --bg-card:      #ffffff;
+    --bg-card-alt:  #f0ede8;
+    --bg-subtle:    #ebe8e3;
+    --border:       #e2ddd8;
+    --border-hover: #c4a8e8;
+    --text-primary: #1c1917;
+    --text-secondary: #57534e;
+    --text-muted:   #a8a29e;
+    --accent:       #9333ea;
+    --accent-glow:  rgba(147, 51, 234, 0.12);
+}
+
+.dark {
+    /* Dark mode tokens */
+    --bg:           #0f0a1a;
+    --bg-card:      #1a1025;
+    --bg-card-alt:  #150d22;
+    --bg-subtle:    #1e1330;
+    --border:       rgba(255,255,255,0.07);
+    --border-hover: rgba(147, 51, 234, 0.4);
+    --text-primary: #f5f0ff;
+    --text-secondary: #c4b5d4;
+    --text-muted:   #7c6d8a;
+    --accent:       #c084fc;
+    --accent-glow:  rgba(192, 132, 252, 0.15);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+}
+
+/* ─── Fade-up Animation ───────────────────────────────────────────────────── */
+.fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─── Light mode grain texture overlay ───────────────────────────────────── */
+/* Adds subtle warmth to the light background */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(147,51,234,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(168,85,247,0.05) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.dark body::before,
+.dark::before {
+    background-image:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(147,51,234,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(88,28,135,0.15) 0%, transparent 60%);
+}
+
+/* ─── Card base styles ────────────────────────────────────────────────────── */
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    border-color: var(--border-hover);
+}
+
+/* ─── Light mode card shadow ──────────────────────────────────────────────── */
+/* Cards in light mode need shadow to lift off the warm background */
+:not(.dark) .card {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+:not(.dark) .card:hover {
+    box-shadow: 0 4px 16px rgba(147,51,234,0.08), 0 1px 3px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }

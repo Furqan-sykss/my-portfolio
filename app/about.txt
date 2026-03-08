@@ -1,6 +1,6 @@
 This favicon was generated using the following font:
 
-- Font Title: Crimson Pro
+- Font Title: DM Serif Display
 - Font Author: undefined
-- Font Source: https://fonts.gstatic.com/s/crimsonpro/v27/q5uSsoa5M_tv7IihmnkabAReu49Y_Bo-HVKMBi4UfJs7dtC4yZNE.ttf
+- Font Source: https://fonts.gstatic.com/s/dmserifdisplay/v16/-nFhOHM81r4j6k0gjAW3mujVU2B2G_Vx1_r352np3Q.ttf
 - Font License: undefined)

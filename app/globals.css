@@ -116,6 +116,10 @@ body::after {
   color: var(--accent);
 }
 
+section[id] {
+  scroll-margin-top: 112px;
+}
+
 /* ── Card ───────────────────────────────────────────────────────────────────── */
 .card {
   background-color: var(--bg-card);
@@ -185,6 +189,35 @@ body::after {
   transform: translateY(-3px);
 }
 
+@keyframes bentoPop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Stats bento grid */
+.stats-bento > div {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+@media (max-width: 639px) {
+  .stats-bento {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: none !important;
+  }
+  .stats-bento > div {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+}
+
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
@@ -202,18 +235,60 @@ body::after {
 }
 
 @media (max-width: 639px) {
+  /* Mobile — single column, reset semua grid span & row */
   .bento-grid {
     grid-template-columns: 1fr !important;
+    grid-template-rows: none !important;
   }
   .bento-grid > div {
-    grid-column: 1 / 2 !important;
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
   }
+  /* bento-last: layout vertikal di mobile */
   .bento-last {
     flex-direction: column !important;
-    gap: 12px !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
   }
   .bento-last .bento-sep {
     display: none !important;
+  }
+  .bento-last > div:last-child {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+  .bento-last > div:nth-child(3) {
+    padding-right: 0 !important;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Tablet — 2 kolom, reset inline gridColumn & gridRow */
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: none !important;
+  }
+  .bento-grid > div {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+  /* Featured (first) dan last card tetap full width di tablet */
+  .bento-grid > div:first-child,
+  .bento-grid > div:last-child {
+    grid-column: 1 / -1 !important;
+  }
+  /* bento-last di tablet: tetap horizontal tapi dengan flex-wrap */
+  .bento-last {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .bento-last > div:nth-child(3) {
+    min-width: 0 !important;
+    flex: 1 1 200px !important;
+    padding-right: 0 !important;
+  }
+  .bento-last > div:last-child {
+    flex-shrink: 0 !important;
   }
 }
 

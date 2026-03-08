@@ -17,15 +17,15 @@ const skills = [
 
 const projects = [
   {
-    title: "Sentiment Analysis Dashboard",
+    title: "Sentiment Analysis of the Attorney General's Office's Performance",
     period: "Oct 2024 – Jul 2025",
     tag: "Final Project",
     desc: "Conducted sentiment analysis on TikTok public opinion data using Python, Selenium and machine learning models trained on labeled data. Developed a Laravel–Flask dashboard to visualize and evaluate sentiment trends.",
-    stack: ["Python", "Selenium", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "Github"],
+    stack: ["Python", "Selenium", "Scraping", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "Github"],
   },
   {
     title: "Data Recapitulation System",
-    period: "Feb – Aug 2024",
+    period: "Feb 2024 – Aug 2024",
     tag: "KPU RI",
     desc: "Developed a prototype web-based recapitulation system for PPK and PPS membership data using dummy datasets, based on SIAKBA workflow references, implemented with Laravel and MySQL for structured data organization.",
     stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "Github"],
@@ -194,6 +194,101 @@ function CornerBrackets({ rect, pad = 14, drawn, delay = 0, cl = 22 }: { rect: B
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
+
+// ─── InstagramChip ─────────────────────────────────────────────────────────────
+
+function InstagramChip({ base }: { base: React.CSSProperties }) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div style={{ position: "relative" }}>
+      {/* ── Popup ── */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "calc(100% + 8px)",
+          left: "50%",
+          transform: show ? "translateX(-50%) translateY(0) scale(1)" : "translateX(-50%) translateY(5px) scale(0.92)",
+          opacity: show ? 1 : 0,
+          pointerEvents: "none",
+          transition: "opacity 0.18s ease, transform 0.2s cubic-bezier(0.34,1.4,0.64,1)",
+          zIndex: 50,
+        }}
+      >
+        {/* Photo circle with Instagram gradient ring */}
+        <div
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: "50%",
+            padding: 2,
+            background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.22)",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: "2px solid var(--bg-card)",
+            }}
+          >
+            <NextImage src="/IMG_2245.jpg" alt="@frqann" width={52} height={52} style={{ objectFit: "cover", objectPosition: "center 5%", transform: "scale(1.12)" }} />
+          </div>
+        </div>
+
+        {/* Username label */}
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "0.6rem",
+            fontWeight: 600,
+            color: "var(--text-secondary)",
+            marginTop: 5,
+            letterSpacing: "0.02em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          @frqann
+        </p>
+
+        {/* Arrow */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: -14,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "5px solid transparent",
+            borderRight: "5px solid transparent",
+            borderTop: "5px solid var(--border-mid)",
+          }}
+        />
+      </div>
+
+      {/* ── Chip ── */}
+      <a
+        href="https://www.instagram.com/frqann?igsh=MTA1ejJ3amhhZTV5cA=="
+        target="_blank"
+        rel="noopener"
+        style={{
+          ...base,
+          borderColor: show ? "var(--border-strong)" : "var(--border)",
+          color: show ? "var(--accent)" : "var(--text-muted)",
+        }}
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+      >
+        <span style={{ opacity: 0.38, fontSize: "0.75rem" }}>↗</span>
+        Instagram
+      </a>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -396,6 +491,7 @@ export default function HomePage() {
                   {[
                     { icon: "✉", label: "furqansykss@gmail.com", href: "mailto:furqansykss@gmail.com" },
                     { icon: "↗", label: "LinkedIn", href: "https://linkedin.com/in/fur-qan-6b1b87242" },
+                    { icon: "↗", label: "Instagram", href: "https://www.instagram.com/frqann?igsh=MTA1ejJ3amhhZTV5cA==" },
                     { icon: "◎", label: "East Jakarta", href: null },
                   ].map((c) => {
                     const base: React.CSSProperties = {
@@ -412,6 +508,11 @@ export default function HomePage() {
                       textDecoration: "none",
                       transition: "all 0.2s ease",
                     };
+
+                    if (c.label === "Instagram") {
+                      return <InstagramChip key="instagram" base={base} />;
+                    }
+
                     return c.href ? (
                       <a
                         key={c.label}
@@ -565,29 +666,125 @@ export default function HomePage() {
             STATS — seamless connected grid, no individual cards
         ══════════════════════════════════════════════════════════════════ */}
         <FadeUp>
-          <div style={{ borderRadius: "1rem", border: "1px solid var(--border)", overflow: "hidden", display: "grid", gridTemplateColumns: "repeat(2,1fr)" }} className="sm:grid-cols-4">
-            {[
-              { target: 6, label: "Projects Built", note: "across industries" },
-              { target: 3, label: "Years Learning", note: "continuous growth" },
-              { target: 2, label: "Internships", note: "industry exposure" },
-              { target: 8, label: "Certifications", note: "verified skills" },
-            ].map((s, i) => (
-              <FadeUp key={s.label} delay={i * 80}>
-                <div
-                  style={{
-                    padding: "2rem 1.4rem",
-                    textAlign: "center",
-                    backgroundColor: "var(--bg-card)",
-                    borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none",
-                    borderBottom: i < 2 ? "1px solid var(--border)" : "none",
-                  }}
-                  className={`sm:border-b-0 ${i < 3 ? "sm:border-r" : ""}`}
-                >
-                  <Counter target={s.target} label={s.label} />
-                  <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{s.note}</p>
-                </div>
-              </FadeUp>
-            ))}
+          <div
+            className="stats-bento"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateRows: "auto auto",
+              gap: 10,
+            }}
+          >
+            {/* [1] Projects Built */}
+            <div
+              className="bento-reveal"
+              style={{
+                gridColumn: "1 / 2",
+                gridRow: "1 / 2",
+                backgroundColor: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "1rem",
+                padding: "1.75rem 1.5rem",
+                textAlign: "center",
+                animationDelay: "0ms",
+              }}
+            >
+              <Counter target={6} label="Projects Built" />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>across industries</p>
+            </div>
+
+            {/* [2] Years Learning */}
+            <div
+              className="bento-reveal"
+              style={{
+                gridColumn: "2 / 3",
+                gridRow: "1 / 2",
+                backgroundColor: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "1rem",
+                padding: "1.75rem 1.5rem",
+                textAlign: "center",
+                animationDelay: "80ms",
+              }}
+            >
+              <Counter target={3} label="Years Learning" />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>continuous growth</p>
+            </div>
+
+            {/* [3] Certifications — spans 2 rows (tall card on the right) */}
+            <div
+              className="bento-reveal"
+              style={{
+                gridColumn: "3 / 4",
+                gridRow: "1 / 3",
+                backgroundColor: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "1rem",
+                padding: "2rem 1.5rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                animationDelay: "160ms",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              {/* Decorative glow */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: -30,
+                  right: -30,
+                  width: 100,
+                  height: 100,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, var(--accent-glow), transparent 70%)",
+                  opacity: 0.8,
+                  pointerEvents: "none",
+                }}
+              />
+              <div style={{ position: "relative" }}>
+                <Counter target={8} label="Certifications" />
+                <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>verified skills</p>
+              </div>
+            </div>
+
+            {/* [4] Internships + [5] Jobs — side by side on bottom-left 2 cols */}
+            <div
+              className="bento-reveal"
+              style={{
+                gridColumn: "1 / 2",
+                gridRow: "2 / 3",
+                backgroundColor: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "1rem",
+                padding: "1.5rem",
+                textAlign: "center",
+                animationDelay: "240ms",
+              }}
+            >
+              <Counter target={1} label="Internships" />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>industry exposure</p>
+            </div>
+
+            <div
+              className="bento-reveal"
+              style={{
+                gridColumn: "2 / 3",
+                gridRow: "2 / 3",
+                backgroundColor: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "1rem",
+                padding: "1.5rem",
+                textAlign: "center",
+                animationDelay: "320ms",
+              }}
+            >
+              <Counter target={1} label="Jobs" />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>industry exposure</p>
+            </div>
           </div>
         </FadeUp>
 
@@ -709,7 +906,7 @@ export default function HomePage() {
                     <TagBadge>{projects[1].tag}</TagBadge>
                     <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[1].period}</p>
                   </div>
-                  <h3 style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>{projects[1].title}</h3>
+                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.88rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>{projects[1].title}</h3>
                   <p style={{ fontSize: "0.79rem", lineHeight: 1.72, color: "var(--text-secondary)" }}>{projects[1].desc}</p>
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 14 }}>
@@ -740,7 +937,7 @@ export default function HomePage() {
                     <TagBadge>{projects[2].tag}</TagBadge>
                     <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[2].period}</p>
                   </div>
-                  <h3 style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[2].title}</h3>
+                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[2].title}</h3>
                   <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[2].desc}</p>
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
@@ -771,7 +968,7 @@ export default function HomePage() {
                     <TagBadge>{projects[3].tag}</TagBadge>
                     <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[3].period}</p>
                   </div>
-                  <h3 style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[3].title}</h3>
+                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[3].title}</h3>
                   <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[3].desc}</p>
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
@@ -802,7 +999,7 @@ export default function HomePage() {
                     <TagBadge>{projects[4].tag}</TagBadge>
                     <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[4].period}</p>
                   </div>
-                  <h3 style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[4].title}</h3>
+                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[4].title}</h3>
                   <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[4].desc}</p>
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
@@ -837,7 +1034,7 @@ export default function HomePage() {
                 <div className="bento-sep" style={{ width: 1, alignSelf: "stretch", backgroundColor: "var(--border)", flexShrink: 0, marginRight: "1.5rem" }} />
                 {/* Title + desc */}
                 <div style={{ flex: 1, minWidth: 0, paddingRight: "1.5rem" }}>
-                  <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>{projects[5].title}</h3>
+                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.87rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>{projects[5].title}</h3>
                   <p style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>{projects[5].desc}</p>
                 </div>
                 {/* Stack */}
@@ -1062,7 +1259,9 @@ export default function HomePage() {
                     LinkedIn ↗
                   </a>
                   <span style={{ color: "var(--border-mid)" }}>·</span>
-                  <span>+62 822-385-84400</span>
+                  <a href="https://wa.me/6282238584400?text=Hi%2C%20Furqan" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>
+                    +62 822-385-84400 ↗
+                  </a>
                 </div>
               </div>
             </div>

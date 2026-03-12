@@ -1197,7 +1197,7 @@ function EventModal({ onClose }: { onClose: () => void }) {
             {/* Contract photo */}
             <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/1000357140.jpg" alt="Employment Contract — Tokopedia Ramadan Extra 2024" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 220 }} />
+              <img src="/1000357140.png" alt="Employment Contract — Tokopedia Ramadan Extra 2024" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 220 }} />
               {/* Overlay label */}
               <div
                 style={{

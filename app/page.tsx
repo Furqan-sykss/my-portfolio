@@ -134,14 +134,65 @@ const experience = [
 ];
 
 const certifications = [
-  { name: "National Professional Certification in Web Development", issuer: "BNSP" },
-  { name: "TOEFL Institutional Testing Program (ITP)", issuer: "Score: 450" },
-  { name: "DSF 46 Faculty of Data: Data Engineer", issuer: "Dibimbing.id" },
-  { name: "Digital Skill Fair 10.0 — Web Development BackEnd", issuer: "Dibimbing.id" },
-  { name: "Softskill Training & Character Building", issuer: "Tandaseru Indonesia" },
-  { name: "The Complete Android 12 & Kotlin Masterclass", issuer: "Udemy" },
-  { name: "Web Development Courses (HTML, PHP, JavaScript)", issuer: "Sololearn" },
-  { name: "HTML Tutorial for Beginners", issuer: "Udemy" },
+  {
+    name: "National Professional Certification in Web Development",
+    issuer: "BNSP",
+    year: "2024",
+    category: "Professional",
+    link: "https://drive.google.com/file/d/1hVjiQ0Ps4sCtMQZMBPA5kYLhE7BrnrEU/view?usp=sharing",
+    badge: "★ Verified",
+  },
+  {
+    name: "TOEFL Institutional Testing Program (ITP)",
+    issuer: "ETS",
+    year: "2024",
+    category: "Language",
+    score: "Score: 450",
+    link: "https://drive.google.com/file/d/1d5n4anePz795cNpg7w9XFBygqo8n3yqf/view?usp=sharing",
+    badge: "★ Verified",
+  },
+  {
+    name: "DSF 46 Faculty of Data: Data Engineer",
+    issuer: "Dibimbing.id",
+    year: "2024",
+    category: "Data",
+    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+  },
+  {
+    name: "Digital Skill Fair 10.0 — Web Development BackEnd",
+    issuer: "Dibimbing.id",
+    year: "2023",
+    category: "Web Dev",
+    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+  },
+  {
+    name: "Softskill Training & Character Building",
+    issuer: "Tandaseru Indonesia",
+    year: "2023",
+    category: "Softskill",
+    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+  },
+  {
+    name: "The Complete Android 12 & Kotlin Masterclass",
+    issuer: "Udemy",
+    year: "2023",
+    category: "Mobile",
+    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+  },
+  {
+    name: "Web Development Courses (HTML, PHP, JavaScript)",
+    issuer: "Sololearn",
+    year: "2022",
+    category: "Web Dev",
+    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+  },
+  {
+    name: "HTML Tutorial for Beginners",
+    issuer: "Udemy",
+    year: "2022",
+    category: "Web Dev",
+    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+  },
 ];
 
 // ─── UI Primitives ─────────────────────────────────────────────────────────────
@@ -1006,6 +1057,509 @@ function InternModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+// ─── EventModal — Tokopedia Event Crew ────────────────────────────────────────
+
+function EventModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  const handleBackdrop = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  const facts = [
+    { label: "Company", value: "PT Fasen Creative Quality" },
+    { label: "Client", value: "Tokopedia (Dyandra Event Solutions)" },
+    { label: "Role", value: "Event Crew — Runner" },
+    { label: "Duration", value: "5 days · Mar 13 – 17, 2024" },
+    { label: "Contract", value: "Fixed-term · Signed 10 March 2024" },
+  ];
+
+  const responsibilities = [
+    "Executed all assigned operational tasks under the direction of the Hall Coordinator with full discipline and accountability",
+    "Supported logistics flow, crowd management, and on-site coordination throughout the entire 5-day event",
+    "Maintained professionalism and excellent service quality toward event participants and visitors",
+    "Monitored assigned post areas and ensured orderly operations within the designated venue zone",
+    "Collaborated effectively with fellow crew members and supervisors to meet event operational targets",
+    "Adhered strictly to event code of conduct including uniform policy and communication protocols",
+  ];
+
+  return (
+    <div
+      onClick={handleBackdrop}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        animation: "fadeIn 0.2s ease",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 640,
+          maxHeight: "90vh",
+          backgroundColor: "var(--bg-card)",
+          border: "1px solid var(--border-mid)",
+          borderRadius: "1.4rem",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.45)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          animation: "slideUp 0.28s cubic-bezier(0.34,1.1,0.64,1)",
+        }}
+      >
+        {/* ── Header ── */}
+        <div
+          style={{
+            flexShrink: 0,
+            padding: "1.15rem 1.5rem 1rem",
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 12,
+            background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+              <span
+                style={{
+                  fontSize: "0.58rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  padding: "3px 8px",
+                  borderRadius: 5,
+                  backgroundColor: "var(--accent-glow)",
+                  color: "var(--accent)",
+                  border: "1px solid var(--border-mid)",
+                }}
+              >
+                Event Crew
+              </span>
+              <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>13 – 17 March 2024 · Jakarta</span>
+            </div>
+            <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 3 }}>Tokopedia Ramadan Extra 2024 Flash Sale</h2>
+            <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions)</p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--bg-subtle)",
+              color: "var(--text-muted)",
+              cursor: "pointer",
+              fontSize: "1rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-strong)";
+              (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
+              (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)";
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* ── Scrollable body ── */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "1.25rem 1.5rem" }}>
+          {/* Two-column: contract photo + quick facts */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.15fr", gap: 14, marginBottom: "1.25rem" }}>
+            {/* Contract photo */}
+            <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/1000357140.jpg" alt="Employment Contract — Tokopedia Ramadan Extra 2024" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 220 }} />
+              {/* Overlay label */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: "10px 12px",
+                  background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
+                }}
+              >
+                <p style={{ fontSize: "0.62rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.05em" }}>Employment Contract</p>
+                <p style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.6)" }}>Surat Perjanjian Kerja · Signed 10 Mar 2024</p>
+              </div>
+            </div>
+
+            {/* Quick facts */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {facts.map(({ label, value }) => (
+                <div
+                  key={label}
+                  style={{
+                    padding: "9px 12px",
+                    borderRadius: 9,
+                    backgroundColor: "var(--bg-subtle)",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
+                  <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Description */}
+          <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)", marginBottom: "1.1rem" }}>
+            Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
+            Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
+          </p>
+
+          {/* Responsibilities */}
+          <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Responsibilities</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: "1.2rem" }}>
+            {responsibilities.map((r, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                <div style={{ flexShrink: 0, marginTop: 7, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{r}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Contract verified badge */}
+          <div
+            style={{
+              padding: "10px 14px",
+              borderRadius: 10,
+              backgroundColor: "var(--bg-subtle)",
+              border: "1px solid var(--border)",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 8,
+                flexShrink: 0,
+                backgroundColor: "var(--accent-glow)",
+                border: "1px solid var(--border-mid)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <polyline points="9 15 11 17 15 13" />
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>Employment Contract Verified</p>
+              <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>Surat Perjanjian Kerja · PT Fasen Creative Quality · Signed 10 March 2024</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style suppressHydrationWarning>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}`}</style>
+    </div>
+  );
+}
+
+// ─── EducationModal ────────────────────────────────────────────────────────────
+
+function EducationModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  const handleBackdrop = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  const coursework: { label: string; color: string; courses: string[] }[] = [
+    { label: "Web Dev", color: "var(--accent)", courses: ["Web Programming", "Web-Based Information Systems", "UI/UX Design"] },
+    { label: "Data", color: "#7c9e87", courses: ["Database Systems", "Data Mining", "Data Structures & Algorithms"] },
+    { label: "Software", color: "#8a7fa8", courses: ["Object-Oriented Programming", "Software Engineering", "System Analysis & Design"] },
+    { label: "Network", color: "#9e8a7c", courses: ["Computer Networks", "Network Security", "Operating Systems"] },
+    { label: "Mobile", color: "#7a9eb0", courses: ["Mobile Application Development"] },
+  ];
+
+  const documents = [
+    { label: "Academic Transcript", icon: "📄", desc: "Full semester grade records", href: "https://drive.google.com/file/d/10aVPxsUkV0j7ZAU7fbV3ZWG7zNgdzc4_/view?usp=drive_link" },
+    { label: "Diploma / Ijazah", icon: "🎓", desc: "Official graduation certificate", href: "https://drive.google.com/file/d/1PlUwjMiyAguZNqbPFsOy3GdmI8ngBPH3/view?usp=drive_link" },
+    { label: "Scientific Journal", icon: "📝", desc: "Published undergraduate research", href: "https://drive.google.com/file/d/1oPKl6xDAVcO336NuP7VrsKrEbNMdt00Z/view?usp=sharing" },
+  ];
+
+  return (
+    <div
+      onClick={handleBackdrop}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        animation: "fadeIn 0.2s ease",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 660,
+          maxHeight: "90vh",
+          backgroundColor: "var(--bg-card)",
+          border: "1px solid var(--border-mid)",
+          borderRadius: "1.4rem",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.45)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          animation: "slideUp 0.28s cubic-bezier(0.34,1.1,0.64,1)",
+        }}
+      >
+        {/* ── Header ── */}
+        <div
+          style={{
+            flexShrink: 0,
+            padding: "1.15rem 1.5rem 1rem",
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 12,
+            background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+              <span
+                style={{
+                  fontSize: "0.58rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  padding: "3px 8px",
+                  borderRadius: 5,
+                  backgroundColor: "var(--accent-glow)",
+                  color: "var(--accent)",
+                  border: "1px solid var(--border-mid)",
+                }}
+              >
+                D-IV · Applied Bachelor
+              </span>
+              <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>2021 – 2025</span>
+            </div>
+            <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 3 }}>Informatics Engineering</h2>
+            <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Politeknik Negeri Lhokseumawe · Lhokseumawe, Aceh</p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--bg-subtle)",
+              color: "var(--text-muted)",
+              cursor: "pointer",
+              fontSize: "1rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              const b = e.currentTarget as HTMLButtonElement;
+              b.style.borderColor = "var(--border-strong)";
+              b.style.color = "var(--accent)";
+            }}
+            onMouseLeave={(e) => {
+              const b = e.currentTarget as HTMLButtonElement;
+              b.style.borderColor = "var(--border)";
+              b.style.color = "var(--text-muted)";
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* ── Scrollable Body ── */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "1.25rem 1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          {/* Quick facts strip */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+            {[
+              { label: "Degree", value: "D-IV (Applied Bachelor)" },
+              { label: "Duration", value: "4 Years · 8 Semesters" },
+              { label: "GPA", value: "3.15 / 4.00" },
+              { label: "Status", value: "Graduated · 2025" },
+            ].map(({ label, value }) => (
+              <div key={label} style={{ padding: "9px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", textAlign: "center" }}>
+                <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 3 }}>{label}</p>
+                <p style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* GPA visual bar */}
+          <div style={{ padding: "12px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <span style={{ fontSize: "0.7rem", fontWeight: 500, color: "var(--text-secondary)" }}>Grade Point Average</span>
+              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)" }}>
+                3.15 <span style={{ fontWeight: 400, color: "var(--text-muted)", fontSize: "0.65rem" }}>/ 4.00</span>
+              </span>
+            </div>
+            <div style={{ height: 5, width: "100%", backgroundColor: "var(--border)", borderRadius: 99, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: "78.75%", borderRadius: 99, background: "linear-gradient(90deg, var(--accent) 0%, var(--accent) 80%, transparent 100%)", opacity: 0.7, transition: "width 1s ease" }} />
+            </div>
+            <p style={{ fontSize: "0.62rem", color: "var(--text-faint)", marginTop: 5 }}>D-IV (Diploma IV) is Indonesia's applied bachelor-level degree — equivalent to an S1 (B.Sc.) in practical engineering track.</p>
+          </div>
+
+          {/* Description + Coursework — 2 col */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 14 }}>
+            {/* Left: about */}
+            <div>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>About</p>
+              <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+                Completed a 4-year applied bachelor program in Informatics Engineering with a focus on web systems development, data processing, and software engineering. The program combines strong theoretical foundations with
+                industry-oriented practical projects and a mandatory industry internship in the final year.
+              </p>
+              {/* Thesis teaser */}
+              <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border-mid)" }}>
+                <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 4 }}>Final Project (Thesis)</p>
+                <p style={{ fontSize: "0.76rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 3 }}>Sentiment Analysis of the Attorney General's Office Performance</p>
+                <p style={{ fontSize: "0.67rem", color: "var(--text-muted)", lineHeight: 1.5 }}>TikTok comment scraping · ML classification · Laravel–Flask dashboard</p>
+              </div>
+            </div>
+
+            {/* Right: coursework */}
+            <div>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Relevant Coursework</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {coursework.map((cat) => (
+                  <div key={cat.label}>
+                    <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: cat.color, opacity: 0.7, marginBottom: 5 }}>{cat.label}</p>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                      {cat.courses.map((course) => (
+                        <span
+                          key={course}
+                          style={{
+                            fontSize: "0.67rem",
+                            padding: "2px 9px",
+                            borderRadius: 5,
+                            backgroundColor: "var(--bg-subtle)",
+                            border: "1px solid var(--border)",
+                            color: "var(--text-secondary)",
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Academic Documents */}
+          <div>
+            <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Academic Documents</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+              {documents.map((doc) => (
+                <a
+                  key={doc.label}
+                  href={doc.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    gap: 7,
+                    padding: "14px 10px",
+                    borderRadius: 11,
+                    backgroundColor: "var(--bg-subtle)",
+                    border: "1px solid var(--border)",
+                    textDecoration: "none",
+                    transition: "all 0.18s ease",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.borderColor = "var(--border-strong)";
+                    el.style.backgroundColor = "var(--bg-card)";
+                    el.style.boxShadow = "var(--shadow-md)";
+                    el.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.borderColor = "var(--border)";
+                    el.style.backgroundColor = "var(--bg-subtle)";
+                    el.style.boxShadow = "none";
+                    el.style.transform = "translateY(0)";
+                  }}
+                >
+                  <span style={{ fontSize: "1.4rem" }}>{doc.icon}</span>
+                  <div>
+                    <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 2 }}>{doc.label}</p>
+                    <p style={{ fontSize: "0.62rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{doc.desc}</p>
+                  </div>
+                  <span style={{ fontSize: "0.6rem", color: "var(--accent)", opacity: 0.7, display: "flex", alignItems: "center", gap: 3 }}>Open ↗</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <style suppressHydrationWarning>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}`}</style>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
@@ -1022,6 +1576,8 @@ export default function HomePage() {
   const [phase, setPhase] = useState<"idle" | "zoom-in" | "hold" | "zoom-out" | "done">("idle");
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null);
   const [showInternModal, setShowInternModal] = useState(false);
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [showEducationModal, setShowEducationModal] = useState(false);
 
   const ZOOM_W = 258;
   const ZOOM_H = 338;
@@ -1073,6 +1629,8 @@ export default function HomePage() {
     <>
       {/* ── INTERN MODAL ─────────────────────────────────────────────────── */}
       {showInternModal && <InternModal onClose={() => setShowInternModal(false)} />}
+      {showEventModal && <EventModal onClose={() => setShowEventModal(false)} />}
+      {showEducationModal && <EducationModal onClose={() => setShowEducationModal(false)} />}
 
       {/* ── PROJECT MODAL ────────────────────────────────────────────────── */}
       {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
@@ -1808,10 +2366,10 @@ export default function HomePage() {
                         <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--accent)" }} />
                       </div>
                     </div>
-                    {/* Card — KPU (i===0) is clickable */}
+                    {/* Card — KPU (i===0) and Event Crew (i===1) are clickable */}
                     <div
                       className="exp-card"
-                      onClick={i === 0 ? () => setShowInternModal(true) : undefined}
+                      onClick={i === 0 ? () => setShowInternModal(true) : i === 1 ? () => setShowEventModal(true) : undefined}
                       style={{
                         flex: 1,
                         padding: "1.2rem 1.4rem",
@@ -1819,18 +2377,18 @@ export default function HomePage() {
                         backgroundColor: "var(--bg-card)",
                         border: "1px solid var(--border)",
                         marginBottom: i < experience.length - 1 ? "0.5rem" : 0,
-                        cursor: i === 0 ? "pointer" : "default",
+                        cursor: i === 0 || i === 1 ? "pointer" : "default",
                         transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
                       }}
                       onMouseEnter={(e) => {
-                        if (i !== 0) return;
+                        if (i !== 0 && i !== 1) return;
                         const el = e.currentTarget as HTMLElement;
                         el.style.borderColor = "var(--border-strong)";
                         el.style.boxShadow = "var(--shadow-md)";
                         el.style.transform = "translateY(-2px)";
                       }}
                       onMouseLeave={(e) => {
-                        if (i !== 0) return;
+                        if (i !== 0 && i !== 1) return;
                         const el = e.currentTarget as HTMLElement;
                         el.style.borderColor = "var(--border)";
                         el.style.boxShadow = "none";
@@ -1840,7 +2398,7 @@ export default function HomePage() {
                       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "5px 12px", marginBottom: 3 }}>
                         <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)" }}>{e.role}</h3>
                         <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{e.period}</span>
-                        {i === 0 && (
+                        {(i === 0 || i === 1) && (
                           <span
                             style={{
                               marginLeft: "auto",
@@ -1883,6 +2441,19 @@ export default function HomePage() {
               <section id="education">
                 <SectionHeader eyebrow="Background" title="Education" />
                 <div
+                  onClick={() => setShowEducationModal(true)}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLDivElement;
+                    el.style.borderColor = "var(--border-strong)";
+                    el.style.boxShadow = "var(--shadow-md)";
+                    el.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLDivElement;
+                    el.style.borderColor = "var(--border)";
+                    el.style.boxShadow = "none";
+                    el.style.transform = "translateY(0)";
+                  }}
                   style={{
                     padding: "1.4rem",
                     borderRadius: "1rem",
@@ -1891,6 +2462,8 @@ export default function HomePage() {
                     display: "flex",
                     gap: 16,
                     alignItems: "flex-start",
+                    cursor: "pointer",
+                    transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease",
                   }}
                 >
                   <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1898,11 +2471,19 @@ export default function HomePage() {
                       <path d="M12 3L2 9l10 6 10-6-10-6zM2 17l10 6 10-6M2 13l10 6 10-6" stroke="var(--accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" opacity="0.65" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 3 }}>Informatics Engineering — D-IV</h3>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 3 }}>
+                      <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)" }}>Informatics Engineering — D-IV</h3>
+                      <span style={{ flexShrink: 0, fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.08em", color: "var(--accent)", opacity: 0.75, display: "flex", alignItems: "center", gap: 4 }}>
+                        View Details
+                        <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                          <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    </div>
                     <p style={{ fontSize: "0.74rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 9 }}>Politeknik Negeri Lhokseumawe</p>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                      {["2021 – 2025", "GPA 3.15 / 4.00"].map((t) => (
+                      {["2021 – 2025", "GPA 3.15 / 4.00", "Graduated"].map((t) => (
                         <span key={t} style={{ fontSize: "0.7rem", padding: "2px 9px", borderRadius: 6, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", color: "var(--text-muted)" }}>
                           {t}
                         </span>
@@ -1948,30 +2529,158 @@ export default function HomePage() {
         <FadeUp>
           <section id="certifications">
             <SectionHeader eyebrow="Credentials" title="Certifications" />
+
+            {/* "View all" link pill */}
+            <a
+              href="https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                marginBottom: "1.4rem",
+                textDecoration: "none",
+                fontSize: "0.71rem",
+                fontWeight: 500,
+                color: "var(--text-muted)",
+                padding: "5px 13px 5px 10px",
+                borderRadius: 99,
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--bg-subtle)",
+                transition: "all 0.18s ease",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLAnchorElement;
+                el.style.color = "var(--accent)";
+                el.style.borderColor = "var(--border-strong)";
+                el.style.backgroundColor = "var(--bg-card)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLAnchorElement;
+                el.style.color = "var(--text-muted)";
+                el.style.borderColor = "var(--border)";
+                el.style.backgroundColor = "var(--bg-subtle)";
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+              </svg>
+              View all certificates on Google Drive
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+
             <div style={{ display: "grid", gap: 8 }} className="grid-cols-1 sm:grid-cols-2">
               {certifications.map((c, i) => (
                 <FadeUp key={c.name} delay={i * 42}>
-                  <div
-                    className="cert-row"
+                  <a
+                    href={c.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     style={{
                       display: "flex",
                       alignItems: "flex-start",
-                      gap: 13,
-                      padding: "12px 14px",
-                      borderRadius: 11,
+                      gap: 12,
+                      padding: "13px 14px",
+                      borderRadius: 12,
                       backgroundColor: "var(--bg-card)",
                       border: "1px solid var(--border)",
-                      cursor: "default",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.borderColor = "var(--border-strong)";
+                      el.style.boxShadow = "var(--shadow-md)";
+                      el.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.borderColor = "var(--border)";
+                      el.style.boxShadow = "none";
+                      el.style.transform = "translateY(0)";
                     }}
                   >
-                    <div style={{ width: 24, height: 24, borderRadius: 7, flexShrink: 0, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <span style={{ fontSize: "0.54rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent)", opacity: 0.55 }}>{String(i + 1).padStart(2, "0")}</span>
+                    {/* Number badge */}
+                    <div
+                      style={{
+                        flexShrink: 0,
+                        width: 28,
+                        height: 28,
+                        borderRadius: 8,
+                        backgroundColor: "var(--bg-subtle)",
+                        border: "1px solid var(--border)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <span style={{ fontSize: "0.54rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent)", opacity: 0.65 }}>{String(i + 1).padStart(2, "0")}</span>
                     </div>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: "0.81rem", fontWeight: 500, lineHeight: 1.4, color: "var(--text-primary)" }}>{c.name}</p>
-                      <p style={{ fontSize: "0.67rem", marginTop: 3, color: "var(--text-muted)" }}>{c.issuer}</p>
+
+                    {/* Content */}
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      {/* Name row */}
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
+                        <p style={{ fontSize: "0.81rem", fontWeight: 500, lineHeight: 1.4, color: "var(--text-primary)" }}>{c.name}</p>
+                        {/* External link arrow */}
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0, marginTop: 2, color: "var(--text-faint)", opacity: 0.5 }}>
+                          <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+
+                      {/* Meta row */}
+                      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "3px 8px" }}>
+                        <span style={{ fontSize: "0.67rem", color: "var(--text-muted)" }}>{c.issuer}</span>
+                        {"score" in c && c.score && (
+                          <>
+                            <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>·</span>
+                            <span style={{ fontSize: "0.65rem", fontWeight: 600, color: "var(--accent)", opacity: 0.8 }}>{(c as { score: string }).score}</span>
+                          </>
+                        )}
+                        <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>·</span>
+                        <span style={{ fontSize: "0.62rem", color: "var(--text-faint)" }}>{c.year}</span>
+                        {/* Category pill */}
+                        <span
+                          style={{
+                            marginLeft: "auto",
+                            fontSize: "0.57rem",
+                            fontWeight: 700,
+                            letterSpacing: "0.07em",
+                            textTransform: "uppercase",
+                            padding: "2px 7px",
+                            borderRadius: 4,
+                            backgroundColor: "var(--accent-glow)",
+                            color: "var(--accent)",
+                            border: "1px solid var(--border-mid)",
+                            opacity: 0.9,
+                          }}
+                        >
+                          {c.category}
+                        </span>
+                        {/* Verified badge for BNSP + TOEFL */}
+                        {"badge" in c && c.badge && (
+                          <span
+                            style={{
+                              fontSize: "0.57rem",
+                              fontWeight: 700,
+                              letterSpacing: "0.05em",
+                              padding: "2px 7px",
+                              borderRadius: 4,
+                              backgroundColor: "rgba(99,178,100,0.12)",
+                              color: "rgb(80,160,80)",
+                              border: "1px solid rgba(99,178,100,0.25)",
+                            }}
+                          >
+                            ✓ Verified
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </a>
                 </FadeUp>
               ))}
             </div>

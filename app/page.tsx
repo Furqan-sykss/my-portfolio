@@ -20,43 +20,101 @@ const projects = [
     title: "Sentiment Analysis of the Attorney General's Office's Performance",
     period: "Oct 2024 – Jul 2025",
     tag: "Final Project",
-    desc: "Conducted sentiment analysis on TikTok public opinion data using Python, Selenium and machine learning models trained on labeled data. Developed a Laravel–Flask dashboard to visualize and evaluate sentiment trends.",
+    desc: "Conducted sentiment analysis on TikTok public opinion data regarding the Attorney General's Office performance, using Python and Selenium for data collection and machine learning for classification. Delivered results through an integrated Laravel–Flask dashboard.",
     stack: ["Python", "Selenium", "Scraping", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "Github"],
+    detail: {
+      highlights: [
+        "Collected over thousands of TikTok comments via automated web scraping using Python & Selenium",
+        "Trained and evaluated multiple machine learning models for Indonesian-language sentiment classification",
+        "Built a REST API bridge between Flask (ML engine) and Laravel (web dashboard)",
+        "Developed an interactive dashboard with real-time sentiment trend visualizations and performance metrics",
+        "Applied data preprocessing techniques including tokenization, stopword removal, and TF-IDF vectorization",
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/Laravel-sentiment-kejagung", icon: "github" },
+        { label: "Google Drive", href: "https://drive.google.com/drive/folders/1GJphNTDR8rLGia2Ze8s1n6zV6V1Nc6VA?usp=sharing", icon: "drive" },
+      ],
+    },
   },
   {
     title: "Data Recapitulation System",
     period: "Feb 2024 – Aug 2024",
     tag: "KPU RI",
-    desc: "Developed a prototype web-based recapitulation system for PPK and PPS membership data using dummy datasets, based on SIAKBA workflow references, implemented with Laravel and MySQL for structured data organization.",
+    desc: "Developed a prototype web-based recapitulation system for PPK and PPS electoral body membership data during an internship at the Secretariat General of KPU RI, based on SIAKBA workflow references and built with Laravel and MySQL.",
     stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "Github"],
+    detail: {
+      highlights: [
+        "Designed and built a prototype recapitulation system for PPK & PPS ad-hoc body membership data (KIP Aceh)",
+        "Analyzed the official SIAKBA system workflow as the primary reference for system architecture",
+        "Implemented role-based access for National Admin, Provincial Admin, and District Operator",
+        "Developed data validation logic to prevent cross-region data entry errors",
+        "Produced comprehensive recapitulation reports with chart visualizations per district and sub-district",
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
+        { label: "Wireframe (Figma)", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
+        { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
+      ],
+    },
   },
   {
     title: "Car Rental Information System Design",
     period: "Aug 2023 – Nov 2023",
     tag: "Academic",
-    desc: "Designed a car rental information system in Figma, focusing on interface structure, user workflows, and feature planning.",
+    desc: "Designed a comprehensive car rental information system in Figma, covering user interface structure, end-to-end user workflows, and interactive prototype for rental booking and management features.",
     stack: ["Figma"],
+    detail: {
+      highlights: [
+        "Designed full UI/UX prototype covering vehicle browsing, booking, and payment flows",
+        "Created wireframes, high-fidelity mockups, and interactive prototype in Figma",
+        "Defined user personas and mapped end-to-end user journeys for both customers and admins",
+      ],
+      links: [{ label: "Figma Design", href: "https://www.figma.com/design/h08W9Bf5GYRqWp2c586C0c/Rental-Car-Design?node-id=0-1&t=KWynD5QTHq7jhNhg-1", icon: "figma" }],
+    },
   },
   {
     title: "History & Philosophy Info System",
     period: "Feb 2023 – May 2023",
     tag: "Academic",
-    desc: "Developed a web-based information system using Laravel, XAMPP, and TailwindCSS to present structured historical and philosophical content with a responsive and user-friendly interface.",
+    desc: "Developed a web-based information system using Laravel, XAMPP, and Tailwind CSS to present structured historical and philosophical content with a clean, responsive interface.",
     stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "Github"],
+    detail: {
+      highlights: [
+        "Built a full-stack web information system for historical and philosophical content",
+        "Implemented a responsive UI with Tailwind CSS, optimized for both desktop and mobile",
+        "Structured content management with Laravel's MVC architecture and MySQL database",
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/laravel-amerta", icon: "github" },
+        { label: "Figma Design", href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
+      ],
+    },
   },
   {
     title: "Coffee Shop Reservation",
     period: "Feb 2023 – Mar 2023",
     tag: "Academic",
-    desc: "Build a Simple reservation website enabling customers to place orders online using PHP native and Bootstrap.",
+    desc: "Built a simple online reservation website for a coffee shop, enabling customers to browse the menu and place orders directly through the web using PHP native and Bootstrap.",
     stack: ["PHP Native", "Laragon", "MySQL", "Bootstrap", "CSS", "Git", "Github"],
+    detail: {
+      highlights: [
+        "Developed an online reservation and ordering system using PHP native without a framework",
+        "Implemented a menu display, order cart, and booking form connected to a MySQL database",
+        "Styled with Bootstrap for a clean and mobile-friendly interface",
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/2A_praktikum_2021573010051/tree/main/DeCafe", icon: "github" }],
+    },
   },
   {
     title: "Personal Portfolio Website",
-    period: "Nov – Dec 2022",
+    period: "Nov 2022 – Dec 2022",
     tag: "Self-Project",
-    desc: "Created a responsive personal portfolio built with Next.js and Tailwind CSS to showcase projects.",
+    desc: "Built a responsive personal portfolio website using Next.js and Tailwind CSS to showcase projects, skills, and professional experience.",
     stack: ["Next.js", "Tailwind", "JavaScript", "CSS", "Git", "Github"],
+    detail: {
+      highlights: ["Designed and developed a fully responsive portfolio with Next.js App Router and Tailwind CSS", "Showcases projects, technical skills, work experience, and certifications"],
+      links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/my-portfolio", icon: "github" }],
+    },
   },
 ];
 
@@ -65,9 +123,14 @@ const experience = [
     role: "Internship — Center for Data & IT",
     company: "Secretariat General of KPU RI",
     period: "Feb 2024 – Sep 2024",
-    desc: "Supported data processing, administrative coordination, and technical documentation for electoral information management.",
+    desc: "Completed a 7-month internship at KPU RI's Center for Data & IT (Pusdatin). Contributed to voter data processing, TPS input across all Indonesian provinces, electoral recapitulation monitoring, and developed a web-based prototype system for ad-hoc electoral body membership data ahead of the 2024 Simultaneous Regional Elections.",
   },
-  { role: "Event Crew | Runner", company: "PT Fasen Creative Quality × Tokopedia", period: "March 2024", desc: "Supported on-site operations during Tokopedia Ramadan Extra 2024 Flash Sale. Assisted with logistics and coordination." },
+  {
+    role: "Event Crew — Runner",
+    company: "PT Fasen Creative Quality × Tokopedia",
+    period: "March 2024",
+    desc: "Supported on-site operations for the Tokopedia Ramadan Extra 2024 Flash Sale event. Responsible for logistics coordination, crowd flow management, and ensuring smooth execution of event activities.",
+  },
 ];
 
 const certifications = [
@@ -290,6 +353,659 @@ function InstagramChip({ base }: { base: React.CSSProperties }) {
   );
 }
 
+// ─── ProjectModal ──────────────────────────────────────────────────────────────
+
+type ProjectDetail = {
+  highlights?: string[];
+  links?: { label: string; href: string; icon: string }[];
+};
+type Project = {
+  title: string;
+  period: string;
+  tag: string;
+  desc: string;
+  stack: string[];
+  detail?: ProjectDetail;
+};
+
+function LinkIcon({ icon }: { icon: string }) {
+  if (icon === "github")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+      </svg>
+    );
+  if (icon === "figma")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M8 24c2.208 0 4-1.792 4-4v-4H8c-2.208 0-4 1.792-4 4s1.792 4 4 4zm0-20H4c-2.208 0-4 1.792-4 4s1.792 4 4 4h4V4zM12 0H8C5.792 0 4 1.792 4 4s1.792 4 4 4h4V0zm4 8c2.208 0 4-1.792 4-4s-1.792-4-4-4h-4v8h4zm-4 2H8c-2.208 0-4 1.792-4 4s1.792 4 4 4h4c2.208 0 4-1.792 4-4s-1.792-4-4-4z" />
+      </svg>
+    );
+  // drive
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6.28 0L0 10.91l3.14 5.45L9.42 5.45zm11.44 0H6.28l6.28 10.91h11.44zm-8.3 12L3.14 16.36 6.28 22h11.44l-3.14-5.45zm2.02.91L8.3 22h11.44L24 16.36z" />
+    </svg>
+  );
+}
+
+function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  // Close on backdrop click
+  const handleBackdrop = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      onClick={handleBackdrop}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0,0,0,0.6)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        animation: "fadeIn 0.18s ease",
+      }}
+    >
+      <style suppressHydrationWarning>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}`}</style>
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 560,
+          maxHeight: "85vh",
+          overflowY: "auto",
+          backgroundColor: "var(--bg-card)",
+          border: "1px solid var(--border-mid)",
+          borderRadius: "1.25rem",
+          boxShadow: "var(--shadow-lg)",
+          animation: "slideUp 0.22s cubic-bezier(0.34,1.1,0.64,1)",
+        }}
+      >
+        {/* Header */}
+        <div style={{ padding: "1.5rem 1.5rem 1rem", borderBottom: "1px solid var(--border)", position: "sticky", top: 0, backgroundColor: "var(--bg-card)", zIndex: 1, borderRadius: "1.25rem 1.25rem 0 0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <TagBadge>{project.tag}</TagBadge>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{project.period}</span>
+              </div>
+              <h2
+                style={{
+                  fontFamily: "var(--font-dm-serif)",
+                  fontSize: "1.15rem",
+                  fontWeight: 400,
+                  color: "var(--text-primary)",
+                  lineHeight: 1.25,
+                }}
+              >
+                {project.title}
+              </h2>
+            </div>
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              style={{
+                flexShrink: 0,
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--bg-subtle)",
+                color: "var(--text-muted)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.15s ease",
+                fontSize: "1rem",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
+                (e.currentTarget as HTMLElement).style.color = "var(--accent)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+                (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
+              }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div style={{ padding: "1.25rem 1.5rem 1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          {/* Description */}
+          <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{project.desc}</p>
+
+          {/* Highlights */}
+          {project.detail?.highlights && (
+            <div>
+              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Highlights</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                {project.detail.highlights.map((h, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                    <div style={{ flexShrink: 0, marginTop: 5, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                    <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Stack */}
+          <div>
+            <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Tech Stack</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+              {project.stack.map((s) => (
+                <StackChip key={s}>{s}</StackChip>
+              ))}
+            </div>
+          </div>
+
+          {/* Links */}
+          {project.detail?.links && project.detail.links.length > 0 && (
+            <div>
+              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Links</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {project.detail.links.map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 7,
+                      padding: "7px 14px",
+                      borderRadius: 9,
+                      fontSize: "0.74rem",
+                      fontWeight: 500,
+                      backgroundColor: "var(--bg-subtle)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text-secondary)",
+                      textDecoration: "none",
+                      transition: "all 0.18s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "var(--border-strong)";
+                      el.style.color = "var(--accent)";
+                      el.style.backgroundColor = "var(--accent-glow)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "var(--border)";
+                      el.style.color = "var(--text-secondary)";
+                      el.style.backgroundColor = "var(--bg-subtle)";
+                    }}
+                  >
+                    <LinkIcon icon={l.icon} />
+                    {l.label}
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
+                      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── InternModal — KPU Internship with Carousel ───────────────────────────────
+
+function InternModal({ onClose }: { onClose: () => void }) {
+  const [carouselIdx, setCarouselIdx] = useState(0);
+  const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fade, setFade] = useState(true);
+  // Touch swipe
+  const touchStartX = useRef<number>(0);
+  const imgCount = images.length;
+
+  // Fetch & shuffle
+  useEffect(() => {
+    fetch("/api/intern-images")
+      .then((r) => r.json())
+      .then((data: { images: string[] }) => {
+        setImages([...data.images].sort(() => Math.random() - 0.5));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  // Keyboard: Escape = close, ← → = navigate
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "ArrowRight") goTo((prev: number) => Math.min(prev + 1, imgCount - 1));
+      if (e.key === "ArrowLeft") goTo((prev: number) => Math.max(prev - 1, 0));
+    };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose, imgCount]);
+
+  // Smooth fade transition on photo change
+  const goTo = (updater: number | ((prev: number) => number)) => {
+    setFade(false);
+    setTimeout(() => {
+      setCarouselIdx(typeof updater === "function" ? updater : () => updater);
+      setFade(true);
+    }, 140);
+  };
+
+  const prev = () => {
+    if (carouselIdx > 0) goTo(carouselIdx - 1);
+  };
+  const next = () => {
+    if (carouselIdx < imgCount - 1) goTo(carouselIdx + 1);
+  };
+
+  // Touch swipe handlers
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) next();
+      else prev();
+    }
+  };
+
+  const handleBackdrop = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  // Dots: max 7 visible, with ellipsis-style scaling
+  const renderDots = () => {
+    if (imgCount <= 7) {
+      return Array.from({ length: imgCount }).map((_, i) => (
+        <button
+          key={i}
+          onClick={() => goTo(i)}
+          style={{
+            width: i === carouselIdx ? 20 : 6,
+            height: 6,
+            borderRadius: 999,
+            border: "none",
+            padding: 0,
+            cursor: "pointer",
+            backgroundColor: i === carouselIdx ? "var(--accent)" : "var(--border-mid)",
+            transition: "all 0.25s ease",
+            flexShrink: 0,
+          }}
+        />
+      ));
+    }
+    // For many images, show 7 slots: first, last, active±1, and ellipsis
+    const visible = new Set([0, imgCount - 1, carouselIdx, carouselIdx - 1, carouselIdx + 1].filter((i) => i >= 0 && i < imgCount));
+    return Array.from({ length: imgCount })
+      .map((_, i) => {
+        if (!visible.has(i)) {
+          // Only show one ellipsis between gaps
+          const prevVisible = [...visible].filter((v) => v < i).length > 0 && [...visible].every((v) => v !== i - 1);
+          if (prevVisible)
+            return (
+              <span key={i} style={{ fontSize: "0.5rem", color: "var(--text-muted)", lineHeight: 1 }}>
+                •
+              </span>
+            );
+          return null;
+        }
+        return (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            style={{
+              width: i === carouselIdx ? 20 : 6,
+              height: 6,
+              borderRadius: 999,
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              backgroundColor: i === carouselIdx ? "var(--accent)" : "var(--border-mid)",
+              transition: "all 0.25s ease",
+              flexShrink: 0,
+            }}
+          />
+        );
+      })
+      .filter(Boolean);
+  };
+
+  return (
+    <div
+      onClick={handleBackdrop}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        animation: "fadeIn 0.2s ease",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: 700,
+          maxHeight: "92vh",
+          backgroundColor: "var(--bg-card)",
+          border: "1px solid var(--border-mid)",
+          borderRadius: "1.35rem",
+          boxShadow: "var(--shadow-lg)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          animation: "slideUp 0.25s cubic-bezier(0.34,1.1,0.64,1)",
+        }}
+      >
+        {/* ── Header ───────────────────────────────────────────────────── */}
+        <div
+          style={{
+            flexShrink: 0,
+            padding: "1.1rem 1.4rem 0.9rem",
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <TagBadge>Internship</TagBadge>
+              <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>Feb 2024 – Sep 2024</span>
+            </div>
+            <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>Secretariat General of KPU RI</h2>
+            <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Jakarta, Indonesia</p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--bg-subtle)",
+              color: "var(--text-muted)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.15s ease",
+              fontSize: "1rem",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
+              (e.currentTarget as HTMLElement).style.color = "var(--accent)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+              (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* ── Scrollable body ───────────────────────────────────────────── */}
+        <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+          {/* Description + Highlights + Links */}
+          <div style={{ padding: "1.1rem 1.4rem 0" }}>
+            <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+              Completed a 7-month industry internship at the Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI), Center for Data &amp; Information Technology (Pusdatin), Jakarta. Contributed across
+              three divisions: Data &amp; Information, Application &amp; Information Governance, and IT Infrastructure. Primary project involved designing and developing a web-based recapitulation system for KIP Aceh ad-hoc electoral body
+              membership data ahead of the 2024 Simultaneous Regional Elections.
+            </p>
+
+            <div style={{ marginTop: "0.9rem" }}>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Highlights</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {[
+                  "Participated in the national voter data recapitulation and monitoring sessions coordinated by the Data and Information Center (Pusdatin).",
+                  "Selection and input of voter status for the Permanent Voter List (DPT), Special Voter List (DPK), and Additional Voter List (DPTb).",
+                  "Assisted in the process of compiling the Additional Voter List (DPTb), compiling the list of voters not yet registered on the Permanent Voter List (DPT) but eligible to vote.",
+                  "Entered data from Polling Stations (TPS) by Province, Regency/City, Sub-district, and Village/Village and reviewed the inputted data to ensure there were no errors.",
+                  "Assisted in the submission of the Potential Voter List (DP4) from the Ministry of Home Affairs (KEMENDAGRI) to the Indonesian General Elections Commission (KPU) as material for compiling voter lists for the 2024 gubernatorial and vice-gubernatorial elections, regents and vice-regents, and mayors and vice-mayors.",
+                  "Assisted in the event process Conducting an evaluation meeting to update voter data for the 2024 Election and preparing for voter data updates for the 2024 elections for Governor and Deputy Governor, Regent and Deputy Regent, and Mayor and Deputy Mayor.",
+                  "Assisting in conducting a working meeting to discuss technical guidelines for updating voter data for the 2024 elections for Governor and Deputy Governor, Regent and Deputy Regent, and Mayor and Deputy Mayor, as well as synchronizing the DP4 (Voting Data Collection).",
+                  "Assisting with logistics for coordination meetings between the Data and Information Center (Pusdatin) and the Criminal Investigation Unit (Bareskrim Polri) regarding election data security and integrity.",
+                  "Assisting in conducting a working meeting to discussvoter data update simulations (Pantarlih) for the 2024 Simultaneous Regional Elections.",
+                  "Designing and developing a Laravel + MySQL recapitulation system prototype for PPK & PPS membership data, based on the SIAKBA workflow reference (Academic Project).",
+                  "Implementing role-based access control: National Admin, Provincial Admin, and District/City Operator (Academic Project).",
+                  "Generating recapitulation reports with graphic visualizations per district and sub-district level (Academic Project).",
+                ].map((h, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+                    <div style={{ flexShrink: 0, marginTop: 6, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                    <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: "0.9rem", paddingBottom: "1.1rem", borderBottom: "1px solid var(--border)" }}>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Links</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                {[
+                  { label: "GitHub (SIAKBA)", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
+                  { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
+                  { label: "Wireframe Figma", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
+                ].map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 7,
+                      padding: "7px 13px",
+                      borderRadius: 9,
+                      fontSize: "0.73rem",
+                      fontWeight: 500,
+                      backgroundColor: "var(--bg-subtle)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text-secondary)",
+                      textDecoration: "none",
+                      transition: "all 0.18s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "var(--border-strong)";
+                      el.style.color = "var(--accent)";
+                      el.style.backgroundColor = "var(--accent-glow)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = "var(--border)";
+                      el.style.color = "var(--text-secondary)";
+                      el.style.backgroundColor = "var(--bg-subtle)";
+                    }}
+                  >
+                    <LinkIcon icon={l.icon} />
+                    {l.label}
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
+                      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Carousel ─────────────────────────────────────────────────── */}
+          <div style={{ padding: "1.1rem 1.4rem 1.4rem" }}>
+            {/* Label + counter */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Documentation{imgCount > 0 ? ` — ${imgCount} Photos` : ""}</p>
+              {imgCount > 0 && !loading && (
+                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
+                  {carouselIdx + 1} / {imgCount}
+                </span>
+              )}
+            </div>
+
+            {/* Loading state */}
+            {loading && (
+              <div style={{ height: 320, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem", flexDirection: "column", gap: 10 }}>
+                <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                Memuat foto...
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!loading && imgCount === 0 && <div style={{ height: 200, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>Foto tidak ditemukan di folder intern-image.</div>}
+
+            {/* Carousel frame */}
+            {!loading && imgCount > 0 && (
+              <div style={{ position: "relative" }}>
+                {/* Photo area */}
+                <div
+                  onTouchStart={onTouchStart}
+                  onTouchEnd={onTouchEnd}
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "clamp(220px, 46vw, 420px)",
+                    borderRadius: "0.85rem",
+                    overflow: "hidden",
+                    backgroundColor: "var(--bg-subtle)",
+                    border: "1px solid var(--border)",
+                    userSelect: "none",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={images[carouselIdx]}
+                    alt={`KPU documentation ${carouselIdx + 1}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      display: "block",
+                      opacity: fade ? 1 : 0,
+                      transition: "opacity 0.14s ease",
+                    }}
+                    loading="lazy"
+                  />
+
+                  {/* Prev / Next overlay buttons */}
+                  {carouselIdx > 0 && (
+                    <button
+                      onClick={prev}
+                      style={{
+                        position: "absolute",
+                        left: 10,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(0,0,0,0.45)",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                        color: "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "background-color 0.15s ease",
+                        backdropFilter: "blur(4px)",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.7)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.45)")}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                        <path d="M15 18l-6-6 6-6" />
+                      </svg>
+                    </button>
+                  )}
+                  {carouselIdx < imgCount - 1 && (
+                    <button
+                      onClick={next}
+                      style={{
+                        position: "absolute",
+                        right: 10,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(0,0,0,0.45)",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                        color: "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "background-color 0.15s ease",
+                        backdropFilter: "blur(4px)",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.7)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.45)")}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                        <path d="M9 18l6-6-6-6" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* Dots indicator */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 14, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
+
+                {/* Keyboard hint */}
+                <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <style suppressHydrationWarning>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
@@ -304,6 +1020,8 @@ export default function HomePage() {
   const [rects, setRects] = useState<Rects>({ heading: null, body: null, photo: null });
   const [fromRect, setFromRect] = useState<BRect | null>(null);
   const [phase, setPhase] = useState<"idle" | "zoom-in" | "hold" | "zoom-out" | "done">("idle");
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null);
+  const [showInternModal, setShowInternModal] = useState(false);
 
   const ZOOM_W = 258;
   const ZOOM_H = 338;
@@ -353,6 +1071,12 @@ export default function HomePage() {
 
   return (
     <>
+      {/* ── INTERN MODAL ─────────────────────────────────────────────────── */}
+      {showInternModal && <InternModal onClose={() => setShowInternModal(false)} />}
+
+      {/* ── PROJECT MODAL ────────────────────────────────────────────────── */}
+      {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
+
       {/* ── BACKDROP ─────────────────────────────────────────────────────── */}
       {showClone && (
         <div
@@ -484,7 +1208,7 @@ export default function HomePage() {
               {/* BRACKET 2 — body */}
               <div ref={bodyRef}>
                 <p style={{ maxWidth: 410, lineHeight: 1.82, fontSize: "0.88rem", color: "var(--text-secondary)", marginBottom: "1.4rem" }}>
-                  Graduate of Informatics Engineering from Politeknik Negeri Lhokseumawe. I build structured, efficient web systems — with hands-on experience in data processing, sentiment analysis, and full-stack development.
+                  Graduate of Informatics Engineering from Politeknik Negeri Lhokseumawe. I build structured, efficient web systems with hands-on experience in data processing, sentiment analysis, and full-stack development.
                 </p>
 
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: "1.4rem" }}>
@@ -833,13 +1557,14 @@ export default function HomePage() {
               {/* ── [0] FEATURED — col 1+2 ────────────────────────────────── */}
               <div
                 className="proj-card bento-reveal"
+                onClick={() => setSelectedProject(projects[0])}
                 style={{
                   gridColumn: "1 / 3",
                   backgroundColor: "var(--bg-card)",
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
                   padding: "1.7rem",
-                  cursor: "default",
+                  cursor: "pointer",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -887,6 +1612,7 @@ export default function HomePage() {
 
               {/* ── [1] col 3, row 1 ──────────────────────────────────────── */}
               <div
+                onClick={() => setSelectedProject(projects[1])}
                 className="proj-card bento-reveal"
                 style={{
                   gridColumn: "3 / 4",
@@ -894,7 +1620,7 @@ export default function HomePage() {
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
                   padding: "1.4rem",
-                  cursor: "default",
+                  cursor: "pointer",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -918,14 +1644,14 @@ export default function HomePage() {
 
               {/* ── [2] col 1, row 2 ──────────────────────────────────────── */}
               <div
+                onClick={() => setSelectedProject(projects[2])}
                 className="proj-card bento-reveal"
                 style={{
-                  gridColumn: "1 / 2",
                   backgroundColor: "var(--bg-card)",
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
                   padding: "1.3rem",
-                  cursor: "default",
+                  cursor: "pointer",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -949,14 +1675,14 @@ export default function HomePage() {
 
               {/* ── [3] col 2, row 2 ──────────────────────────────────────── */}
               <div
+                onClick={() => setSelectedProject(projects[3])}
                 className="proj-card bento-reveal"
                 style={{
-                  gridColumn: "2 / 3",
                   backgroundColor: "var(--bg-card)",
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
                   padding: "1.3rem",
-                  cursor: "default",
+                  cursor: "pointer",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -980,6 +1706,7 @@ export default function HomePage() {
 
               {/* ── [4] col 3, row 2 ──────────────────────────────────────── */}
               <div
+                onClick={() => setSelectedProject(projects[4])}
                 className="proj-card bento-reveal"
                 style={{
                   gridColumn: "3 / 4",
@@ -987,7 +1714,7 @@ export default function HomePage() {
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
                   padding: "1.3rem",
-                  cursor: "default",
+                  cursor: "pointer",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -1011,6 +1738,7 @@ export default function HomePage() {
 
               {/* ── [5] LAST — full width, horizontal layout ──────────────── */}
               <div
+                onClick={() => setSelectedProject(projects[5])}
                 className="proj-card bento-reveal bento-last"
                 style={{
                   gridColumn: "1 / 4",
@@ -1018,7 +1746,7 @@ export default function HomePage() {
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
                   padding: "1.15rem 1.5rem",
-                  cursor: "default",
+                  cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: 0,
@@ -1080,9 +1808,10 @@ export default function HomePage() {
                         <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--accent)" }} />
                       </div>
                     </div>
-                    {/* Card */}
+                    {/* Card — KPU (i===0) is clickable */}
                     <div
                       className="exp-card"
+                      onClick={i === 0 ? () => setShowInternModal(true) : undefined}
                       style={{
                         flex: 1,
                         padding: "1.2rem 1.4rem",
@@ -1090,11 +1819,47 @@ export default function HomePage() {
                         backgroundColor: "var(--bg-card)",
                         border: "1px solid var(--border)",
                         marginBottom: i < experience.length - 1 ? "0.5rem" : 0,
+                        cursor: i === 0 ? "pointer" : "default",
+                        transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (i !== 0) return;
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border-strong)";
+                        el.style.boxShadow = "var(--shadow-md)";
+                        el.style.transform = "translateY(-2px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (i !== 0) return;
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border)";
+                        el.style.boxShadow = "none";
+                        el.style.transform = "translateY(0)";
                       }}
                     >
                       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "5px 12px", marginBottom: 3 }}>
                         <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)" }}>{e.role}</h3>
                         <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{e.period}</span>
+                        {i === 0 && (
+                          <span
+                            style={{
+                              marginLeft: "auto",
+                              fontSize: "0.62rem",
+                              fontWeight: 600,
+                              letterSpacing: "0.08em",
+                              color: "var(--accent)",
+                              opacity: 0.75,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 4,
+                            }}
+                          >
+                            View Details
+                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                              <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </span>
+                        )}
                       </div>
                       <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{e.company}</p>
                       <p style={{ fontSize: "0.82rem", lineHeight: 1.74, color: "var(--text-secondary)" }}>{e.desc}</p>

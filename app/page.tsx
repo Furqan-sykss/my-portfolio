@@ -440,7 +440,190 @@ function LinkIcon({ icon }: { icon: string }) {
   );
 }
 
+// ─── useSwipeToDismiss — drag handle swipe-down to close ──────────────────────
+
+function useSwipeToDismiss(onClose: () => void) {
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const startY = useRef(0);
+  const currentY = useRef(0);
+  const isDragging = useRef(false);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    startY.current = e.touches[0].clientY;
+    currentY.current = 0;
+    isDragging.current = true;
+    const sheet = sheetRef.current;
+    if (sheet) sheet.style.transition = "none";
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    const dy = e.touches[0].clientY - startY.current;
+    if (dy < 0) return; // don't allow dragging up
+    currentY.current = dy;
+    const sheet = sheetRef.current;
+    if (sheet) sheet.style.transform = `translateY(${dy}px)`;
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    isDragging.current = false;
+    const sheet = sheetRef.current;
+    if (!sheet) return;
+    if (currentY.current > 90) {
+      // Dismiss — animate out
+      sheet.style.transition = "transform 0.28s cubic-bezier(0.4, 0, 1, 1)";
+      sheet.style.transform = `translateY(110%)`;
+      setTimeout(onClose, 260);
+    } else {
+      // Snap back
+      sheet.style.transition = "transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1)";
+      sheet.style.transform = "translateY(0)";
+    }
+  }, [onClose]);
+
+  return { sheetRef, onTouchStart, onTouchMove, onTouchEnd };
+}
+
+// ─── Shared close button ───────────────────────────────────────────────────────
+
+function CloseBtn({ onClose }: { onClose: () => void }) {
+  return (
+    <button
+      onClick={onClose}
+      style={{
+        flexShrink: 0,
+        width: 32,
+        height: 32,
+        borderRadius: 8,
+        border: "1px solid var(--border)",
+        backgroundColor: "var(--bg-subtle)",
+        color: "var(--text-muted)",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "all 0.15s ease",
+        fontSize: "1rem",
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.borderColor = "var(--border-strong)";
+        el.style.color = "var(--accent)";
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.borderColor = "var(--border)";
+        el.style.color = "var(--text-muted)";
+      }}
+    >
+      ✕
+    </button>
+  );
+}
+
+// ─── Shared modal wrapper — bottom-sheet on mobile, centered on desktop ────────
+
+function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => void; children: (drag: ReturnType<typeof useSwipeToDismiss>) => React.ReactNode; maxWidth?: number }) {
+  const drag = useSwipeToDismiss(onClose);
+
+  const handleBackdrop = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  return (
+    <div
+      onClick={handleBackdrop}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0,0,0,0.7)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "flex-end", // bottom-sheet default
+        justifyContent: "center",
+        padding: 0,
+        animation: "mbFadeIn 0.2s ease",
+      }}
+      // On sm+ screens: center vertically via CSS class
+      className="modal-root"
+    >
+      <style suppressHydrationWarning>{`
+        @keyframes mbFadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes mbSheetUp { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes mbSlideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .modal-root { }
+        @media(min-width:600px){
+          .modal-root { align-items:center; padding:1rem; }
+          .modal-sheet-inner { border-radius:1.35rem !important; animation:mbSlideUp 0.26s cubic-bezier(0.34,1.1,0.64,1) !important; }
+          .modal-drag-handle { display:none !important; }
+        }
+      `}</style>
+
+      <div
+        ref={drag.sheetRef}
+        className="modal-sheet-inner"
+        style={{
+          width: "100%",
+          maxWidth,
+          maxHeight: "92dvh",
+          backgroundColor: "var(--bg-card)",
+          border: "1px solid var(--border-mid)",
+          borderRadius: "1.25rem 1.25rem 0 0",
+          boxShadow: "0 -4px 40px rgba(0,0,0,0.4)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          animation: "mbSheetUp 0.3s cubic-bezier(0.32,1.1,0.64,1)",
+          willChange: "transform",
+        }}
+      >
+        {/* Drag handle */}
+        <div
+          className="modal-drag-handle"
+          onTouchStart={drag.onTouchStart}
+          onTouchMove={drag.onTouchMove}
+          onTouchEnd={drag.onTouchEnd}
+          style={{
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "10px 0 4px",
+            cursor: "grab",
+            touchAction: "none",
+          }}
+        >
+          <div style={{ width: 36, height: 4, borderRadius: 99, backgroundColor: "var(--border-mid)" }} />
+        </div>
+
+        {children(drag)}
+      </div>
+    </div>
+  );
+}
+
+// ─── ProjectModal ──────────────────────────────────────────────────────────────
+
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [onClose]);
+
   // Close on backdrop click
   const handleBackdrop = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
@@ -460,170 +643,99 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   }, [onClose]);
 
   return (
-    <div
-      onClick={handleBackdrop}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1rem",
-        animation: "fadeIn 0.18s ease",
-      }}
-    >
-      <style suppressHydrationWarning>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}`}</style>
-
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 560,
-          maxHeight: "85vh",
-          overflowY: "auto",
-          backgroundColor: "var(--bg-card)",
-          border: "1px solid var(--border-mid)",
-          borderRadius: "1.25rem",
-          boxShadow: "var(--shadow-lg)",
-          animation: "slideUp 0.22s cubic-bezier(0.34,1.1,0.64,1)",
-        }}
-      >
-        {/* Header */}
-        <div style={{ padding: "1.5rem 1.5rem 1rem", borderBottom: "1px solid var(--border)", position: "sticky", top: 0, backgroundColor: "var(--bg-card)", zIndex: 1, borderRadius: "1.25rem 1.25rem 0 0" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+    <ModalBackdrop onClose={onClose} maxWidth={560}>
+      {() => (
+        <>
+          {/* Header */}
+          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
                 <TagBadge>{project.tag}</TagBadge>
                 <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{project.period}</span>
               </div>
-              <h2
-                style={{
-                  fontFamily: "var(--font-dm-serif)",
-                  fontSize: "1.15rem",
-                  fontWeight: 400,
-                  color: "var(--text-primary)",
-                  lineHeight: 1.25,
-                }}
-              >
-                {project.title}
-              </h2>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{project.title}</h2>
             </div>
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              style={{
-                flexShrink: 0,
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                border: "1px solid var(--border)",
-                backgroundColor: "var(--bg-subtle)",
-                color: "var(--text-muted)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.15s ease",
-                fontSize: "1rem",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
-                (e.currentTarget as HTMLElement).style.color = "var(--accent)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
-              }}
-            >
-              ✕
-            </button>
+            <CloseBtn onClose={onClose} />
           </div>
-        </div>
 
-        {/* Body */}
-        <div style={{ padding: "1.25rem 1.5rem 1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-          {/* Description */}
-          <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{project.desc}</p>
+          {/* Body */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+            <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{project.desc}</p>
 
-          {/* Highlights */}
-          {project.detail?.highlights && (
+            {project.detail?.highlights && (
+              <div>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Highlights</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {project.detail.highlights.map((h, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <div style={{ flexShrink: 0, marginTop: 5, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                      <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div>
-              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Highlights</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                {project.detail.highlights.map((h, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                    <div style={{ flexShrink: 0, marginTop: 5, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                    <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
-                  </div>
+              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Tech Stack</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                {project.stack.map((s) => (
+                  <StackChip key={s}>{s}</StackChip>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* Stack */}
-          <div>
-            <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Tech Stack</p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-              {project.stack.map((s) => (
-                <StackChip key={s}>{s}</StackChip>
-              ))}
-            </div>
-          </div>
-
-          {/* Links */}
-          {project.detail?.links && project.detail.links.length > 0 && (
-            <div>
-              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Links</p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {project.detail.links.map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 7,
-                      padding: "7px 14px",
-                      borderRadius: 9,
-                      fontSize: "0.74rem",
-                      fontWeight: 500,
-                      backgroundColor: "var(--bg-subtle)",
-                      border: "1px solid var(--border)",
-                      color: "var(--text-secondary)",
-                      textDecoration: "none",
-                      transition: "all 0.18s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = "var(--border-strong)";
-                      el.style.color = "var(--accent)";
-                      el.style.backgroundColor = "var(--accent-glow)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = "var(--border)";
-                      el.style.color = "var(--text-secondary)";
-                      el.style.backgroundColor = "var(--bg-subtle)";
-                    }}
-                  >
-                    <LinkIcon icon={l.icon} />
-                    {l.label}
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
-                      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </a>
-                ))}
+            {project.detail?.links && project.detail.links.length > 0 && (
+              <div>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Links</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {project.detail.links.map((l) => (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 7,
+                        padding: "8px 14px",
+                        borderRadius: 9,
+                        fontSize: "0.74rem",
+                        fontWeight: 500,
+                        backgroundColor: "var(--bg-subtle)",
+                        border: "1px solid var(--border)",
+                        color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        transition: "all 0.18s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border-strong)";
+                        el.style.color = "var(--accent)";
+                        el.style.backgroundColor = "var(--accent-glow)";
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border)";
+                        el.style.color = "var(--text-secondary)";
+                        el.style.backgroundColor = "var(--bg-subtle)";
+                      }}
+                    >
+                      <LinkIcon icon={l.icon} />
+                      {l.label}
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
+                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            )}
+          </div>
+        </>
+      )}
+    </ModalBackdrop>
   );
 }
 
@@ -757,303 +869,207 @@ function InternModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div
-      onClick={handleBackdrop}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,0.75)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1rem",
-        animation: "fadeIn 0.2s ease",
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          maxWidth: 700,
-          maxHeight: "92vh",
-          backgroundColor: "var(--bg-card)",
-          border: "1px solid var(--border-mid)",
-          borderRadius: "1.35rem",
-          boxShadow: "var(--shadow-lg)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          animation: "slideUp 0.25s cubic-bezier(0.34,1.1,0.64,1)",
-        }}
-      >
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <div
-          style={{
-            flexShrink: 0,
-            padding: "1.1rem 1.4rem 0.9rem",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            gap: 12,
-          }}
-        >
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-              <TagBadge>Internship</TagBadge>
-              <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>Feb 2024 – Sep 2024</span>
+    <ModalBackdrop onClose={onClose} maxWidth={700}>
+      {({ onTouchStart: swipeTouchStart, onTouchMove: swipeTouchMove, onTouchEnd: swipeTouchEnd }) => (
+        <>
+          {/* Header */}
+          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                <TagBadge>Internship</TagBadge>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>Feb 2024 – Sep 2024</span>
+              </div>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>Secretariat General of KPU RI</h2>
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Jakarta, Indonesia</p>
             </div>
-            <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>Secretariat General of KPU RI</h2>
-            <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Jakarta, Indonesia</p>
+            <CloseBtn onClose={onClose} />
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              flexShrink: 0,
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--bg-subtle)",
-              color: "var(--text-muted)",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.15s ease",
-              fontSize: "1rem",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
-              (e.currentTarget as HTMLElement).style.color = "var(--accent)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-              (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
-            }}
-          >
-            ✕
-          </button>
-        </div>
 
-        {/* ── Scrollable body ───────────────────────────────────────────── */}
-        <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
-          {/* Description + Highlights + Links */}
-          <div style={{ padding: "1.1rem 1.4rem 0" }}>
-            <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-              Completed a 7-month industry internship at the Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI), Center for Data &amp; Information Technology (Pusdatin), Jakarta. Contributed across
-              three divisions: Data &amp; Information, Application &amp; Information Governance, and IT Infrastructure. Primary project involved designing and developing a web-based recapitulation system for KIP Aceh ad-hoc electoral body
-              membership data ahead of the 2024 Simultaneous Regional Elections.
-            </p>
+          {/* Scrollable body */}
+          <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+            <div style={{ padding: "1rem 1.1rem 0" }}>
+              <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+                Completed a 7-month industry internship at the Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI), Center for Data &amp; Information Technology (Pusdatin), Jakarta. Contributed
+                across three divisions: Data &amp; Information, Application &amp; Information Governance, and IT Infrastructure.
+              </p>
+              <div style={{ marginTop: "0.9rem" }}>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Highlights</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {[
+                    "Participated in the national voter data recapitulation and monitoring sessions coordinated by the Data and Information Center (Pusdatin).",
+                    "Selection and input of voter status for the Permanent Voter List (DPT), Special Voter List (DPK), and Additional Voter List (DPTb).",
+                    "Assisted in the process of compiling the Additional Voter List (DPTb), compiling the list of voters not yet registered on the Permanent Voter List (DPT) but eligible to vote.",
+                    "Entered data from Polling Stations (TPS) by Province, Regency/City, Sub-district, and Village/Village and reviewed the inputted data to ensure there were no errors.",
+                    "Assisted in the submission of the Potential Voter List (DP4) from the Ministry of Home Affairs (KEMENDAGRI) to the Indonesian General Elections Commission (KPU) as material for compiling voter lists for the 2024 gubernatorial and vice-gubernatorial elections.",
+                    "Assisted in conducting an evaluation meeting to update voter data for the 2024 Election and preparing for voter data updates for the 2024 Simultaneous Regional Elections.",
+                    "Assisting in conducting a working meeting to discuss technical guidelines for updating voter data for the 2024 elections, as well as synchronizing the DP4 (Voting Data Collection).",
+                    "Assisting with logistics for coordination meetings between Pusdatin and Bareskrim Polri regarding election data security and integrity.",
+                    "Assisting in conducting a working meeting to discuss voter data update simulations (Pantarlih) for the 2024 Simultaneous Regional Elections.",
+                    "Designing and developing a Laravel + MySQL recapitulation system prototype for PPK & PPS membership data, based on the SIAKBA workflow reference (Academic Project).",
+                    "Implementing role-based access control: National Admin, Provincial Admin, and District/City Operator (Academic Project).",
+                    "Generating recapitulation reports with graphic visualizations per district and sub-district level (Academic Project).",
+                  ].map((h, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+                      <div style={{ flexShrink: 0, marginTop: 6, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-            <div style={{ marginTop: "0.9rem" }}>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Highlights</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {[
-                  "Participated in the national voter data recapitulation and monitoring sessions coordinated by the Data and Information Center (Pusdatin).",
-                  "Selection and input of voter status for the Permanent Voter List (DPT), Special Voter List (DPK), and Additional Voter List (DPTb).",
-                  "Assisted in the process of compiling the Additional Voter List (DPTb), compiling the list of voters not yet registered on the Permanent Voter List (DPT) but eligible to vote.",
-                  "Entered data from Polling Stations (TPS) by Province, Regency/City, Sub-district, and Village/Village and reviewed the inputted data to ensure there were no errors.",
-                  "Assisted in the submission of the Potential Voter List (DP4) from the Ministry of Home Affairs (KEMENDAGRI) to the Indonesian General Elections Commission (KPU) as material for compiling voter lists for the 2024 gubernatorial and vice-gubernatorial elections, regents and vice-regents, and mayors and vice-mayors.",
-                  "Assisted in the event process Conducting an evaluation meeting to update voter data for the 2024 Election and preparing for voter data updates for the 2024 elections for Governor and Deputy Governor, Regent and Deputy Regent, and Mayor and Deputy Mayor.",
-                  "Assisting in conducting a working meeting to discuss technical guidelines for updating voter data for the 2024 elections for Governor and Deputy Governor, Regent and Deputy Regent, and Mayor and Deputy Mayor, as well as synchronizing the DP4 (Voting Data Collection).",
-                  "Assisting with logistics for coordination meetings between the Data and Information Center (Pusdatin) and the Criminal Investigation Unit (Bareskrim Polri) regarding election data security and integrity.",
-                  "Assisting in conducting a working meeting to discussvoter data update simulations (Pantarlih) for the 2024 Simultaneous Regional Elections.",
-                  "Designing and developing a Laravel + MySQL recapitulation system prototype for PPK & PPS membership data, based on the SIAKBA workflow reference (Academic Project).",
-                  "Implementing role-based access control: National Admin, Provincial Admin, and District/City Operator (Academic Project).",
-                  "Generating recapitulation reports with graphic visualizations per district and sub-district level (Academic Project).",
-                ].map((h, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
-                    <div style={{ flexShrink: 0, marginTop: 6, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                    <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
-                  </div>
-                ))}
+              <div style={{ marginTop: "0.9rem", paddingBottom: "1.1rem", borderBottom: "1px solid var(--border)" }}>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Links</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                  {[
+                    { label: "GitHub (SIAKBA)", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
+                    { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
+                    { label: "Wireframe Figma", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
+                  ].map((l) => (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 7,
+                        padding: "7px 13px",
+                        borderRadius: 9,
+                        fontSize: "0.73rem",
+                        fontWeight: 500,
+                        backgroundColor: "var(--bg-subtle)",
+                        border: "1px solid var(--border)",
+                        color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        transition: "all 0.18s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border-strong)";
+                        el.style.color = "var(--accent)";
+                        el.style.backgroundColor = "var(--accent-glow)";
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border)";
+                        el.style.color = "var(--text-secondary)";
+                        el.style.backgroundColor = "var(--bg-subtle)";
+                      }}
+                    >
+                      <LinkIcon icon={l.icon} />
+                      {l.label}
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
+                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div style={{ marginTop: "0.9rem", paddingBottom: "1.1rem", borderBottom: "1px solid var(--border)" }}>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Links</p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                {[
-                  { label: "GitHub (SIAKBA)", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
-                  { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
-                  { label: "Wireframe Figma", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
-                ].map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+            {/* Carousel */}
+            <div style={{ padding: "1.1rem 1.1rem 1.4rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Documentation{imgCount > 0 ? ` — ${imgCount} Photos` : ""}</p>
+                {imgCount > 0 && !loading && (
+                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
+                    {carouselIdx + 1} / {imgCount}
+                  </span>
+                )}
+              </div>
+              {loading && (
+                <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem", flexDirection: "column", gap: 10 }}>
+                  <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                  Memuat foto...
+                </div>
+              )}
+              {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>Foto tidak ditemukan.</div>}
+              {!loading && imgCount > 0 && (
+                <div style={{ position: "relative" }}>
+                  <div
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
                     style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 7,
-                      padding: "7px 13px",
-                      borderRadius: 9,
-                      fontSize: "0.73rem",
-                      fontWeight: 500,
+                      position: "relative",
+                      width: "100%",
+                      height: "clamp(200px, 44vw, 380px)",
+                      borderRadius: "0.85rem",
+                      overflow: "hidden",
                       backgroundColor: "var(--bg-subtle)",
                       border: "1px solid var(--border)",
-                      color: "var(--text-secondary)",
-                      textDecoration: "none",
-                      transition: "all 0.18s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = "var(--border-strong)";
-                      el.style.color = "var(--accent)";
-                      el.style.backgroundColor = "var(--accent-glow)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = "var(--border)";
-                      el.style.color = "var(--text-secondary)";
-                      el.style.backgroundColor = "var(--bg-subtle)";
+                      userSelect: "none",
                     }}
                   >
-                    <LinkIcon icon={l.icon} />
-                    {l.label}
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
-                      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* ── Carousel ─────────────────────────────────────────────────── */}
-          <div style={{ padding: "1.1rem 1.4rem 1.4rem" }}>
-            {/* Label + counter */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Documentation{imgCount > 0 ? ` — ${imgCount} Photos` : ""}</p>
-              {imgCount > 0 && !loading && (
-                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
-                  {carouselIdx + 1} / {imgCount}
-                </span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={images[carouselIdx]}
+                      alt={`KPU documentation ${carouselIdx + 1}`}
+                      style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", opacity: fade ? 1 : 0, transition: "opacity 0.14s ease" }}
+                      loading="lazy"
+                    />
+                    {carouselIdx > 0 && (
+                      <button
+                        onClick={prev}
+                        style={{
+                          position: "absolute",
+                          left: 8,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 34,
+                          height: 34,
+                          borderRadius: "50%",
+                          backgroundColor: "rgba(0,0,0,0.45)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          color: "#fff",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backdropFilter: "blur(4px)",
+                        }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                          <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                      </button>
+                    )}
+                    {carouselIdx < imgCount - 1 && (
+                      <button
+                        onClick={next}
+                        style={{
+                          position: "absolute",
+                          right: 8,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 34,
+                          height: 34,
+                          borderRadius: "50%",
+                          backgroundColor: "rgba(0,0,0,0.45)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          color: "#fff",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backdropFilter: "blur(4px)",
+                        }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 12, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
+                  <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
+                </div>
               )}
             </div>
-
-            {/* Loading state */}
-            {loading && (
-              <div style={{ height: 320, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem", flexDirection: "column", gap: 10 }}>
-                <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                Memuat foto...
-              </div>
-            )}
-
-            {/* Empty state */}
-            {!loading && imgCount === 0 && <div style={{ height: 200, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>Foto tidak ditemukan di folder intern-image.</div>}
-
-            {/* Carousel frame */}
-            {!loading && imgCount > 0 && (
-              <div style={{ position: "relative" }}>
-                {/* Photo area */}
-                <div
-                  onTouchStart={onTouchStart}
-                  onTouchEnd={onTouchEnd}
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "clamp(220px, 46vw, 420px)",
-                    borderRadius: "0.85rem",
-                    overflow: "hidden",
-                    backgroundColor: "var(--bg-subtle)",
-                    border: "1px solid var(--border)",
-                    userSelect: "none",
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={images[carouselIdx]}
-                    alt={`KPU documentation ${carouselIdx + 1}`}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      display: "block",
-                      opacity: fade ? 1 : 0,
-                      transition: "opacity 0.14s ease",
-                    }}
-                    loading="lazy"
-                  />
-
-                  {/* Prev / Next overlay buttons */}
-                  {carouselIdx > 0 && (
-                    <button
-                      onClick={prev}
-                      style={{
-                        position: "absolute",
-                        left: 10,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        width: 36,
-                        height: 36,
-                        borderRadius: "50%",
-                        backgroundColor: "rgba(0,0,0,0.45)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        color: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "background-color 0.15s ease",
-                        backdropFilter: "blur(4px)",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.7)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.45)")}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                        <path d="M15 18l-6-6 6-6" />
-                      </svg>
-                    </button>
-                  )}
-                  {carouselIdx < imgCount - 1 && (
-                    <button
-                      onClick={next}
-                      style={{
-                        position: "absolute",
-                        right: 10,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        width: 36,
-                        height: 36,
-                        borderRadius: "50%",
-                        backgroundColor: "rgba(0,0,0,0.45)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        color: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "background-color 0.15s ease",
-                        backdropFilter: "blur(4px)",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.7)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.45)")}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                        <path d="M9 18l6-6-6-6" />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-
-                {/* Dots indicator */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 14, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
-
-                {/* Keyboard hint */}
-                <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
-              </div>
-            )}
           </div>
-        </div>
-      </div>
-      <style suppressHydrationWarning>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+        </>
+      )}
+    </ModalBackdrop>
   );
 }
 
@@ -1094,202 +1110,104 @@ function EventModal({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div
-      onClick={handleBackdrop}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,0.75)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1rem",
-        animation: "fadeIn 0.2s ease",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 640,
-          maxHeight: "90vh",
-          backgroundColor: "var(--bg-card)",
-          border: "1px solid var(--border-mid)",
-          borderRadius: "1.4rem",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.45)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          animation: "slideUp 0.28s cubic-bezier(0.34,1.1,0.64,1)",
-        }}
-      >
-        {/* ── Header ── */}
-        <div
-          style={{
-            flexShrink: 0,
-            padding: "1.15rem 1.5rem 1rem",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            gap: 12,
-            background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
-          }}
-        >
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-              <span
-                style={{
-                  fontSize: "0.58rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  padding: "3px 8px",
-                  borderRadius: 5,
-                  backgroundColor: "var(--accent-glow)",
-                  color: "var(--accent)",
-                  border: "1px solid var(--border-mid)",
-                }}
-              >
-                Event Crew
-              </span>
-              <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>13 – 17 March 2024 · Jakarta</span>
-            </div>
-            <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 3 }}>Tokopedia Ramadan Extra 2024 Flash Sale</h2>
-            <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions)</p>
-          </div>
-          <button
-            onClick={onClose}
-            style={{
-              flexShrink: 0,
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--bg-subtle)",
-              color: "var(--text-muted)",
-              cursor: "pointer",
-              fontSize: "1rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-strong)";
-              (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
-              (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)";
-            }}
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* ── Scrollable body ── */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "1.25rem 1.5rem" }}>
-          {/* Two-column: contract photo + quick facts */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.15fr", gap: 14, marginBottom: "1.25rem" }}>
-            {/* Contract photo */}
-            <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/1000357140.png" alt="Employment Contract — Tokopedia Ramadan Extra 2024" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 220 }} />
-              {/* Overlay label */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: "10px 12px",
-                  background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
-                }}
-              >
-                <p style={{ fontSize: "0.62rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.05em" }}>Employment Contract</p>
-                <p style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.6)" }}>Surat Perjanjian Kerja · Signed 10 Mar 2024</p>
-              </div>
-            </div>
-
-            {/* Quick facts */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {facts.map(({ label, value }) => (
-                <div
-                  key={label}
-                  style={{
-                    padding: "9px 12px",
-                    borderRadius: 9,
-                    backgroundColor: "var(--bg-subtle)",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
-                  <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Description */}
-          <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)", marginBottom: "1.1rem" }}>
-            Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
-            Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
-          </p>
-
-          {/* Responsibilities */}
-          <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Responsibilities</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: "1.2rem" }}>
-            {responsibilities.map((r, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                <div style={{ flexShrink: 0, marginTop: 7, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{r}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Contract verified badge */}
+    <ModalBackdrop onClose={onClose} maxWidth={640}>
+      {() => (
+        <>
+          {/* Header */}
           <div
             style={{
-              padding: "10px 14px",
-              borderRadius: 10,
-              backgroundColor: "var(--bg-subtle)",
-              border: "1px solid var(--border)",
+              flexShrink: 0,
+              padding: "0.9rem 1.1rem 0.8rem",
+              borderBottom: "1px solid var(--border)",
               display: "flex",
-              alignItems: "center",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
               gap: 10,
+              background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
             }}
           >
-            <div
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 8,
-                flexShrink: 0,
-                backgroundColor: "var(--accent-glow)",
-                border: "1px solid var(--border-mid)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <polyline points="9 15 11 17 15 13" />
-              </svg>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
+                <span
+                  style={{
+                    fontSize: "0.58rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    padding: "3px 8px",
+                    borderRadius: 5,
+                    backgroundColor: "var(--accent-glow)",
+                    color: "var(--accent)",
+                    border: "1px solid var(--border-mid)",
+                  }}
+                >
+                  Event Crew
+                </span>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>13 – 17 March 2024 · Jakarta</span>
+              </div>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Tokopedia Ramadan Extra 2024 Flash Sale</h2>
+              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions)</p>
             </div>
+            <CloseBtn onClose={onClose} />
+          </div>
+
+          {/* Scrollable body */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {/* Photo + facts — stacked mobile, 2-col on sm+ */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }} className="ev-grid">
+              <style suppressHydrationWarning>{`@media(min-width:500px){.ev-grid{grid-template-columns:1fr 1.15fr!important}}`}</style>
+              <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)", minHeight: 160 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/1000357140.png" alt="Employment Contract" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 160 }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 12px", background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}>
+                  <p style={{ fontSize: "0.62rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.05em" }}>Employment Contract</p>
+                  <p style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.6)" }}>Surat Perjanjian Kerja · Signed 10 Mar 2024</p>
+                </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                {facts.map(({ label, value }) => (
+                  <div key={label} style={{ padding: "8px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+                    <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
+                    <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+              Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
+              Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
+            </p>
+
             <div>
-              <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>Employment Contract Verified</p>
-              <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>Surat Perjanjian Kerja · PT Fasen Creative Quality · Signed 10 March 2024</p>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Responsibilities</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                {responsibilities.map((r, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                    <div style={{ flexShrink: 0, marginTop: 7, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                    <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{r}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ padding: "10px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, backgroundColor: "var(--accent-glow)", border: "1px solid var(--border-mid)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <polyline points="9 15 11 17 15 13" />
+                </svg>
+              </div>
+              <div>
+                <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>Employment Contract Verified</p>
+                <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>Surat Perjanjian Kerja · PT Fasen Creative Quality · Signed 10 March 2024</p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <style suppressHydrationWarning>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}`}</style>
-    </div>
+        </>
+      )}
+    </ModalBackdrop>
   );
 }
 
@@ -1301,16 +1219,8 @@ function EducationModal({ onClose }: { onClose: () => void }) {
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
+    return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
-
-  const handleBackdrop = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
-  };
 
   const coursework: { label: string; color: string; courses: string[] }[] = [
     { label: "Web Dev", color: "var(--accent)", courses: ["Web Programming", "Web-Based Information Systems", "UI/UX Design"] },
@@ -1327,236 +1237,167 @@ function EducationModal({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div
-      onClick={handleBackdrop}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,0.75)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1rem",
-        animation: "fadeIn 0.2s ease",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 660,
-          maxHeight: "90vh",
-          backgroundColor: "var(--bg-card)",
-          border: "1px solid var(--border-mid)",
-          borderRadius: "1.4rem",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.45)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          animation: "slideUp 0.28s cubic-bezier(0.34,1.1,0.64,1)",
-        }}
-      >
-        {/* ── Header ── */}
-        <div
-          style={{
-            flexShrink: 0,
-            padding: "1.15rem 1.5rem 1rem",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            gap: 12,
-            background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
-          }}
-        >
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-              <span
-                style={{
-                  fontSize: "0.58rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  padding: "3px 8px",
-                  borderRadius: 5,
-                  backgroundColor: "var(--accent-glow)",
-                  color: "var(--accent)",
-                  border: "1px solid var(--border-mid)",
-                }}
-              >
-                D-IV · Applied Bachelor
-              </span>
-              <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>2021 – 2025</span>
-            </div>
-            <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 3 }}>Informatics Engineering</h2>
-            <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Politeknik Negeri Lhokseumawe · Lhokseumawe, Aceh</p>
-          </div>
-          <button
-            onClick={onClose}
+    <ModalBackdrop onClose={onClose} maxWidth={660}>
+      {() => (
+        <>
+          {/* Header */}
+          <div
             style={{
               flexShrink: 0,
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--bg-subtle)",
-              color: "var(--text-muted)",
-              cursor: "pointer",
-              fontSize: "1rem",
+              padding: "0.9rem 1.1rem 0.8rem",
+              borderBottom: "1px solid var(--border)",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              const b = e.currentTarget as HTMLButtonElement;
-              b.style.borderColor = "var(--border-strong)";
-              b.style.color = "var(--accent)";
-            }}
-            onMouseLeave={(e) => {
-              const b = e.currentTarget as HTMLButtonElement;
-              b.style.borderColor = "var(--border)";
-              b.style.color = "var(--text-muted)";
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              gap: 10,
+              background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
             }}
           >
-            ✕
-          </button>
-        </div>
-
-        {/* ── Scrollable Body ── */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "1.25rem 1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-          {/* Quick facts strip */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
-            {[
-              { label: "Degree", value: "D-IV (Applied Bachelor)" },
-              { label: "Duration", value: "4 Years · 8 Semesters" },
-              { label: "GPA", value: "3.15 / 4.00" },
-              { label: "Status", value: "Graduated · 2025" },
-            ].map(({ label, value }) => (
-              <div key={label} style={{ padding: "9px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", textAlign: "center" }}>
-                <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 3 }}>{label}</p>
-                <p style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
+                <span
+                  style={{
+                    fontSize: "0.58rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    padding: "3px 8px",
+                    borderRadius: 5,
+                    backgroundColor: "var(--accent-glow)",
+                    color: "var(--accent)",
+                    border: "1px solid var(--border-mid)",
+                  }}
+                >
+                  D-IV · Applied Bachelor
+                </span>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>2021 – 2025</span>
               </div>
-            ))}
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Informatics Engineering</h2>
+              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Politeknik Negeri Lhokseumawe · Lhokseumawe, Aceh</p>
+            </div>
+            <CloseBtn onClose={onClose} />
           </div>
 
-          {/* GPA visual bar */}
-          <div style={{ padding: "12px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-              <span style={{ fontSize: "0.7rem", fontWeight: 500, color: "var(--text-secondary)" }}>Grade Point Average</span>
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)" }}>
-                3.15 <span style={{ fontWeight: 400, color: "var(--text-muted)", fontSize: "0.65rem" }}>/ 4.00</span>
-              </span>
+          {/* Scrollable body */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {/* Quick facts — 2×2 on mobile, 4-col on sm+ */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 8 }} className="edu-facts">
+              <style suppressHydrationWarning>{`@media(min-width:460px){.edu-facts{grid-template-columns:repeat(4,1fr)!important}}`}</style>
+              {[
+                { label: "Degree", value: "D-IV" },
+                { label: "Duration", value: "4 Yrs · 8 Sem" },
+                { label: "GPA", value: "3.15 / 4.00" },
+                { label: "Status", value: "Graduated '25" },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ padding: "9px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", textAlign: "center" }}>
+                  <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 3 }}>{label}</p>
+                  <p style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+                </div>
+              ))}
             </div>
-            <div style={{ height: 5, width: "100%", backgroundColor: "var(--border)", borderRadius: 99, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: "78.75%", borderRadius: 99, background: "linear-gradient(90deg, var(--accent) 0%, var(--accent) 80%, transparent 100%)", opacity: 0.7, transition: "width 1s ease" }} />
-            </div>
-            <p style={{ fontSize: "0.62rem", color: "var(--text-faint)", marginTop: 5 }}>D-IV (Diploma IV) is Indonesia's applied bachelor-level degree — equivalent to an S1 (B.Sc.) in practical engineering track.</p>
-          </div>
 
-          {/* Description + Coursework — 2 col */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 14 }}>
-            {/* Left: about */}
-            <div>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>About</p>
-              <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-                Completed a 4-year applied bachelor program in Informatics Engineering with a focus on web systems development, data processing, and software engineering. The program combines strong theoretical foundations with
-                industry-oriented practical projects and a mandatory industry internship in the final year.
-              </p>
-              {/* Thesis teaser */}
-              <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border-mid)" }}>
-                <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 4 }}>Final Project (Thesis)</p>
-                <p style={{ fontSize: "0.76rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 3 }}>Sentiment Analysis of the Attorney General's Office Performance</p>
-                <p style={{ fontSize: "0.67rem", color: "var(--text-muted)", lineHeight: 1.5 }}>TikTok comment scraping · ML classification · Laravel–Flask dashboard</p>
+            {/* GPA bar */}
+            <div style={{ padding: "12px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <span style={{ fontSize: "0.7rem", fontWeight: 500, color: "var(--text-secondary)" }}>Grade Point Average</span>
+                <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)" }}>
+                  3.15 <span style={{ fontWeight: 400, color: "var(--text-muted)", fontSize: "0.65rem" }}>/ 4.00</span>
+                </span>
               </div>
+              <div style={{ height: 5, width: "100%", backgroundColor: "var(--border)", borderRadius: 99, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: "78.75%", borderRadius: 99, background: "linear-gradient(90deg, var(--accent), var(--accent))", opacity: 0.7 }} />
+              </div>
+              <p style={{ fontSize: "0.62rem", color: "var(--text-faint)", marginTop: 5 }}>D-IV is Indonesia's applied bachelor-level degree — equivalent to S1 (B.Sc.) in the practical engineering track.</p>
             </div>
 
-            {/* Right: coursework */}
-            <div>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Relevant Coursework</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {coursework.map((cat) => (
-                  <div key={cat.label}>
-                    <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: cat.color, opacity: 0.7, marginBottom: 5 }}>{cat.label}</p>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                      {cat.courses.map((course) => (
-                        <span
-                          key={course}
-                          style={{
-                            fontSize: "0.67rem",
-                            padding: "2px 9px",
-                            borderRadius: 5,
-                            backgroundColor: "var(--bg-subtle)",
-                            border: "1px solid var(--border)",
-                            color: "var(--text-secondary)",
-                            lineHeight: 1.6,
-                          }}
-                        >
-                          {course}
-                        </span>
-                      ))}
+            {/* About + Coursework — stacked mobile, 2-col sm+ */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 14 }} className="edu-split">
+              <style suppressHydrationWarning>{`@media(min-width:500px){.edu-split{grid-template-columns:1fr 1.3fr!important}}`}</style>
+              <div>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>About</p>
+                <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+                  Completed a 4-year applied bachelor program in Informatics Engineering with a focus on web systems development, data processing, and software engineering. Combines strong theoretical foundations with industry-oriented
+                  practical projects and a mandatory industry internship.
+                </p>
+                <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border-mid)" }}>
+                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 4 }}>Final Project (Thesis)</p>
+                  <p style={{ fontSize: "0.76rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 3 }}>Sentiment Analysis of the Attorney General's Office Performance</p>
+                  <p style={{ fontSize: "0.67rem", color: "var(--text-muted)", lineHeight: 1.5 }}>TikTok comment scraping · ML classification · Laravel–Flask dashboard</p>
+                </div>
+              </div>
+              <div>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Relevant Coursework</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {coursework.map((cat) => (
+                    <div key={cat.label}>
+                      <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", color: cat.color, opacity: 0.7, marginBottom: 5 }}>{cat.label}</p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                        {cat.courses.map((course) => (
+                          <span key={course} style={{ fontSize: "0.67rem", padding: "2px 9px", borderRadius: 5, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                            {course}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Academic Documents — 1-col mobile, 3-col sm+ */}
+            <div>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Academic Documents</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8 }} className="edu-docs">
+                <style suppressHydrationWarning>{`@media(min-width:380px){.edu-docs{grid-template-columns:repeat(3,1fr)!important}}`}</style>
+                {documents.map((doc) => (
+                  <a
+                    key={doc.label}
+                    href={doc.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      gap: 7,
+                      padding: "14px 10px",
+                      borderRadius: 11,
+                      backgroundColor: "var(--bg-subtle)",
+                      border: "1px solid var(--border)",
+                      textDecoration: "none",
+                      transition: "all 0.18s ease",
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.borderColor = "var(--border-strong)";
+                      el.style.backgroundColor = "var(--bg-card)";
+                      el.style.boxShadow = "var(--shadow-md)";
+                      el.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.borderColor = "var(--border)";
+                      el.style.backgroundColor = "var(--bg-subtle)";
+                      el.style.boxShadow = "none";
+                      el.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <span style={{ fontSize: "1.4rem" }}>{doc.icon}</span>
+                    <div>
+                      <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 2 }}>{doc.label}</p>
+                      <p style={{ fontSize: "0.62rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{doc.desc}</p>
+                    </div>
+                    <span style={{ fontSize: "0.6rem", color: "var(--accent)", opacity: 0.7 }}>Open ↗</span>
+                  </a>
                 ))}
               </div>
             </div>
           </div>
-
-          {/* Academic Documents */}
-          <div>
-            <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Academic Documents</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-              {documents.map((doc) => (
-                <a
-                  key={doc.label}
-                  href={doc.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                    gap: 7,
-                    padding: "14px 10px",
-                    borderRadius: 11,
-                    backgroundColor: "var(--bg-subtle)",
-                    border: "1px solid var(--border)",
-                    textDecoration: "none",
-                    transition: "all 0.18s ease",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLAnchorElement;
-                    el.style.borderColor = "var(--border-strong)";
-                    el.style.backgroundColor = "var(--bg-card)";
-                    el.style.boxShadow = "var(--shadow-md)";
-                    el.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLAnchorElement;
-                    el.style.borderColor = "var(--border)";
-                    el.style.backgroundColor = "var(--bg-subtle)";
-                    el.style.boxShadow = "none";
-                    el.style.transform = "translateY(0)";
-                  }}
-                >
-                  <span style={{ fontSize: "1.4rem" }}>{doc.icon}</span>
-                  <div>
-                    <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 2 }}>{doc.label}</p>
-                    <p style={{ fontSize: "0.62rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{doc.desc}</p>
-                  </div>
-                  <span style={{ fontSize: "0.6rem", color: "var(--accent)", opacity: 0.7, display: "flex", alignItems: "center", gap: 3 }}>Open ↗</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      <style suppressHydrationWarning>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}} @keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}`}</style>
-    </div>
+        </>
+      )}
+    </ModalBackdrop>
   );
 }
 
@@ -1699,7 +1540,7 @@ export default function HomePage() {
       )}
 
       {/* ── PAGE SHELL ───────────────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 pb-32" style={{ display: "flex", flexDirection: "column", gap: "6.5rem" }}>
+      <div className="page-container max-w-5xl mx-auto px-5 sm:px-8 pb-32" style={{ display: "flex", flexDirection: "column", gap: "6.5rem" }}>
         {/* ══════════════════════════════════════════════════════════════════
             HERO
         ══════════════════════════════════════════════════════════════════ */}
@@ -1769,7 +1610,7 @@ export default function HomePage() {
                   Graduate of Informatics Engineering from Politeknik Negeri Lhokseumawe. I build structured, efficient web systems with hands-on experience in data processing, sentiment analysis, and full-stack development.
                 </p>
 
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: "1.4rem" }}>
+                <div className="hero-contact-chips" style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: "1.4rem" }}>
                   {[
                     { icon: "✉", label: "furqansykss@gmail.com", href: "mailto:furqansykss@gmail.com" },
                     { icon: "↗", label: "LinkedIn", href: "https://linkedin.com/in/fur-qan-6b1b87242" },
@@ -2121,7 +1962,7 @@ export default function HomePage() {
                   backgroundColor: "var(--bg-card)",
                   border: "1px solid var(--border)",
                   borderRadius: "1rem",
-                  padding: "1.7rem",
+                  padding: "1.4rem 1.5rem",
                   cursor: "pointer",
                   display: "flex",
                   flexDirection: "column",
@@ -2131,7 +1972,7 @@ export default function HomePage() {
                 }}
               >
                 <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <TagBadge>{projects[0].tag}</TagBadge>
                       <span style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>Featured</span>
@@ -2141,26 +1982,42 @@ export default function HomePage() {
                   <h3
                     style={{
                       fontFamily: "var(--font-dm-serif)",
-                      fontSize: "1.25rem",
+                      fontSize: "clamp(1rem, 3.5vw, 1.25rem)",
                       fontWeight: 400,
                       color: "var(--text-primary)",
                       marginBottom: 10,
-                      lineHeight: 1.2,
+                      lineHeight: 1.25,
                     }}
                   >
                     {projects[0].title}
                   </h3>
-                  <p style={{ fontSize: "0.84rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>{projects[0].desc}</p>
+                  <p style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>{projects[0].desc}</p>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18 }}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                    {projects[0].stack.map((s) => (
+                {/* Stack chips — max 5, then "+N more" chip */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                    {projects[0].stack.slice(0, 5).map((s) => (
                       <StackChip key={s}>{s}</StackChip>
                     ))}
+                    {projects[0].stack.length > 5 && (
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          padding: "3px 10px",
+                          borderRadius: 6,
+                          backgroundColor: "var(--accent-glow)",
+                          border: "1px solid var(--border-mid)",
+                          color: "var(--accent)",
+                          cursor: "pointer",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        +{projects[0].stack.length - 5} more
+                      </span>
+                    )}
                   </div>
-                  <div
-                    style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, marginLeft: 12, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
-                  >
+                  <div style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                       <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -2372,7 +2229,7 @@ export default function HomePage() {
                       onClick={i === 0 ? () => setShowInternModal(true) : i === 1 ? () => setShowEventModal(true) : undefined}
                       style={{
                         flex: 1,
-                        padding: "1.2rem 1.4rem",
+                        padding: "1.1rem 1.25rem",
                         borderRadius: "1rem",
                         backgroundColor: "var(--bg-card)",
                         border: "1px solid var(--border)",
@@ -2395,13 +2252,13 @@ export default function HomePage() {
                         el.style.transform = "translateY(0)";
                       }}
                     >
-                      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "5px 12px", marginBottom: 3 }}>
-                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)" }}>{e.role}</h3>
-                        <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{e.period}</span>
+                      {/* Top row: role title + View Details */}
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 2 }}>
+                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{e.role}</h3>
                         {(i === 0 || i === 1) && (
                           <span
                             style={{
-                              marginLeft: "auto",
+                              flexShrink: 0,
                               fontSize: "0.62rem",
                               fontWeight: 600,
                               letterSpacing: "0.08em",
@@ -2410,6 +2267,7 @@ export default function HomePage() {
                               display: "flex",
                               alignItems: "center",
                               gap: 4,
+                              paddingTop: 2,
                             }}
                           >
                             View Details
@@ -2419,6 +2277,8 @@ export default function HomePage() {
                           </span>
                         )}
                       </div>
+                      {/* Period — own line below role */}
+                      <span style={{ display: "block", fontSize: "0.67rem", color: "var(--text-muted)", marginBottom: 6 }}>{e.period}</span>
                       <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{e.company}</p>
                       <p style={{ fontSize: "0.82rem", lineHeight: 1.74, color: "var(--text-secondary)" }}>{e.desc}</p>
                     </div>
@@ -2473,8 +2333,8 @@ export default function HomePage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 3 }}>
-                      <h3 style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)" }}>Informatics Engineering — D-IV</h3>
-                      <span style={{ flexShrink: 0, fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.08em", color: "var(--accent)", opacity: 0.75, display: "flex", alignItems: "center", gap: 4 }}>
+                      <h3 style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35, minWidth: 0 }}>Informatics Engineering — D-IV</h3>
+                      <span style={{ flexShrink: 0, fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.08em", color: "var(--accent)", opacity: 0.75, display: "flex", alignItems: "center", gap: 4, paddingTop: 2 }}>
                         View Details
                         <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
                           <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -2505,9 +2365,9 @@ export default function HomePage() {
                   ].map((l, i) => (
                     <FadeUp key={l.lang} delay={i * 90}>
                       <div style={{ padding: "1.1rem 1.25rem", borderRadius: "1rem", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
                           <span style={{ fontSize: "0.87rem", fontWeight: 500, color: "var(--text-primary)" }}>{l.lang}</span>
-                          <span style={{ fontSize: "0.64rem", color: "var(--text-muted)" }}>{l.level}</span>
+                          <span style={{ fontSize: "0.64rem", color: "var(--text-muted)", textAlign: "right", lineHeight: 1.4 }}>{l.level}</span>
                         </div>
                         <div style={{ height: 3, width: "100%", backgroundColor: "var(--bg-subtle)", borderRadius: 99, overflow: "hidden" }}>
                           <div style={{ height: "100%", width: `${l.pct}%`, borderRadius: 99, backgroundColor: "var(--accent)", opacity: 0.5 }} />
@@ -2624,16 +2484,16 @@ export default function HomePage() {
                     {/* Content */}
                     <div style={{ minWidth: 0, flex: 1 }}>
                       {/* Name row */}
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
                         <p style={{ fontSize: "0.81rem", fontWeight: 500, lineHeight: 1.4, color: "var(--text-primary)" }}>{c.name}</p>
                         {/* External link arrow */}
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0, marginTop: 2, color: "var(--text-faint)", opacity: 0.5 }}>
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0, marginTop: 3, color: "var(--text-faint)", opacity: 0.5 }}>
                           <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
 
-                      {/* Meta row */}
-                      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "3px 8px" }}>
+                      {/* Line 1: issuer · score · year */}
+                      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "2px 6px", marginBottom: 6 }}>
                         <span style={{ fontSize: "0.67rem", color: "var(--text-muted)" }}>{c.issuer}</span>
                         {"score" in c && c.score && (
                           <>
@@ -2643,32 +2503,32 @@ export default function HomePage() {
                         )}
                         <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>·</span>
                         <span style={{ fontSize: "0.62rem", color: "var(--text-faint)" }}>{c.year}</span>
-                        {/* Category pill */}
+                      </div>
+
+                      {/* Line 2: category pill + verified badge */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                         <span
                           style={{
-                            marginLeft: "auto",
                             fontSize: "0.57rem",
                             fontWeight: 700,
                             letterSpacing: "0.07em",
                             textTransform: "uppercase",
-                            padding: "2px 7px",
+                            padding: "2px 8px",
                             borderRadius: 4,
                             backgroundColor: "var(--accent-glow)",
                             color: "var(--accent)",
                             border: "1px solid var(--border-mid)",
-                            opacity: 0.9,
                           }}
                         >
                           {c.category}
                         </span>
-                        {/* Verified badge for BNSP + TOEFL */}
                         {"badge" in c && c.badge && (
                           <span
                             style={{
                               fontSize: "0.57rem",
                               fontWeight: 700,
                               letterSpacing: "0.05em",
-                              padding: "2px 7px",
+                              padding: "2px 8px",
                               borderRadius: 4,
                               backgroundColor: "rgba(99,178,100,0.12)",
                               color: "rgb(80,160,80)",
@@ -2694,7 +2554,7 @@ export default function HomePage() {
         ══════════════════════════════════════════════════════════════════ */}
         <FadeUp>
           <section id="contact">
-            <div style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "5rem 2rem", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+            <div style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "clamp(2.5rem,8vw,5rem) clamp(1.25rem,5vw,2rem)", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
               <div style={{ position: "absolute", top: -80, right: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", opacity: 0.7, pointerEvents: "none" }} />
               <div style={{ position: "absolute", bottom: -60, left: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", opacity: 0.4, pointerEvents: "none" }} />
               {/* Corner marks */}
@@ -2728,7 +2588,7 @@ export default function HomePage() {
                 >
                   furqansykss@gmail.com
                 </a>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20, marginTop: 28, fontSize: "0.73rem", color: "var(--text-muted)" }}>
+                <div className="contact-socials" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20, marginTop: 28, fontSize: "0.73rem", color: "var(--text-muted)", flexWrap: "wrap" }}>
                   <a href="https://linkedin.com/in/fur-qan-6b1b87242" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>
                     LinkedIn ↗
                   </a>

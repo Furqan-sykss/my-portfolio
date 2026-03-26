@@ -1955,7 +1955,7 @@ export default function HomePage() {
             >
               {/* ── [0] FEATURED — col 1+2 ────────────────────────────────── */}
               <div
-                className="proj-card bento-reveal"
+                className="proj-card proj-card-featured bento-reveal"
                 onClick={() => setSelectedProject(projects[0])}
                 style={{
                   gridColumn: "1 / 3",
@@ -1971,15 +1971,16 @@ export default function HomePage() {
                   animationDelay: "0ms",
                 }}
               >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className="proj-card-main">
+                  <div className="proj-card-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
+                    <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <TagBadge>{projects[0].tag}</TagBadge>
-                      <span style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>Featured</span>
+                      <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>Featured</span>
                     </div>
-                    <span style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>{projects[0].period}</span>
+                    <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>{projects[0].period}</span>
                   </div>
                   <h3
+                    className="proj-card-title"
                     style={{
                       fontFamily: "var(--font-dm-serif)",
                       fontSize: "clamp(1rem, 3.5vw, 1.25rem)",
@@ -1991,11 +1992,11 @@ export default function HomePage() {
                   >
                     {projects[0].title}
                   </h3>
-                  <p style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>{projects[0].desc}</p>
+                  <p className="proj-card-desc" style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>{projects[0].desc}</p>
                 </div>
                 {/* Stack chips — max 5, then "+N more" chip */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
                     {projects[0].stack.slice(0, 5).map((s) => (
                       <StackChip key={s}>{s}</StackChip>
                     ))}
@@ -2017,7 +2018,7 @@ export default function HomePage() {
                       </span>
                     )}
                   </div>
-                  <div style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+                  <div className="proj-card-cta" style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                       <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -2042,15 +2043,15 @@ export default function HomePage() {
                   animationDelay: "65ms",
                 }}
               >
-                <div>
-                  <div style={{ marginBottom: 10 }}>
+                <div className="proj-card-main">
+                  <div className="proj-card-meta" style={{ marginBottom: 10 }}>
                     <TagBadge>{projects[1].tag}</TagBadge>
-                    <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[1].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[1].period}</p>
                   </div>
-                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.88rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>{projects[1].title}</h3>
-                  <p style={{ fontSize: "0.79rem", lineHeight: 1.72, color: "var(--text-secondary)" }}>{projects[1].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.88rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>{projects[1].title}</h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.79rem", lineHeight: 1.72, color: "var(--text-secondary)" }}>{projects[1].desc}</p>
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 14 }}>
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 14 }}>
                   {projects[1].stack.map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
@@ -2073,15 +2074,15 @@ export default function HomePage() {
                   animationDelay: "120ms",
                 }}
               >
-                <div>
-                  <div style={{ marginBottom: 9 }}>
+                <div className="proj-card-main">
+                  <div className="proj-card-meta" style={{ marginBottom: 9 }}>
                     <TagBadge>{projects[2].tag}</TagBadge>
-                    <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[2].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[2].period}</p>
                   </div>
-                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[2].title}</h3>
-                  <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[2].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[2].title}</h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[2].desc}</p>
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
                   {projects[2].stack.map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
@@ -2104,15 +2105,15 @@ export default function HomePage() {
                   animationDelay: "175ms",
                 }}
               >
-                <div>
-                  <div style={{ marginBottom: 9 }}>
+                <div className="proj-card-main">
+                  <div className="proj-card-meta" style={{ marginBottom: 9 }}>
                     <TagBadge>{projects[3].tag}</TagBadge>
-                    <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[3].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[3].period}</p>
                   </div>
-                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[3].title}</h3>
-                  <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[3].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[3].title}</h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[3].desc}</p>
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
                   {projects[3].stack.map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
@@ -2136,15 +2137,15 @@ export default function HomePage() {
                   animationDelay: "230ms",
                 }}
               >
-                <div>
-                  <div style={{ marginBottom: 9 }}>
+                <div className="proj-card-main">
+                  <div className="proj-card-meta" style={{ marginBottom: 9 }}>
                     <TagBadge>{projects[4].tag}</TagBadge>
-                    <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[4].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[4].period}</p>
                   </div>
-                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[4].title}</h3>
-                  <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[4].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[4].title}</h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[4].desc}</p>
                 </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
                   {projects[4].stack.map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
@@ -2169,19 +2170,19 @@ export default function HomePage() {
                 }}
               >
                 {/* Meta block */}
-                <div style={{ flexShrink: 0, paddingRight: "1.5rem" }}>
+                <div className="proj-card-meta" style={{ flexShrink: 0, paddingRight: "1.5rem" }}>
                   <TagBadge>{projects[5].tag}</TagBadge>
-                  <p style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 5 }}>{projects[5].period}</p>
+                  <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 5 }}>{projects[5].period}</p>
                 </div>
                 {/* Vertical separator */}
                 <div className="bento-sep" style={{ width: 1, alignSelf: "stretch", backgroundColor: "var(--border)", flexShrink: 0, marginRight: "1.5rem" }} />
                 {/* Title + desc */}
-                <div style={{ flex: 1, minWidth: 0, paddingRight: "1.5rem" }}>
-                  <h3 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.87rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>{projects[5].title}</h3>
-                  <p style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>{projects[5].desc}</p>
+                <div className="proj-card-main" style={{ flex: 1, minWidth: 0, paddingRight: "1.5rem" }}>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.87rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>{projects[5].title}</h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>{projects[5].desc}</p>
                 </div>
                 {/* Stack */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, flexShrink: 0, justifyContent: "flex-end" }}>
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flexShrink: 0, justifyContent: "flex-end" }}>
                   {projects[5].stack.map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}

@@ -442,7 +442,7 @@ function LinkIcon({ icon }: { icon: string }) {
 
 // ─── useSwipeToDismiss — drag handle swipe-down to close ──────────────────────
 
-function useSwipeToDismiss(onClose: () => void) {
+function useSwipeToDismiss(onDismiss: () => void) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
   const currentY = useRef(0);
@@ -471,15 +471,15 @@ function useSwipeToDismiss(onClose: () => void) {
     if (!sheet) return;
     if (currentY.current > 90) {
       // Dismiss — animate out
-      sheet.style.transition = "transform 0.28s cubic-bezier(0.4, 0, 1, 1)";
-      sheet.style.transform = `translateY(110%)`;
-      setTimeout(onClose, 260);
+      sheet.style.transition = "";
+      sheet.style.transform = "";
+      onDismiss();
     } else {
       // Snap back
       sheet.style.transition = "transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1)";
       sheet.style.transform = "translateY(0)";
     }
-  }, [onClose]);
+  }, [onDismiss]);
 
   return { sheetRef, onTouchStart, onTouchMove, onTouchEnd };
 }
@@ -523,58 +523,92 @@ function CloseBtn({ onClose }: { onClose: () => void }) {
 
 // ─── Shared modal wrapper — bottom-sheet on mobile, centered on desktop ────────
 
-function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => void; children: (drag: ReturnType<typeof useSwipeToDismiss>) => React.ReactNode; maxWidth?: number }) {
-  const drag = useSwipeToDismiss(onClose);
+function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => void; children: (controls: ReturnType<typeof useSwipeToDismiss> & { requestClose: () => void; isClosing: boolean }) => React.ReactNode; maxWidth?: number }) {
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isClosingRef = useRef(false);
+
+  const requestClose = useCallback(() => {
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+    setIsClosing(true);
+    closeTimerRef.current = setTimeout(() => onClose(), 280);
+  }, [onClose]);
+
+  const drag = useSwipeToDismiss(requestClose);
 
   const handleBackdrop = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
+    if (e.target === e.currentTarget) requestClose();
   };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") requestClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [requestClose]);
 
   return (
     <div
       onClick={handleBackdrop}
+      className={`modal-root${isClosing ? " is-closing" : ""}`}
       style={{
         position: "fixed",
         inset: 0,
         zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,0.7)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        background: "rgba(20, 18, 15, 0.58)",
+        backdropFilter: "blur(14px) saturate(0.9)",
+        WebkitBackdropFilter: "blur(14px) saturate(0.9)",
         display: "flex",
-        alignItems: "flex-end", // bottom-sheet default
+        alignItems: "flex-end",
         justifyContent: "center",
         padding: 0,
-        animation: "mbFadeIn 0.2s ease",
+        pointerEvents: isClosing ? "none" : "auto",
       }}
-      // On sm+ screens: center vertically via CSS class
-      className="modal-root"
     >
       <style suppressHydrationWarning>{`
         @keyframes mbFadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes mbSheetUp { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes mbSlideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes mbFadeOut { from{opacity:1} to{opacity:0} }
+        @keyframes mbSheetUp { from{opacity:0;transform:translate3d(0,56px,0) scale(0.985)} to{opacity:1;transform:translate3d(0,0,0) scale(1)} }
+        @keyframes mbSheetDown { from{opacity:1;transform:translate3d(0,0,0) scale(1)} to{opacity:0;transform:translate3d(0,56px,0) scale(0.985)} }
         @keyframes spin { to{transform:rotate(360deg)} }
-        .modal-root { }
-        @media(min-width:600px){
-          .modal-root { align-items:center; padding:1rem; }
-          .modal-sheet-inner { border-radius:1.35rem !important; animation:mbSlideUp 0.26s cubic-bezier(0.34,1.1,0.64,1) !important; }
+        .modal-root { animation:mbFadeIn 0.22s ease forwards; }
+        .modal-root.is-closing { animation:mbFadeOut 0.24s ease forwards; }
+        .modal-sheet-inner {
+          animation:mbSheetUp 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+          background-image: linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0) 12%);
+        }
+        .modal-sheet-inner.is-closing { animation:mbSheetDown 0.28s cubic-bezier(0.4,0,0.2,1) forwards; }
+        @media(min-width:768px){
+          .modal-root {
+            align-items:center;
+            padding:clamp(24px, 4vw, 42px);
+          }
+          .modal-sheet-inner {
+            width:min(860px, 100%) !important;
+            max-width:100% !important;
+            max-height:min(84dvh, 860px) !important;
+            border-radius:1.7rem !important;
+            border-color:var(--border) !important;
+            box-shadow: 0 34px 90px rgba(0, 0, 0, 0.24), 0 12px 28px rgba(0, 0, 0, 0.12) !important;
+          }
           .modal-drag-handle { display:none !important; }
         }
       `}</style>
 
       <div
         ref={drag.sheetRef}
-        className="modal-sheet-inner"
+        className={`modal-sheet-inner${isClosing ? " is-closing" : ""}`}
         style={{
           width: "100%",
-          maxWidth,
+          maxWidth: "100%",
           maxHeight: "92dvh",
           backgroundColor: "var(--bg-card)",
           border: "1px solid var(--border-mid)",
@@ -583,7 +617,6 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          animation: "mbSheetUp 0.3s cubic-bezier(0.32,1.1,0.64,1)",
           willChange: "transform",
         }}
       >
@@ -603,10 +636,10 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
             touchAction: "none",
           }}
         >
-          <div style={{ width: 36, height: 4, borderRadius: 99, backgroundColor: "var(--border-mid)" }} />
+          <div style={{ width: 36, height: 4, borderRadius: 99, backgroundColor: "var(--border-mid)", opacity: 0.9 }} />
         </div>
 
-        {children(drag)}
+        {children({ ...drag, requestClose, isClosing })}
       </div>
     </div>
   );
@@ -615,39 +648,12 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
 // ─── ProjectModal ──────────────────────────────────────────────────────────────
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
-  // Close on Escape
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [onClose]);
-
-  // Close on backdrop click
-  const handleBackdrop = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
-  };
-
-  // Close on Escape
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
   return (
     <ModalBackdrop onClose={onClose} maxWidth={560}>
-      {() => (
+      {({ requestClose }) => (
         <>
           {/* Header */}
-          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
                 <TagBadge>{project.tag}</TagBadge>
@@ -655,11 +661,11 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               </div>
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{project.title}</h2>
             </div>
-            <CloseBtn onClose={onClose} />
+            <CloseBtn onClose={requestClose} />
           </div>
 
           {/* Body */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
             <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{project.desc}</p>
 
             {project.detail?.highlights && (
@@ -764,20 +770,14 @@ function InternModal({ onClose }: { onClose: () => void }) {
   // Keyboard: Escape = close, ← → = navigate
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
       if (e.key === "ArrowRight") goTo((prev: number) => Math.min(prev + 1, imgCount - 1));
       if (e.key === "ArrowLeft") goTo((prev: number) => Math.max(prev - 1, 0));
     };
     document.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
     };
-  }, [onClose, imgCount]);
+  }, [imgCount]);
 
   // Smooth fade transition on photo change
   const goTo = (updater: number | ((prev: number) => number)) => {
@@ -805,10 +805,6 @@ function InternModal({ onClose }: { onClose: () => void }) {
       if (diff > 0) next();
       else prev();
     }
-  };
-
-  const handleBackdrop = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
   };
 
   // Dots: max 7 visible, with ellipsis-style scaling
@@ -870,10 +866,10 @@ function InternModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ModalBackdrop onClose={onClose} maxWidth={700}>
-      {({ onTouchStart: swipeTouchStart, onTouchMove: swipeTouchMove, onTouchEnd: swipeTouchEnd }) => (
+      {({ onTouchStart: swipeTouchStart, onTouchMove: swipeTouchMove, onTouchEnd: swipeTouchEnd, requestClose }) => (
         <>
           {/* Header */}
-          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                 <TagBadge>Internship</TagBadge>
@@ -882,11 +878,11 @@ function InternModal({ onClose }: { onClose: () => void }) {
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>Secretariat General of KPU RI</h2>
               <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Jakarta, Indonesia</p>
             </div>
-            <CloseBtn onClose={onClose} />
+            <CloseBtn onClose={requestClose} />
           </div>
 
           {/* Scrollable body */}
-          <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
             <div style={{ padding: "1rem 1.1rem 0" }}>
               <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
                 Completed a 7-month industry internship at the Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI), Center for Data &amp; Information Technology (Pusdatin), Jakarta. Contributed
@@ -1076,22 +1072,6 @@ function InternModal({ onClose }: { onClose: () => void }) {
 // ─── EventModal — Tokopedia Event Crew ────────────────────────────────────────
 
 function EventModal({ onClose }: { onClose: () => void }) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  const handleBackdrop = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose();
-  };
-
   const facts = [
     { label: "Company", value: "PT Fasen Creative Quality" },
     { label: "Client", value: "Tokopedia (Dyandra Event Solutions)" },
@@ -1111,7 +1091,7 @@ function EventModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ModalBackdrop onClose={onClose} maxWidth={640}>
-      {() => (
+      {({ requestClose }) => (
         <>
           {/* Header */}
           <div
@@ -1123,7 +1103,7 @@ function EventModal({ onClose }: { onClose: () => void }) {
               justifyContent: "space-between",
               alignItems: "flex-start",
               gap: 10,
-              background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
+              background: "var(--modal-header-bg)",
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -1148,14 +1128,21 @@ function EventModal({ onClose }: { onClose: () => void }) {
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Tokopedia Ramadan Extra 2024 Flash Sale</h2>
               <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions)</p>
             </div>
-            <CloseBtn onClose={onClose} />
+            <CloseBtn onClose={requestClose} />
           </div>
 
           {/* Scrollable body */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
             {/* Photo + facts — stacked mobile, 2-col on sm+ */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }} className="ev-grid">
-              <style suppressHydrationWarning>{`@media(min-width:500px){.ev-grid{grid-template-columns:1fr 1.15fr!important}}`}</style>
+              <style suppressHydrationWarning>{`
+                @media(min-width:500px){.ev-grid{grid-template-columns:1fr 1.15fr!important}}
+                @media(min-width:900px){.ev-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr)!important; align-items:start}}
+                @media(min-width:900px){.ev-desktop-copy{display:block!important}}
+                @media(max-width:899px){.ev-desktop-copy{display:none!important}}
+                @media(min-width:900px){.ev-mobile-copy{display:none!important}}
+                @media(max-width:899px){.ev-mobile-copy{display:block!important}}
+              `}</style>
               <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)", minHeight: 160 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/1000357140.png" alt="Employment Contract" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 160 }} />
@@ -1171,10 +1158,24 @@ function EventModal({ onClose }: { onClose: () => void }) {
                     <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
                   </div>
                 ))}
+                <div
+                  className="ev-desktop-copy"
+                  style={{
+                    display: "none",
+                    marginTop: 10,
+                    paddingTop: 14,
+                    borderTop: "1px solid var(--border)",
+                  }}
+                >
+                  <p style={{ fontSize: "0.90rem", lineHeight: 1.9, color: "var(--text-secondary)", textWrap: "pretty" }}>
+                    Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong>, a large-scale promotional event organized by PT Fasen Creative
+                    Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across five consecutive days at the Jakarta venue.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+            <p className="ev-mobile-copy" style={{ display: "block", fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
               Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
               Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
             </p>
@@ -1214,14 +1215,6 @@ function EventModal({ onClose }: { onClose: () => void }) {
 // ─── EducationModal ────────────────────────────────────────────────────────────
 
 function EducationModal({ onClose }: { onClose: () => void }) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [onClose]);
-
   const coursework: { label: string; color: string; courses: string[] }[] = [
     { label: "Web Dev", color: "var(--accent)", courses: ["Web Programming", "Web-Based Information Systems", "UI/UX Design"] },
     { label: "Data", color: "#7c9e87", courses: ["Database Systems", "Data Mining", "Data Structures & Algorithms"] },
@@ -1238,7 +1231,7 @@ function EducationModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ModalBackdrop onClose={onClose} maxWidth={660}>
-      {() => (
+      {({ requestClose }) => (
         <>
           {/* Header */}
           <div
@@ -1250,7 +1243,7 @@ function EducationModal({ onClose }: { onClose: () => void }) {
               justifyContent: "space-between",
               alignItems: "flex-start",
               gap: 10,
-              background: "linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%)",
+              background: "var(--modal-header-bg)",
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -1275,11 +1268,11 @@ function EducationModal({ onClose }: { onClose: () => void }) {
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Informatics Engineering</h2>
               <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Politeknik Negeri Lhokseumawe · Lhokseumawe, Aceh</p>
             </div>
-            <CloseBtn onClose={onClose} />
+            <CloseBtn onClose={requestClose} />
           </div>
 
           {/* Scrollable body */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
             {/* Quick facts — 2×2 on mobile, 4-col on sm+ */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 8 }} className="edu-facts">
               <style suppressHydrationWarning>{`@media(min-width:460px){.edu-facts{grid-template-columns:repeat(4,1fr)!important}}`}</style>
@@ -1764,6 +1757,7 @@ export default function HomePage() {
 
           {/* Scroll hint */}
           <div
+            className="hero-scroll-hint"
             style={{
               position: "absolute",
               bottom: 28,
@@ -1778,8 +1772,10 @@ export default function HomePage() {
               pointerEvents: "none",
             }}
           >
-            <span style={{ fontSize: "0.51rem", fontWeight: 600, letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--text-faint)" }}>scroll</span>
-            <div style={{ width: 1, height: 30, background: "linear-gradient(to bottom, var(--border-mid), transparent)" }} />
+            <span className="hero-scroll-label" style={{ fontSize: "0.51rem", fontWeight: 600, letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--text-faint)" }}>
+              scroll
+            </span>
+            <div className="hero-scroll-line" style={{ width: 1, height: 30, background: "linear-gradient(to bottom, var(--border-mid), transparent)" }} />
           </div>
         </section>
 
@@ -1975,9 +1971,13 @@ export default function HomePage() {
                   <div className="proj-card-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
                     <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <TagBadge>{projects[0].tag}</TagBadge>
-                      <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>Featured</span>
+                      <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>
+                        Featured
+                      </span>
                     </div>
-                    <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>{projects[0].period}</span>
+                    <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
+                      {projects[0].period}
+                    </span>
                   </div>
                   <h3
                     className="proj-card-title"
@@ -1992,7 +1992,9 @@ export default function HomePage() {
                   >
                     {projects[0].title}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>{projects[0].desc}</p>
+                  <p className="proj-card-desc" style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>
+                    {projects[0].desc}
+                  </p>
                 </div>
                 {/* Stack chips — max 5, then "+N more" chip */}
                 <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
@@ -2018,7 +2020,10 @@ export default function HomePage() {
                       </span>
                     )}
                   </div>
-                  <div className="proj-card-cta" style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+                  <div
+                    className="proj-card-cta"
+                    style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
+                  >
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                       <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -2046,10 +2051,16 @@ export default function HomePage() {
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 10 }}>
                     <TagBadge>{projects[1].tag}</TagBadge>
-                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[1].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
+                      {projects[1].period}
+                    </p>
                   </div>
-                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.88rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>{projects[1].title}</h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.79rem", lineHeight: 1.72, color: "var(--text-secondary)" }}>{projects[1].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.88rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>
+                    {projects[1].title}
+                  </h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.79rem", lineHeight: 1.72, color: "var(--text-secondary)" }}>
+                    {projects[1].desc}
+                  </p>
                 </div>
                 <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 14 }}>
                   {projects[1].stack.map((s) => (
@@ -2077,10 +2088,16 @@ export default function HomePage() {
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
                     <TagBadge>{projects[2].tag}</TagBadge>
-                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[2].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
+                      {projects[2].period}
+                    </p>
                   </div>
-                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[2].title}</h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[2].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
+                    {projects[2].title}
+                  </h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>
+                    {projects[2].desc}
+                  </p>
                 </div>
                 <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
                   {projects[2].stack.map((s) => (
@@ -2108,10 +2125,16 @@ export default function HomePage() {
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
                     <TagBadge>{projects[3].tag}</TagBadge>
-                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[3].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
+                      {projects[3].period}
+                    </p>
                   </div>
-                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[3].title}</h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[3].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
+                    {projects[3].title}
+                  </h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>
+                    {projects[3].desc}
+                  </p>
                 </div>
                 <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
                   {projects[3].stack.map((s) => (
@@ -2140,10 +2163,16 @@ export default function HomePage() {
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
                     <TagBadge>{projects[4].tag}</TagBadge>
-                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>{projects[4].period}</p>
+                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
+                      {projects[4].period}
+                    </p>
                   </div>
-                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>{projects[4].title}</h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{projects[4].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
+                    {projects[4].title}
+                  </h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>
+                    {projects[4].desc}
+                  </p>
                 </div>
                 <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
                   {projects[4].stack.map((s) => (
@@ -2172,14 +2201,20 @@ export default function HomePage() {
                 {/* Meta block */}
                 <div className="proj-card-meta" style={{ flexShrink: 0, paddingRight: "1.5rem" }}>
                   <TagBadge>{projects[5].tag}</TagBadge>
-                  <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 5 }}>{projects[5].period}</p>
+                  <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 5 }}>
+                    {projects[5].period}
+                  </p>
                 </div>
                 {/* Vertical separator */}
                 <div className="bento-sep" style={{ width: 1, alignSelf: "stretch", backgroundColor: "var(--border)", flexShrink: 0, marginRight: "1.5rem" }} />
                 {/* Title + desc */}
                 <div className="proj-card-main" style={{ flex: 1, minWidth: 0, paddingRight: "1.5rem" }}>
-                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.87rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>{projects[5].title}</h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>{projects[5].desc}</p>
+                  <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.87rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>
+                    {projects[5].title}
+                  </h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>
+                    {projects[5].desc}
+                  </p>
                 </div>
                 {/* Stack */}
                 <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flexShrink: 0, justifyContent: "flex-end" }}>

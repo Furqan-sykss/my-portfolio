@@ -583,7 +583,7 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
         .modal-root.is-closing { animation:mbFadeOut 0.24s ease forwards; }
         .modal-sheet-inner {
           animation:mbSheetUp 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
-          background-image: linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0) 12%);
+          background-image: var(--modal-surface-overlay);
         }
         .modal-sheet-inner.is-closing { animation:mbSheetDown 0.28s cubic-bezier(0.4,0,0.2,1) forwards; }
         @media(min-width:768px){
@@ -610,7 +610,7 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
           width: "100%",
           maxWidth: "100%",
           maxHeight: "92dvh",
-          backgroundColor: "var(--bg-card)",
+          background: "var(--modal-surface-bg)",
           border: "1px solid var(--border-mid)",
           borderRadius: "1.25rem 1.25rem 0 0",
           boxShadow: "0 -4px 40px rgba(0,0,0,0.4)",

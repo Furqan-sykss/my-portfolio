@@ -453,41 +453,110 @@ function useSwipeToDismiss(onDismiss: () => void) {
   const startY = useRef(0);
   const currentY = useRef(0);
   const isDragging = useRef(false);
+  const velocityY = useRef(0);
+  const lastY = useRef(0);
+  const lastEventTime = useRef(0);
 
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    startY.current = e.touches[0].clientY;
-    currentY.current = 0;
-    isDragging.current = true;
+  useEffect(() => {
     const sheet = sheetRef.current;
-    if (sheet) sheet.style.transition = "none";
-  }, []);
-
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging.current) return;
-    const dy = e.touches[0].clientY - startY.current;
-    if (dy < 0) return; // don't allow dragging up
-    currentY.current = dy;
-    const sheet = sheetRef.current;
-    if (sheet) sheet.style.transform = `translateY(${dy}px)`;
-  }, []);
-
-  const onTouchEnd = useCallback(() => {
-    isDragging.current = false;
-    const sheet = sheetRef.current;
-    if (!sheet) return;
-    if (currentY.current > 90) {
-      // Dismiss — animate out
-      sheet.style.transition = "";
-      sheet.style.transform = "";
-      onDismiss();
-    } else {
-      // Snap back
-      sheet.style.transition = "transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1)";
-      sheet.style.transform = "translateY(0)";
+    if (!sheet) {
+      console.log("[useSwipeToDismiss] sheet ref not available");
+      return;
     }
+
+    console.log("[useSwipeToDismiss] attaching listeners to:", sheet);
+
+    const handleTouchStart = (e: TouchEvent) => {
+      console.log("[Touch] START", { clientY: e.touches[0].clientY });
+      startY.current = e.touches[0].clientY;
+      lastY.current = e.touches[0].clientY;
+      currentY.current = 0;
+      velocityY.current = 0;
+      lastEventTime.current = Date.now();
+      isDragging.current = true;
+      sheet.style.transition = "none";
+      sheet.style.animation = "none"; // Disable CSS animation during drag
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging.current) {
+        console.log("[Touch] MOVE ignored - not dragging");
+        return;
+      }
+
+      const dy = e.touches[0].clientY - startY.current;
+      console.log("[Touch] MOVE", { dy, isDragging: isDragging.current, currentY: currentY.current });
+
+      // If dragging upward, stop
+      if (dy < 0) {
+        isDragging.current = false;
+        console.log("[Touch] cancelled - dragging up");
+        return;
+      }
+
+      // Prevent default scroll behavior
+      e.preventDefault();
+
+      // Calculate velocity
+      const timeDelta = Date.now() - lastEventTime.current;
+      if (timeDelta > 0) {
+        velocityY.current = (e.touches[0].clientY - lastY.current) / timeDelta;
+      }
+
+      lastY.current = e.touches[0].clientY;
+      lastEventTime.current = Date.now();
+      currentY.current = dy;
+
+      // Move modal with finger - using both transform and will-change
+      sheet.style.transform = `translateY(${dy}px)`;
+      console.log("[Touch] TRANSFORM SET", { dy, transform: sheet.style.transform, computedTransform: getComputedStyle(sheet).transform });
+    };
+
+    const handleTouchEnd = () => {
+      console.log("[Touch] END", { currentY: currentY.current, isDragging: isDragging.current });
+      isDragging.current = false;
+
+      const sheetHeight = sheet.offsetHeight;
+      const dismissThreshold = sheetHeight * 0.7;
+      const hasHighVelocity = Math.abs(velocityY.current) > 0.8;
+
+      console.log("[Touch] END ANALYSIS", { currentY: currentY.current, sheetHeight, dismissThreshold, hasHighVelocity, velocity: velocityY.current });
+
+      if (currentY.current > dismissThreshold || (currentY.current > 100 && hasHighVelocity)) {
+        // Dismiss
+        console.log("[Touch] DISMISSING");
+        sheet.style.transition = "transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        sheet.style.animation = "none"; // Disable animation
+        sheet.style.transform = `translateY(${sheetHeight}px)`;
+
+        setTimeout(() => {
+          onDismiss();
+        }, 420);
+      } else {
+        // Snap back
+        console.log("[Touch] SNAPPING BACK");
+        sheet.style.transition = "transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1)";
+        sheet.style.animation = "none"; // Disable animation
+        sheet.style.transform = "translateY(0)";
+      }
+    };
+
+    // Add native touch event listeners with { passive: false } to allow preventDefault
+    sheet.addEventListener("touchstart", handleTouchStart, { passive: true });
+    sheet.addEventListener("touchmove", handleTouchMove, { passive: false });
+    sheet.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    console.log("[useSwipeToDismiss] listeners attached successfully");
+
+    return () => {
+      sheet.removeEventListener("touchstart", handleTouchStart);
+      sheet.removeEventListener("touchmove", handleTouchMove);
+      sheet.removeEventListener("touchend", handleTouchEnd);
+      console.log("[useSwipeToDismiss] listeners removed");
+    };
   }, [onDismiss]);
 
-  return { sheetRef, onTouchStart, onTouchMove, onTouchEnd };
+  return { sheetRef, onTouchStart: () => {}, onTouchMove: () => {}, onTouchEnd: () => {} };
 }
 
 // ─── Shared close button ───────────────────────────────────────────────────────
@@ -590,6 +659,7 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
         .modal-sheet-inner {
           animation:mbSheetUp 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
           background-image: var(--modal-surface-overlay);
+          touch-action: none;
         }
         .modal-sheet-inner.is-closing { animation:mbSheetDown 0.28s cubic-bezier(0.4,0,0.2,1) forwards; }
         @media(min-width:768px){
@@ -624,14 +694,12 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
           flexDirection: "column",
           overflow: "hidden",
           willChange: "transform",
+          touchAction: "none",
         }}
       >
         {/* Drag handle */}
         <div
           className="modal-drag-handle"
-          onTouchStart={drag.onTouchStart}
-          onTouchMove={drag.onTouchMove}
-          onTouchEnd={drag.onTouchEnd}
           style={{
             flexShrink: 0,
             display: "flex",
@@ -639,7 +707,6 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
             justifyContent: "center",
             padding: "10px 0 4px",
             cursor: "grab",
-            touchAction: "none",
           }}
         >
           <div style={{ width: 36, height: 4, borderRadius: 99, backgroundColor: "var(--border-mid)", opacity: 0.9 }} />
@@ -1078,6 +1145,116 @@ function InternModal({ onClose }: { onClose: () => void }) {
 // ─── EventModal — Tokopedia Event Crew ────────────────────────────────────────
 
 function EventModal({ onClose }: { onClose: () => void }) {
+  // ── Carousel state (mirrors InternModal) ──
+  const [carouselIdx, setCarouselIdx] = useState(0);
+  const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fade, setFade] = useState(true);
+  const touchStartX = useRef<number>(0);
+  const imgCount = images.length;
+
+  // Fetch & shuffle on mount
+  useEffect(() => {
+    fetch("/api/eventcrew-image")
+      .then((r) => r.json())
+      .then((data: { images: string[] }) => {
+        setImages([...data.images].sort(() => Math.random() - 0.5));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  // Keyboard: ← → navigate
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") goTo((prev: number) => Math.min(prev + 1, imgCount - 1));
+      if (e.key === "ArrowLeft") goTo((prev: number) => Math.max(prev - 1, 0));
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [imgCount]);
+
+  // Smooth fade on photo change
+  const goTo = (updater: number | ((prev: number) => number)) => {
+    setFade(false);
+    setTimeout(() => {
+      setCarouselIdx(typeof updater === "function" ? updater : () => updater);
+      setFade(true);
+    }, 140);
+  };
+  const prev = () => {
+    if (carouselIdx > 0) goTo(carouselIdx - 1);
+  };
+  const next = () => {
+    if (carouselIdx < imgCount - 1) goTo(carouselIdx + 1);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) next();
+      else prev();
+    }
+  };
+
+  // Smart dots — same as InternModal
+  const renderDots = () => {
+    if (imgCount <= 7) {
+      return Array.from({ length: imgCount }).map((_, i) => (
+        <button
+          key={i}
+          onClick={() => goTo(i)}
+          style={{
+            width: i === carouselIdx ? 20 : 6,
+            height: 6,
+            borderRadius: 999,
+            border: "none",
+            padding: 0,
+            cursor: "pointer",
+            backgroundColor: i === carouselIdx ? "var(--accent)" : "var(--border-mid)",
+            transition: "all 0.25s ease",
+            flexShrink: 0,
+          }}
+        />
+      ));
+    }
+    const visible = new Set([0, imgCount - 1, carouselIdx, carouselIdx - 1, carouselIdx + 1].filter((i) => i >= 0 && i < imgCount));
+    return Array.from({ length: imgCount })
+      .map((_, i) => {
+        if (!visible.has(i)) {
+          const prevVisible = [...visible].filter((v) => v < i).length > 0 && [...visible].every((v) => v !== i - 1);
+          if (prevVisible)
+            return (
+              <span key={i} style={{ fontSize: "0.5rem", color: "var(--text-muted)", lineHeight: 1 }}>
+                •
+              </span>
+            );
+          return null;
+        }
+        return (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            style={{
+              width: i === carouselIdx ? 20 : 6,
+              height: 6,
+              borderRadius: 999,
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              backgroundColor: i === carouselIdx ? "var(--accent)" : "var(--border-mid)",
+              transition: "all 0.25s ease",
+              flexShrink: 0,
+            }}
+          />
+        );
+      })
+      .filter(Boolean);
+  };
+
   const facts = [
     { label: "Company", value: "PT Fasen Creative Quality" },
     { label: "Client", value: "Tokopedia (Dyandra Event Solutions)" },
@@ -1096,22 +1273,11 @@ function EventModal({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <ModalBackdrop onClose={onClose} maxWidth={640}>
+    <ModalBackdrop onClose={onClose} maxWidth={660}>
       {({ requestClose }) => (
         <>
           {/* Header */}
-          <div
-            style={{
-              flexShrink: 0,
-              padding: "0.9rem 1.1rem 0.8rem",
-              borderBottom: "1px solid var(--border)",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              gap: 10,
-              background: "var(--modal-header-bg)",
-            }}
-          >
+          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
                 <span
@@ -1138,78 +1304,217 @@ function EventModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* Scrollable body */}
-          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {/* Photo + facts — stacked mobile, 2-col on sm+ */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }} className="ev-grid">
-              <style suppressHydrationWarning>{`
-                @media(min-width:500px){.ev-grid{grid-template-columns:1fr 1.15fr!important}}
-                @media(min-width:900px){.ev-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr)!important; align-items:start}}
-                @media(min-width:900px){.ev-desktop-copy{display:block!important}}
-                @media(max-width:899px){.ev-desktop-copy{display:none!important}}
-                @media(min-width:900px){.ev-mobile-copy{display:none!important}}
-                @media(max-width:899px){.ev-mobile-copy{display:block!important}}
-              `}</style>
-              <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)", minHeight: 160 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/1000357140.png" alt="Employment Contract" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 160 }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 12px", background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}>
-                  <p style={{ fontSize: "0.62rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.05em" }}>Employment Contract</p>
-                  <p style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.6)" }}>Surat Perjanjian Kerja · Signed 10 Mar 2024</p>
+          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+            <div style={{ padding: "1rem 1.1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
+              {/* Photo + facts */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }} className="ev-grid">
+                <style suppressHydrationWarning>{`
+                  @media(min-width:500px){.ev-grid{grid-template-columns:1fr 1.15fr!important}}
+                  @media(min-width:900px){.ev-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr)!important;align-items:start}}
+                  @media(min-width:900px){.ev-desktop-copy{display:block!important}}
+                  @media(max-width:899px){.ev-desktop-copy{display:none!important}}
+                  @media(min-width:900px){.ev-mobile-copy{display:none!important}}
+                  @media(max-width:899px){.ev-mobile-copy{display:block!important}}
+                `}</style>
+                <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)", minHeight: 160 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/1000357140.png" alt="Employment Contract" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 160 }} />
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 12px", background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}>
+                    <p style={{ fontSize: "0.62rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.05em" }}>Employment Contract</p>
+                    <p style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.6)" }}>Surat Perjanjian Kerja · Signed 10 Mar 2024</p>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {facts.map(({ label, value }) => (
+                    <div key={label} style={{ padding: "8px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+                      <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
+                      <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+                    </div>
+                  ))}
+                  <div className="ev-desktop-copy" style={{ display: "none", marginTop: 10, paddingTop: 14, borderTop: "1px solid var(--border)" }}>
+                    <p style={{ fontSize: "0.84rem", lineHeight: 1.9, color: "var(--text-secondary)", textWrap: "pretty" as "pretty" }}>
+                      Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong>, a large-scale promotional event organized by PT Fasen
+                      Creative Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across five consecutive days at the Jakarta venue.
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                {facts.map(({ label, value }) => (
-                  <div key={label} style={{ padding: "8px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
-                    <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
-                    <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
-                  </div>
-                ))}
-                <div
-                  className="ev-desktop-copy"
-                  style={{
-                    display: "none",
-                    marginTop: 10,
-                    paddingTop: 14,
-                    borderTop: "1px solid var(--border)",
-                  }}
-                >
-                  <p style={{ fontSize: "0.90rem", lineHeight: 1.9, color: "var(--text-secondary)", textWrap: "pretty" }}>
-                    Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong>, a large-scale promotional event organized by PT Fasen Creative
-                    Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across five consecutive days at the Jakarta venue.
-                  </p>
-                </div>
-              </div>
-            </div>
 
-            <p className="ev-mobile-copy" style={{ display: "block", fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-              Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
-              Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
-            </p>
+              <p className="ev-mobile-copy" style={{ display: "block", fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
+                Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
+                Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
+              </p>
 
-            <div>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Responsibilities</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                {responsibilities.map((r, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                    <div style={{ flexShrink: 0, marginTop: 7, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                    <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{r}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ padding: "10px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, backgroundColor: "var(--accent-glow)", border: "1px solid var(--border-mid)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <polyline points="9 15 11 17 15 13" />
-                </svg>
-              </div>
+              {/* Responsibilities */}
               <div>
-                <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>Employment Contract Verified</p>
-                <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>Surat Perjanjian Kerja · PT Fasen Creative Quality · Signed 10 March 2024</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Responsibilities</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {responsibilities.map((r, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <div style={{ flexShrink: 0, marginTop: 7, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{r}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Employment contract badge */}
+              <div style={{ padding: "10px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, backgroundColor: "var(--accent-glow)", border: "1px solid var(--border-mid)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <polyline points="9 15 11 17 15 13" />
+                  </svg>
+                </div>
+                <div>
+                  <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>Employment Contract Verified</p>
+                  <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>Surat Perjanjian Kerja · PT Fasen Creative Quality · Signed 10 March 2024</p>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Photo Documentation Carousel ─────────────────────────────── */}
+            <div style={{ padding: "1.2rem 1.1rem 1.6rem", borderTop: "1px solid var(--border)", marginTop: "1rem" }}>
+              {/* Section label + counter */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Documentation{imgCount > 0 ? ` — ${imgCount} Photos` : ""}</p>
+                  {imgCount > 0 && !loading && (
+                    <span style={{ fontSize: "0.67rem", color: "var(--text-faint)", fontVariantNumeric: "tabular-nums" }}>
+                      {carouselIdx + 1} / {imgCount}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Loading spinner */}
+              {loading && (
+                <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 10, color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                  <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                  Loading photos...
+                </div>
+              )}
+
+              {/* No photos */}
+              {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>No photos found.</div>}
+
+              {/* Carousel */}
+              {!loading && imgCount > 0 && (
+                <div style={{ position: "relative" }}>
+                  {/* Image frame */}
+                  <div
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      height: "clamp(200px, 44vw, 380px)",
+                      borderRadius: "0.85rem",
+                      overflow: "hidden",
+                      backgroundColor: "var(--bg-subtle)",
+                      border: "1px solid var(--border)",
+                      userSelect: "none",
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={images[carouselIdx]}
+                      alt={`Event crew documentation ${carouselIdx + 1}`}
+                      style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", opacity: fade ? 1 : 0, transition: "opacity 0.14s ease" }}
+                      loading="lazy"
+                    />
+                    {/* Prev button */}
+                    {carouselIdx > 0 && (
+                      <button
+                        onClick={prev}
+                        style={{
+                          position: "absolute",
+                          left: 8,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 34,
+                          height: 34,
+                          borderRadius: "50%",
+                          backgroundColor: "rgba(0,0,0,0.45)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          color: "#fff",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backdropFilter: "blur(4px)",
+                        }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                          <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                      </button>
+                    )}
+                    {/* Next button */}
+                    {carouselIdx < imgCount - 1 && (
+                      <button
+                        onClick={next}
+                        style={{
+                          position: "absolute",
+                          right: 8,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 34,
+                          height: 34,
+                          borderRadius: "50%",
+                          backgroundColor: "rgba(0,0,0,0.45)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          color: "#fff",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backdropFilter: "blur(4px)",
+                        }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Dots */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 12, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
+
+                  {/* Keyboard hint */}
+                  <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
+
+                  {/* ── Privacy Notice ─────────────────────────────────────── */}
+                  <div
+                    style={{
+                      marginTop: 18,
+                      padding: "11px 14px",
+                      borderRadius: 10,
+                      backgroundColor: "var(--bg-subtle)",
+                      border: "1px solid var(--border)",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 10,
+                    }}
+                  >
+                    {/* Lock icon */}
+                    <div style={{ flexShrink: 0, marginTop: 1 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.65 }}>
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "0.63rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: 3, letterSpacing: "0.01em" }}>Confidentiality Notice</p>
+                      <p style={{ fontSize: "0.61rem", lineHeight: 1.65, color: "var(--text-muted)" }}>
+                        In accordance with the terms of the employment contract and the company's confidentiality policy, there is some documentation from this event that cannot be disclosed or distributed to the public.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </>

@@ -20,7 +20,7 @@ html {
   --text-primary: #1c2214; /* near-black with green tint */
   --text-secondary: #3d4a35; /* dark olive */
   --text-muted: #7a8b6f; /* medium sage */
-  --text-faint: #a8b89a; /* faint sage */
+  --text-faint: #8a9678; /* improved faint sage for better contrast */
   --accent: #4f633d; /* olive green — primary accent */
   --accent-2: #8ba194; /* sage — secondary accent */
   --accent-warm: #c17d3c; /* amber — highlight */
@@ -46,8 +46,8 @@ html {
   --border-strong: rgba(168, 151, 122, 0.5);
   --text-primary: #f5f0e8; /* warm white */
   --text-secondary: #b8ad9a; /* warm tan */
-  --text-muted: #6b6055; /* dark tan */
-  --text-faint: #443c34; /* very muted */
+  --text-muted: #8b776e; /* improved muted tan for better contrast */
+  --text-faint: #9c8774; /* improved faint tan for better contrast */
   --accent: #a8977a; /* warm tan — primary */
   --accent-2: #7a8b6f; /* muted olive */
   --accent-warm: #c17d3c; /* amber */
@@ -187,14 +187,17 @@ section[id] {
   box-shadow: none;
   transition:
     border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (min-width: 640px) and (hover: hover) and (pointer: fine) {
   .proj-card:hover {
     border-color: var(--border-strong);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    box-shadow:
+      var(--shadow-md),
+      0 0 24px var(--accent-glow);
+    transform: translateY(-2px) scale(1.02);
   }
 }
 
@@ -207,6 +210,24 @@ section[id] {
 .proj-card-stack,
 .proj-card-footer {
   min-width: 0;
+}
+
+/* ── Modal Drag Handle ──────────────────────────────────────────────────────── */
+.modal-drag-handle {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+@media (min-width: 640px) and (hover: hover) and (pointer: fine) {
+  .modal-drag-handle:hover {
+    opacity: 0.7;
+    transform: scale(1.15);
+  }
+}
+
+.modal-drag-handle:active {
+  cursor: grabbing;
 }
 
 @keyframes bentoPop {
@@ -242,6 +263,17 @@ section[id] {
   from {
     opacity: 0;
     transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;

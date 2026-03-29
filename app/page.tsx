@@ -205,7 +205,7 @@ const certifications = [
 
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <div style={{ marginBottom: "2.5rem" }}>
+    <div style={{ marginBottom: "2.5rem", opacity: 0, animation: "fadeSlideDown 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s forwards" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
         <div style={{ width: 18, height: 1, backgroundColor: "var(--accent)", opacity: 0.4 }} />
         <p style={{ fontSize: "0.59rem", fontWeight: 700, letterSpacing: "0.27em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.65 }}>{eyebrow}</p>
@@ -448,115 +448,100 @@ function LinkIcon({ icon }: { icon: string }) {
 
 // ─── useSwipeToDismiss — drag handle swipe-down to close ──────────────────────
 
+// ─── useSwipeToDismiss — drag handle swipe-down to close ──────────────────────
+
 function useSwipeToDismiss(onDismiss: () => void) {
   const sheetRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const startY = useRef(0);
-  const currentY = useRef(0);
-  const isDragging = useRef(false);
-  const velocityY = useRef(0);
-  const lastY = useRef(0);
-  const lastEventTime = useRef(0);
+  const startElement = useRef<EventTarget | null>(null);
+  const maxDragY = useRef(0);
+  const isHeaderDrag = useRef(false);
 
   useEffect(() => {
     const sheet = sheetRef.current;
-    if (!sheet) {
-      console.log("[useSwipeToDismiss] sheet ref not available");
-      return;
-    }
+    if (!sheet) return;
 
-    console.log("[useSwipeToDismiss] attaching listeners to:", sheet);
+    // Clear any inline animation/transform from previous interactions
+    sheet.style.animation = "";
+    sheet.style.transform = "";
+    sheet.style.transition = "";
+
+    const DISMISS_THRESHOLD = 0.3; // 30% of modal height
+
+    const isHeaderElement = (element: EventTarget | null): boolean => {
+      if (!element || !(element instanceof Element)) return false;
+      const el = element as Element;
+      return el.closest(".modal-drag-handle") !== null || el.closest(".modal-header") !== null;
+    };
 
     const handleTouchStart = (e: TouchEvent) => {
-      console.log("[Touch] START", { clientY: e.touches[0].clientY });
       startY.current = e.touches[0].clientY;
-      lastY.current = e.touches[0].clientY;
-      currentY.current = 0;
-      velocityY.current = 0;
-      lastEventTime.current = Date.now();
-      isDragging.current = true;
+      startElement.current = e.target;
+      maxDragY.current = 0;
+      isHeaderDrag.current = isHeaderElement(e.target);
       sheet.style.transition = "none";
-      sheet.style.animation = "none"; // Disable CSS animation during drag
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging.current) {
-        console.log("[Touch] MOVE ignored - not dragging");
-        return;
-      }
+      if (!isHeaderDrag.current) return; // Not header drag, let scroll happen
 
       const dy = e.touches[0].clientY - startY.current;
-      console.log("[Touch] MOVE", { dy, isDragging: isDragging.current, currentY: currentY.current });
 
-      // If dragging upward, stop
-      if (dy < 0) {
-        isDragging.current = false;
-        console.log("[Touch] cancelled - dragging up");
-        return;
-      }
-
-      // Prevent default scroll behavior
-      e.preventDefault();
-
-      // Calculate velocity
-      const timeDelta = Date.now() - lastEventTime.current;
-      if (timeDelta > 0) {
-        velocityY.current = (e.touches[0].clientY - lastY.current) / timeDelta;
-      }
-
-      lastY.current = e.touches[0].clientY;
-      lastEventTime.current = Date.now();
-      currentY.current = dy;
-
-      // Move modal with finger - using both transform and will-change
-      sheet.style.transform = `translateY(${dy}px)`;
-      console.log("[Touch] TRANSFORM SET", { dy, transform: sheet.style.transform, computedTransform: getComputedStyle(sheet).transform });
-    };
-
-    const handleTouchEnd = () => {
-      console.log("[Touch] END", { currentY: currentY.current, isDragging: isDragging.current });
-      isDragging.current = false;
-
-      const sheetHeight = sheet.offsetHeight;
-      const dismissThreshold = sheetHeight * 0.7;
-      const hasHighVelocity = Math.abs(velocityY.current) > 0.8;
-
-      console.log("[Touch] END ANALYSIS", { currentY: currentY.current, sheetHeight, dismissThreshold, hasHighVelocity, velocity: velocityY.current });
-
-      if (currentY.current > dismissThreshold || (currentY.current > 100 && hasHighVelocity)) {
-        // Dismiss
-        console.log("[Touch] DISMISSING");
-        sheet.style.transition = "transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-        sheet.style.animation = "none"; // Disable animation
-        sheet.style.transform = `translateY(${sheetHeight}px)`;
-
-        setTimeout(() => {
-          onDismiss();
-        }, 420);
-      } else {
-        // Snap back
-        console.log("[Touch] SNAPPING BACK");
-        sheet.style.transition = "transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1)";
-        sheet.style.animation = "none"; // Disable animation
+      // Track and apply only downward drag
+      if (dy > 0) {
+        maxDragY.current = Math.max(maxDragY.current, dy);
+        sheet.classList.add("is-dragging");
+        e.preventDefault();
+        sheet.style.transform = `translateY(${dy}px)`;
+      } else if (dy < 0) {
+        // Dragging upward - stop tracking
+        isHeaderDrag.current = false;
+        sheet.classList.remove("is-dragging");
         sheet.style.transform = "translateY(0)";
       }
     };
 
-    // Add native touch event listeners with { passive: false } to allow preventDefault
+    const handleTouchEnd = () => {
+      // Permanently disable CSS animation to prevent retrigger
+      sheet.style.animation = "none";
+      sheet.classList.remove("is-dragging");
+
+      if (!isHeaderDrag.current || maxDragY.current === 0) {
+        sheet.style.transition = "none";
+        sheet.style.transform = "translateY(0)";
+        return;
+      }
+
+      isHeaderDrag.current = false;
+
+      const sheetHeight = sheet.offsetHeight;
+      const dismissThreshold = sheetHeight * DISMISS_THRESHOLD;
+
+      if (maxDragY.current > dismissThreshold) {
+        // DISMISS - smooth exit
+        sheet.style.transition = "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)";
+        sheet.style.transform = `translateY(${sheetHeight}px)`;
+        setTimeout(() => onDismiss(), 280);
+      } else {
+        // SNAP BACK - directly from current position to 0, no extra animation
+        sheet.style.transition = "transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1)";
+        sheet.style.transform = "translateY(0)";
+      }
+    };
+
     sheet.addEventListener("touchstart", handleTouchStart, { passive: true });
     sheet.addEventListener("touchmove", handleTouchMove, { passive: false });
     sheet.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    console.log("[useSwipeToDismiss] listeners attached successfully");
 
     return () => {
       sheet.removeEventListener("touchstart", handleTouchStart);
       sheet.removeEventListener("touchmove", handleTouchMove);
       sheet.removeEventListener("touchend", handleTouchEnd);
-      console.log("[useSwipeToDismiss] listeners removed");
     };
   }, [onDismiss]);
 
-  return { sheetRef, onTouchStart: () => {}, onTouchMove: () => {}, onTouchEnd: () => {} };
+  return { sheetRef, dragHandleRef, onTouchStart: () => {}, onTouchMove: () => {}, onTouchEnd: () => {} };
 }
 
 // ─── Shared close button ───────────────────────────────────────────────────────
@@ -602,6 +587,7 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
   const [isClosing, setIsClosing] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isClosingRef = useRef(false);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const requestClose = useCallback(() => {
     if (isClosingRef.current) return;
@@ -617,16 +603,35 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
   };
 
   useEffect(() => {
+    // Store the element that had focus before modal opened
+    previousActiveElementRef.current = document.activeElement as HTMLElement;
+
     document.body.style.overflow = "hidden";
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") requestClose();
     };
     document.addEventListener("keydown", handleEscape);
 
+    // Focus management: focus first focusable element in modal
+    const modalContent = document.querySelector('[role="dialog"]') || document.querySelector(".modal-sheet-inner");
+    if (modalContent) {
+      const focusableElements = modalContent.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const firstFocusable = focusableElements[0] as HTMLElement;
+      if (firstFocusable && firstFocusable.focus) {
+        // Delay focus to ensure modal is rendered
+        setTimeout(() => firstFocusable.focus(), 0);
+      }
+    }
+
     return () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
+
+      // Restore focus to previous element
+      if (previousActiveElementRef.current && previousActiveElementRef.current.focus) {
+        previousActiveElementRef.current.focus();
+      }
     };
   }, [requestClose]);
 
@@ -651,15 +656,18 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
       <style suppressHydrationWarning>{`
         @keyframes mbFadeIn { from{opacity:0} to{opacity:1} }
         @keyframes mbFadeOut { from{opacity:1} to{opacity:0} }
-        @keyframes mbSheetUp { from{opacity:0;transform:translate3d(0,56px,0) scale(0.985)} to{opacity:1;transform:translate3d(0,0,0) scale(1)} }
-        @keyframes mbSheetDown { from{opacity:1;transform:translate3d(0,0,0) scale(1)} to{opacity:0;transform:translate3d(0,56px,0) scale(0.985)} }
+        @keyframes mbSheetUp { from{transform:translate3d(0,100px,0)} to{transform:translate3d(0,0,0)} }
+        @keyframes mbSheetDown { from{transform:translate3d(0,0,0)} to{transform:translate3d(0,100px,0)} }
         @keyframes spin { to{transform:rotate(360deg)} }
-        .modal-root { animation:mbFadeIn 0.22s ease forwards; }
+        .modal-root { animation:mbFadeIn 0.28s ease forwards; }
         .modal-root.is-closing { animation:mbFadeOut 0.24s ease forwards; }
         .modal-sheet-inner {
-          animation:mbSheetUp 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+          animation:mbSheetUp 0.28s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
           background-image: var(--modal-surface-overlay);
           touch-action: none;
+        }
+        .modal-sheet-inner.is-dragging {
+          animation: none !important;
         }
         .modal-sheet-inner.is-closing { animation:mbSheetDown 0.28s cubic-bezier(0.4,0,0.2,1) forwards; }
         @media(min-width:768px){
@@ -681,6 +689,8 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
 
       <div
         ref={drag.sheetRef}
+        role="dialog"
+        aria-modal="true"
         className={`modal-sheet-inner${isClosing ? " is-closing" : ""}`}
         style={{
           width: "100%",
@@ -699,6 +709,7 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
       >
         {/* Drag handle */}
         <div
+          ref={drag.dragHandleRef}
           className="modal-drag-handle"
           style={{
             flexShrink: 0,
@@ -726,7 +737,10 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       {({ requestClose }) => (
         <>
           {/* Header */}
-          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}>
+          <div
+            className="modal-header"
+            style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}
+          >
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
                 <TagBadge>{project.tag}</TagBadge>
@@ -942,7 +956,10 @@ function InternModal({ onClose }: { onClose: () => void }) {
       {({ onTouchStart: swipeTouchStart, onTouchMove: swipeTouchMove, onTouchEnd: swipeTouchEnd, requestClose }) => (
         <>
           {/* Header */}
-          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}>
+          <div
+            className="modal-header"
+            style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}
+          >
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                 <TagBadge>Internship</TagBadge>
@@ -1277,7 +1294,10 @@ function EventModal({ onClose }: { onClose: () => void }) {
       {({ requestClose }) => (
         <>
           {/* Header */}
-          <div style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}>
+          <div
+            className="modal-header"
+            style={{ flexShrink: 0, padding: "0.9rem 1.1rem 0.8rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, background: "var(--modal-header-bg)" }}
+          >
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
                 <span
@@ -1546,6 +1566,7 @@ function EducationModal({ onClose }: { onClose: () => void }) {
         <>
           {/* Header */}
           <div
+            className="modal-header"
             style={{
               flexShrink: 0,
               padding: "0.9rem 1.1rem 0.8rem",

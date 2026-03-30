@@ -162,42 +162,42 @@ const certifications = [
     issuer: "Dibimbing.id",
     year: "2024",
     category: "Data",
-    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+    link: "https://drive.google.com/file/d/1rkkrpb6TKYstaHnZjpH3aC3xnDAEN9jq/view?usp=drive_link",
   },
   {
     name: "Digital Skill Fair 10.0 — Web Development BackEnd",
     issuer: "Dibimbing.id",
     year: "2023",
     category: "Web Dev",
-    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+    link: "https://drive.google.com/file/d/1-tTniLS-94LRkplidre2eyjIUBGtpmb4/view?usp=sharing",
   },
   {
     name: "Softskill Training & Character Building",
     issuer: "Tandaseru Indonesia",
     year: "2023",
     category: "Softskill",
-    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+    link: "https://drive.google.com/file/d/1v-B2GnD7bOGt0B-OzH4ltwI1e_t3tLSw/view?usp=drive_link",
   },
   {
     name: "The Complete Android 12 & Kotlin Masterclass",
     issuer: "Udemy",
     year: "2023",
     category: "Mobile",
-    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+    link: "https://drive.google.com/file/d/1TMJ2ztceLbsDEGAKWdR1uy6qVKHcFQrv/view?usp=drive_link",
   },
   {
     name: "Web Development Courses (HTML, PHP, JavaScript)",
     issuer: "Sololearn",
     year: "2022",
     category: "Web Dev",
-    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+    link: "https://drive.google.com/drive/folders/1REyQNrXFrFkP3GQyg0Qlefe9mjGW4Wzc?usp=sharing",
   },
   {
     name: "HTML Tutorial for Beginners",
     issuer: "Udemy",
     year: "2022",
     category: "Web Dev",
-    link: "https://drive.google.com/drive/folders/1sgOCYsZb7D8BU5XhkxtKViYX3FAjnOj2?usp=sharing",
+    link: "https://drive.google.com/file/d/1mFuyc4T9vTyPBCBO3yyevZIEJdnNmTje/view?usp=drive_link",
   },
 ];
 
@@ -453,10 +453,21 @@ function LinkIcon({ icon }: { icon: string }) {
 function useSwipeToDismiss(onDismiss: () => void) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const startY = useRef(0);
   const startElement = useRef<EventTarget | null>(null);
   const maxDragY = useRef(0);
   const isHeaderDrag = useRef(false);
+  const isScrollDrag = useRef(false);
+  const lastScrollTop = useRef(0);
+  const scrollStartTop = useRef(0);
+
+  // Auto-find content ref on mount
+  useEffect(() => {
+    if (!contentRef.current && sheetRef.current) {
+      contentRef.current = sheetRef.current.querySelector(".modal-scroll-area") as HTMLDivElement;
+    }
+  }, []);
 
   useEffect(() => {
     const sheet = sheetRef.current;
@@ -480,25 +491,64 @@ function useSwipeToDismiss(onDismiss: () => void) {
       startElement.current = e.target;
       maxDragY.current = 0;
       isHeaderDrag.current = isHeaderElement(e.target);
+      isScrollDrag.current = false;
+
+      // Check if at scroll top for scroll-over-dismiss
+      if (contentRef.current && isHeaderDrag.current === false) {
+        lastScrollTop.current = contentRef.current.scrollTop;
+        scrollStartTop.current = contentRef.current.scrollTop;
+        // If very close to top, enable scroll-over-dismiss mode
+        if (scrollStartTop.current < 5) {
+          isScrollDrag.current = true;
+        }
+      }
+
       sheet.style.transition = "none";
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isHeaderDrag.current) return; // Not header drag, let scroll happen
-
       const dy = e.touches[0].clientY - startY.current;
 
-      // Track and apply only downward drag
-      if (dy > 0) {
-        maxDragY.current = Math.max(maxDragY.current, dy);
-        sheet.classList.add("is-dragging");
-        e.preventDefault();
-        sheet.style.transform = `translateY(${dy}px)`;
-      } else if (dy < 0) {
-        // Dragging upward - stop tracking
-        isHeaderDrag.current = false;
-        sheet.classList.remove("is-dragging");
-        sheet.style.transform = "translateY(0)";
+      // Header drag - always enabled when on header
+      if (isHeaderDrag.current) {
+        if (dy > 0) {
+          maxDragY.current = Math.max(maxDragY.current, dy);
+          sheet.classList.add("is-dragging");
+          e.preventDefault();
+          sheet.style.transform = `translateY(${dy}px)`;
+        } else if (dy < 0) {
+          isHeaderDrag.current = false;
+          sheet.classList.remove("is-dragging");
+          sheet.style.transform = "translateY(0)";
+        }
+        return;
+      }
+
+      // Scroll-over-dismiss: when scroll is at top and user scrolling up
+      if (isScrollDrag.current && contentRef.current) {
+        const currentScrollTop = contentRef.current.scrollTop;
+        lastScrollTop.current = currentScrollTop;
+
+        // Only handle upward drag when at/near top
+        if (currentScrollTop < 5) {
+          // User dragging downward on content (scrolling up) = dy > 0 = pull modal down
+          if (dy > 0) {
+            maxDragY.current = Math.max(maxDragY.current, dy);
+            sheet.classList.add("is-dragging");
+            e.preventDefault();
+            sheet.style.transform = `translateY(${dy}px)`;
+          } else if (dy < 0) {
+            // User dragging upward on content - stop scroll drag
+            isScrollDrag.current = false;
+            sheet.classList.remove("is-dragging");
+            sheet.style.transform = "translateY(0)";
+          }
+        } else {
+          // User scrolled away from top - disable scroll drag mode
+          isScrollDrag.current = false;
+          sheet.classList.remove("is-dragging");
+          sheet.style.transform = "translateY(0)";
+        }
       }
     };
 
@@ -507,13 +557,17 @@ function useSwipeToDismiss(onDismiss: () => void) {
       sheet.style.animation = "none";
       sheet.classList.remove("is-dragging");
 
-      if (!isHeaderDrag.current || maxDragY.current === 0) {
+      const isDragging = isHeaderDrag.current || isScrollDrag.current;
+      if (!isDragging || maxDragY.current === 0) {
         sheet.style.transition = "none";
         sheet.style.transform = "translateY(0)";
+        isHeaderDrag.current = false;
+        isScrollDrag.current = false;
         return;
       }
 
       isHeaderDrag.current = false;
+      isScrollDrag.current = false;
 
       const sheetHeight = sheet.offsetHeight;
       const dismissThreshold = sheetHeight * DISMISS_THRESHOLD;
@@ -524,7 +578,7 @@ function useSwipeToDismiss(onDismiss: () => void) {
         sheet.style.transform = `translateY(${sheetHeight}px)`;
         setTimeout(() => onDismiss(), 280);
       } else {
-        // SNAP BACK - directly from current position to 0, no extra animation
+        // SNAP BACK - directly from current position to 0
         sheet.style.transition = "transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1)";
         sheet.style.transform = "translateY(0)";
       }
@@ -541,7 +595,7 @@ function useSwipeToDismiss(onDismiss: () => void) {
     };
   }, [onDismiss]);
 
-  return { sheetRef, dragHandleRef, onTouchStart: () => {}, onTouchMove: () => {}, onTouchEnd: () => {} };
+  return { sheetRef, dragHandleRef, contentRef, onTouchStart: () => {}, onTouchMove: () => {}, onTouchEnd: () => {} };
 }
 
 // ─── Shared close button ───────────────────────────────────────────────────────
@@ -966,7 +1020,7 @@ function InternModal({ onClose }: { onClose: () => void }) {
                 <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>Feb 2024 – Sep 2024</span>
               </div>
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>Secretariat General of KPU RI</h2>
-              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Jakarta, Indonesia</p>
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Menteng, Central Jakarta, Indonesia</p>
             </div>
             <CloseBtn onClose={requestClose} />
           </div>
@@ -1149,6 +1203,34 @@ function InternModal({ onClose }: { onClose: () => void }) {
                   </div>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 12, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
                   <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
+
+                  {/* ── Confidentiality Notice ─────────────────────────────── */}
+                  <div
+                    style={{
+                      marginTop: 18,
+                      padding: "11px 14px",
+                      borderRadius: 10,
+                      backgroundColor: "var(--bg-subtle)",
+                      border: "1px solid var(--border)",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 10,
+                    }}
+                  >
+                    {/* Lock icon */}
+                    <div style={{ flexShrink: 0, marginTop: 1 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.65 }}>
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "0.63rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: 3, letterSpacing: "0.01em" }}>Confidentiality Notice</p>
+                      <p style={{ fontSize: "0.61rem", lineHeight: 1.65, color: "var(--text-muted)" }}>
+                        To safeguard data security and organizational confidentiality, certain documentation from this internship experience cannot be disclosed or distributed to the public.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1318,7 +1400,7 @@ function EventModal({ onClose }: { onClose: () => void }) {
                 <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>13 – 17 March 2024 · Jakarta</span>
               </div>
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Tokopedia Ramadan Extra 2024 Flash Sale</h2>
-              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions)</p>
+              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions) · Kebayoran Lama, South Jakarta, Indonesia (Pondok Indah Mall 3)</p>
             </div>
             <CloseBtn onClose={requestClose} />
           </div>
@@ -1940,6 +2022,7 @@ export default function HomePage() {
                     { icon: "✉", label: "furqansykss@gmail.com", href: "mailto:furqansykss@gmail.com" },
                     { icon: "↗", label: "LinkedIn", href: "https://linkedin.com/in/fur-qan-6b1b87242" },
                     { icon: "↗", label: "Instagram", href: "https://www.instagram.com/frqann?igsh=MTA1ejJ3amhhZTV5cA==" },
+                    { icon: "↗", label: "GitHub", href: "https://github.com/Furqan-sykss" },
                     { icon: "◎", label: "East Jakarta", href: null },
                   ].map((c) => {
                     const base: React.CSSProperties = {
@@ -2959,6 +3042,10 @@ export default function HomePage() {
                 <div className="contact-socials" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20, marginTop: 28, fontSize: "0.73rem", color: "var(--text-muted)", flexWrap: "wrap" }}>
                   <a href="https://linkedin.com/in/fur-qan-6b1b87242" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>
                     LinkedIn ↗
+                  </a>
+                  <span style={{ color: "var(--border-mid)" }}>·</span>
+                  <a href="https://github.com/Furqan-sykss" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>
+                    GitHub ↗
                   </a>
                   <span style={{ color: "var(--border-mid)" }}>·</span>
                   <a href="https://wa.me/6282238584400?text=Hi%2C%20Furqan" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>

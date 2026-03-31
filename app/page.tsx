@@ -2169,29 +2169,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-
-          {/* Scroll hint */}
-          <div
-            className="hero-scroll-hint"
-            style={{
-              position: "absolute",
-              bottom: 28,
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 7,
-              opacity: isDone ? 1 : 0,
-              transition: "opacity 0.8s ease 0.7s",
-              pointerEvents: "none",
-            }}
-          >
-            <span className="hero-scroll-label" style={{ fontSize: "0.51rem", fontWeight: 600, letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--text-faint)" }}>
-              scroll
-            </span>
-            <div className="hero-scroll-line" style={{ width: 1, height: 30, background: "linear-gradient(to bottom, var(--border-mid), transparent)" }} />
-          </div>
         </section>
 
         <Divider />

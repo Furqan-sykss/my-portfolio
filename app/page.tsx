@@ -1357,7 +1357,7 @@ function EventModal({ onClose }: { onClose: () => void }) {
   const facts = [
     { label: "Company", value: "PT Fasen Creative Quality" },
     { label: "Client", value: "Tokopedia (Dyandra Event Solutions)" },
-    { label: "Role", value: "Event Crew — Runner" },
+    { label: "Role", value: "Event Crew — Runner Flash Sale" },
     { label: "Duration", value: "5 days · Mar 13 – 17, 2024" },
     { label: "Contract", value: "Fixed-term · Signed 10 March 2024" },
   ];
@@ -1408,37 +1408,61 @@ function EventModal({ onClose }: { onClose: () => void }) {
           {/* Scrollable body */}
           <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
             <div style={{ padding: "1rem 1.1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {/* Photo + facts */}
+              {/* Overview + facts */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }} className="ev-grid">
                 <style suppressHydrationWarning>{`
-                  @media(min-width:500px){.ev-grid{grid-template-columns:1fr 1.15fr!important}}
-                  @media(min-width:900px){.ev-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr)!important;align-items:start}}
+                  @media(min-width:640px){.ev-grid{grid-template-columns:1.08fr 0.92fr!important;align-items:start}}
+                  @media(min-width:900px){.ev-grid{grid-template-columns:minmax(0,1.08fr) minmax(0,0.92fr)!important;align-items:start}}
                   @media(min-width:900px){.ev-desktop-copy{display:block!important}}
                   @media(max-width:899px){.ev-desktop-copy{display:none!important}}
                   @media(min-width:900px){.ev-mobile-copy{display:none!important}}
                   @media(max-width:899px){.ev-mobile-copy{display:block!important}}
                 `}</style>
-                <div style={{ borderRadius: "0.85rem", overflow: "hidden", border: "1px solid var(--border)", position: "relative", backgroundColor: "var(--bg-subtle)", minHeight: 160 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/1000357140.png" alt="Employment Contract" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: 160 }} />
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 12px", background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}>
-                    <p style={{ fontSize: "0.62rem", fontWeight: 600, color: "rgba(255,255,255,0.9)", letterSpacing: "0.05em" }}>Employment Contract</p>
-                    <p style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.6)" }}>Surat Perjanjian Kerja · Signed 10 Mar 2024</p>
-                  </div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {facts.map(({ label, value }) => (
-                    <div key={label} style={{ padding: "8px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
-                      <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
-                      <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+                <div
+                  style={{
+                    borderRadius: "1rem",
+                    border: "1px solid var(--border)",
+                    background: "linear-gradient(180deg, color-mix(in srgb, var(--accent-glow) 70%, transparent) 0%, var(--bg-subtle) 100%)",
+                    padding: "1rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 14,
+                    minHeight: 160,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+                    <div>
+                      <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.7, marginBottom: 6 }}>Engagement Overview</p>
+                      <p style={{ fontSize: "0.96rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.4 }}>On-site runner support for Tokopedia Ramadan Extra in Jakarta.</p>
                     </div>
-                  ))}
-                  <div className="ev-desktop-copy" style={{ display: "none", marginTop: 10, paddingTop: 14, borderTop: "1px solid var(--border)" }}>
-                    <p style={{ fontSize: "0.84rem", lineHeight: 1.9, color: "var(--text-secondary)", textWrap: "pretty" as "pretty" }}>
+                    <div style={{ padding: "6px 10px", borderRadius: 999, backgroundColor: "var(--bg-primary)", border: "1px solid var(--border)", fontSize: "0.62rem", fontWeight: 700, color: "var(--text-primary)", whiteSpace: "nowrap" }}>
+                      5 Days
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+                    <div style={{ padding: "10px 12px", borderRadius: 12, backgroundColor: "var(--bg-primary)", border: "1px solid var(--border)" }}>
+                      <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>Contract</p>
+                      <p style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>Fixed-term employment agreement</p>
+                    </div>
+                    <div style={{ padding: "10px 12px", borderRadius: 12, backgroundColor: "var(--bg-primary)", border: "1px solid var(--border)" }}>
+                      <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>Venue</p>
+                      <p style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>Pondok Indah Mall 3, South Jakarta</p>
+                    </div>
+                  </div>
+                  <div className="ev-desktop-copy" style={{ display: "none", paddingTop: 2 }}>
+                    <p style={{ fontSize: "0.84rem", lineHeight: 1.85, color: "var(--text-secondary)", textWrap: "pretty" as "pretty" }}>
                       Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong>, a large-scale promotional event organized by PT Fasen
                       Creative Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across five consecutive days at the Jakarta venue.
                     </p>
                   </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {facts.map(({ label, value }) => (
+                    <div key={label} style={{ padding: "10px 12px", borderRadius: 12, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+                      <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 2 }}>{label}</p>
+                      <p style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.3 }}>{value}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -1461,7 +1485,17 @@ function EventModal({ onClose }: { onClose: () => void }) {
               </div>
 
               {/* Employment contract badge */}
-              <div style={{ padding: "10px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
+              <div
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  background: "linear-gradient(180deg, var(--bg-subtle) 0%, color-mix(in srgb, var(--accent-glow) 30%, var(--bg-subtle)) 100%)",
+                  border: "1px solid var(--border)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
                 <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, backgroundColor: "var(--accent-glow)", border: "1px solid var(--border-mid)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />

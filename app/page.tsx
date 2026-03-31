@@ -1156,8 +1156,8 @@ function InternModal({ onClose }: { onClose: () => void }) {
                           left: 8,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          width: 34,
-                          height: 34,
+                          width: 48,
+                          height: 48,
                           borderRadius: "50%",
                           backgroundColor: "rgba(0,0,0,0.45)",
                           border: "1px solid rgba(255,255,255,0.15)",
@@ -1182,8 +1182,8 @@ function InternModal({ onClose }: { onClose: () => void }) {
                           right: 8,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          width: 34,
-                          height: 34,
+                          width: 48,
+                          height: 48,
                           borderRadius: "50%",
                           backgroundColor: "rgba(0,0,0,0.45)",
                           border: "1px solid rgba(255,255,255,0.15)",
@@ -1535,8 +1535,8 @@ function EventModal({ onClose }: { onClose: () => void }) {
                           left: 8,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          width: 34,
-                          height: 34,
+                          width: 48,
+                          height: 48,
                           borderRadius: "50%",
                           backgroundColor: "rgba(0,0,0,0.45)",
                           border: "1px solid rgba(255,255,255,0.15)",
@@ -1562,8 +1562,8 @@ function EventModal({ onClose }: { onClose: () => void }) {
                           right: 8,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          width: 34,
-                          height: 34,
+                          width: 48,
+                          height: 48,
                           borderRadius: "50%",
                           backgroundColor: "rgba(0,0,0,0.45)",
                           border: "1px solid rgba(255,255,255,0.15)",
@@ -1975,14 +1975,15 @@ export default function HomePage() {
                   marginBottom: "2rem",
                   fontSize: "0.71rem",
                   fontWeight: 500,
-                  backgroundColor: "rgba(16,185,129,0.07)",
-                  color: "#10b981",
-                  border: "1px solid rgba(16,185,129,0.15)",
+                  backgroundColor: "var(--status-bg)",
+                  color: "var(--status-color)",
+                  border: "1px solid var(--status-color)",
+                  opacity: 0.85,
                 }}
               >
                 <span style={{ position: "relative", display: "inline-flex", width: 7, height: 7 }}>
-                  <span style={{ position: "absolute", inset: 0, borderRadius: "50%", backgroundColor: "#10b981", opacity: 0.5, animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }} />
-                  <span style={{ position: "relative", width: 7, height: 7, borderRadius: "50%", backgroundColor: "#10b981" }} />
+                  <span style={{ position: "absolute", inset: 0, borderRadius: "50%", backgroundColor: "var(--status-color)", opacity: 0.5, animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }} />
+                  <span style={{ position: "relative", width: 7, height: 7, borderRadius: "50%", backgroundColor: "var(--status-color)" }} />
                 </span>
                 Available for work
               </div>
@@ -3025,7 +3026,7 @@ export default function HomePage() {
                     GitHub ↗
                   </a>
                   <span style={{ color: "var(--border-mid)" }}>·</span>
-                  <a href="https://wa.me/6282238584400?text=Hi%2C%20Furqan" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>
+                  <a href="https://wa.me/6282238584400?text=Hi%20Furqan" target="_blank" rel="noopener" className="lnk" style={{ textDecoration: "none", color: "var(--text-muted)" }}>
                     +62 822-385-84400 ↗
                   </a>
                 </div>

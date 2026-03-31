@@ -126,16 +126,16 @@ const projects = [
 
 const experience = [
   {
-    role: "Internship — Center for Data & IT",
-    company: "Secretariat General of KPU RI",
-    period: "Feb 2024 – Sep 2024",
-    desc: "Completed a 7-month internship at KPU RI's Center for Data & IT (Pusdatin). Contributed to voter data processing, TPS input across all Indonesian provinces, electoral recapitulation monitoring, and developed a web-based prototype system for ad-hoc electoral body membership data ahead of the 2024 Simultaneous Regional Elections.",
-  },
-  {
     role: "Event Crew — Runner",
     company: "PT Fasen Creative Quality × Tokopedia",
     period: "March 2024",
     desc: "Supported on-site operations for the Tokopedia Ramadan Extra 2024 Flash Sale event. Responsible for logistics coordination, crowd flow management, and ensuring smooth execution of event activities.",
+  },
+  {
+    role: "Internship — Center for Data & IT",
+    company: "Secretariat General of KPU RI",
+    period: "Feb 2024 – Sep 2024",
+    desc: "Completed a 7-month internship at KPU RI's Center for Data & IT (Pusdatin). Contributed to voter data processing, TPS input across all Indonesian provinces, electoral recapitulation monitoring, and developed a web-based prototype system for ad-hoc electoral body membership data ahead of the 2024 Simultaneous Regional Elections.",
   },
 ];
 
@@ -2689,7 +2689,7 @@ export default function HomePage() {
                     {/* Card — KPU (i===0) and Event Crew (i===1) are clickable */}
                     <div
                       className="exp-card"
-                      onClick={i === 0 ? () => setShowInternModal(true) : i === 1 ? () => setShowEventModal(true) : undefined}
+                      onClick={i === 0 ? () => setShowEventModal(true) : i === 1 ? () => setShowInternModal(true) : undefined}
                       style={{
                         flex: 1,
                         padding: "1.1rem 1.25rem",
@@ -2895,13 +2895,14 @@ export default function HomePage() {
               </svg>
             </a>
 
-            <div style={{ display: "grid", gap: 8 }} className="grid-cols-1 sm:grid-cols-2">
+            <div style={{ display: "grid", gap: 8 }} className="grid-cols-1 sm:grid-cols-2 cert-grid">
               {certifications.map((c, i) => (
                 <FadeUp key={c.name} delay={i * 42}>
                   <a
                     href={c.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="cert-card"
                     style={{
                       display: "flex",
                       alignItems: "flex-start",
@@ -2945,7 +2946,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Content */}
-                    <div style={{ minWidth: 0, flex: 1 }}>
+                    <div className="cert-content" style={{ minWidth: 0, flex: 1 }}>
                       {/* Name row */}
                       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
                         <p style={{ fontSize: "0.81rem", fontWeight: 500, lineHeight: 1.4, color: "var(--text-primary)" }}>{c.name}</p>
@@ -2969,7 +2970,7 @@ export default function HomePage() {
                       </div>
 
                       {/* Line 2: category pill + verified badge */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <div className="cert-badges" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                         <span
                           style={{
                             fontSize: "0.57rem",

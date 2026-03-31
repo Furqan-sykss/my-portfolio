@@ -602,6 +602,40 @@ section[id] {
   transform: translateY(-2px);
 }
 
+/* ── Certification grid — tablet: kartu sama tinggi, badge sejajar bawah ────── */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* 1. Grid stretch semua sel sama tinggi */
+  .cert-grid {
+    align-items: stretch !important;
+  }
+
+  /* 2. FadeUp wrapper (langsung anak grid) harus flex & full height */
+  .cert-grid > * {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+
+  /* 3. Card <a> mengisi full height wrapper */
+  .cert-card {
+    height: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 4. Content div jadi flex-column agar badge bisa push ke bawah */
+  .cert-content {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    height: 100% !important;
+  }
+
+  /* 5. Badge row selalu di bawah */
+  .cert-badges {
+    margin-top: auto !important;
+  }
+}
+
 /* ── Skill chips ────────────────────────────────────────────────────────────── */
 .skill-chip {
   transition:

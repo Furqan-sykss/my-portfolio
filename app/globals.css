@@ -315,7 +315,7 @@ section[id] {
     grid-column: 1 / -1 !important;
     grid-row: auto !important;
     position: sticky;
-    top: calc(70px + var(--stack-shift, 0px));
+    top: calc(90px + var(--stack-shift, 0px));
     z-index: var(--stack-z, 1);
     margin-bottom: 0.65rem;
     box-shadow: var(--shadow-lg);
@@ -736,7 +736,7 @@ section[id] {
   }
 
   .bento-grid > div {
-    top: calc(64px + var(--stack-shift, 0px));
+    top: calc(90px + var(--stack-shift, 0px));
     margin-bottom: 0.6rem;
     min-height: 18.75rem;
   }

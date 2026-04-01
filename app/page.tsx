@@ -1959,7 +1959,7 @@ export default function HomePage() {
             ].join(", "),
           }}
         >
-          <NextImage src="furqan-image/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.05)" }} />
+          <NextImage src="/furqan-image/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.05)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.5) 100%)" }} />
           {/* Name tag */}
           <div
@@ -2159,7 +2159,7 @@ export default function HomePage() {
                     transition: "opacity 0.5s ease",
                   }}
                 >
-                  <NextImage src="furqan-image/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.06)" }} />
+                  <NextImage src="/furqan-image/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.06)" }} />
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "38%", background: "linear-gradient(to top, rgba(0,0,0,0.18), transparent)", pointerEvents: "none" }} />
                 </div>
                 {/* Badge — 3+ */}

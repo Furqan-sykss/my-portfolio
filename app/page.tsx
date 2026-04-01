@@ -355,7 +355,7 @@ function InstagramChip({ base }: { base: React.CSSProperties }) {
               border: "2px solid var(--bg-card)",
             }}
           >
-            <NextImage src="/IMG_2245.jpg" alt="@frqann" width={52} height={52} style={{ objectFit: "cover", objectPosition: "center 5%", transform: "scale(1.12)" }} />
+            <NextImage src="instagram-image/IMG_2245.jpg" alt="@frqann" width={52} height={52} style={{ objectFit: "cover", objectPosition: "center 5%", transform: "scale(1.12)" }} />
           </div>
         </div>
 
@@ -2159,7 +2159,7 @@ export default function HomePage() {
                     transition: "opacity 0.5s ease",
                   }}
                 >
-                  <NextImage src="/furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.06)" }} />
+                  <NextImage src="furqan-image/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.06)" }} />
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "38%", background: "linear-gradient(to top, rgba(0,0,0,0.18), transparent)", pointerEvents: "none" }} />
                 </div>
                 {/* Badge — 3+ */}

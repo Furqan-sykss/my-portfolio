@@ -355,7 +355,7 @@ function InstagramChip({ base }: { base: React.CSSProperties }) {
               border: "2px solid var(--bg-card)",
             }}
           >
-            <NextImage src="instagram-image/IMG_2245.jpg" alt="@frqann" unoptimized={true} width={52} height={52} style={{ objectFit: "cover", objectPosition: "center 5%", transform: "scale(1.12)" }} />
+            <NextImage src="/instagram-image/IMG_2245.jpg" alt="@frqann" width={52} height={52} style={{ objectFit: "cover", objectPosition: "center 5%", transform: "scale(1.12)" }} />
           </div>
         </div>
 

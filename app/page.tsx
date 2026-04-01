@@ -1959,7 +1959,7 @@ export default function HomePage() {
             ].join(", "),
           }}
         >
-          <NextImage src="/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.05)" }} />
+          <NextImage src="furqan-image/Furqan.jpg" alt="Furqan" fill priority style={{ objectFit: "cover", objectPosition: "center 8%", transform: "scale(1.05)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.5) 100%)" }} />
           {/* Name tag */}
           <div

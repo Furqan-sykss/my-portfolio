@@ -1974,7 +1974,7 @@ export default function HomePage() {
               transition: "opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s",
             }}
           >
-            <p style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 4 }}>Full-Stack Developer</p>
+            <p style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 4 }}>Web Developer</p>
             <p style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.3rem", color: "rgba(255,255,255,0.92)", fontWeight: 400 }}>Furqan</p>
           </div>
         </div>

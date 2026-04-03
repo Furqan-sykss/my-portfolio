@@ -47,8 +47,6 @@ export default function Navbar() {
         }
       },
       {
-        // rootMargin: potong 30% dari atas (navbar area) dan 40% dari bawah
-        // sehingga section dianggap "aktif" saat bagian tengahnya terlihat
         rootMargin: "-30% 0px -40% 0px",
         threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
       },
@@ -68,6 +66,14 @@ export default function Navbar() {
     const nowDark = html.classList.contains("dark");
     setIsDark(nowDark);
     localStorage.setItem("theme", nowDark ? "dark" : "light");
+  };
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      history.pushState(null, "", window.location.pathname); // hapus # dari URL
+    }
   };
 
   const links = ["projects", "experience", "certifications", "contact"];
@@ -102,12 +108,14 @@ export default function Navbar() {
               return (
                 <a
                   key={s}
-                  href={`#${s}`}
+                  href="javascript:void(0)"
+                  onClick={() => scrollTo(s)}
                   style={{
                     textDecoration: "none",
                     color: isActive ? "var(--accent)" : "var(--text-muted)",
                     transition: "color 0.2s ease",
                     fontWeight: isActive ? 600 : 500,
+                    cursor: "pointer",
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = isActive ? "var(--accent)" : "var(--text-muted)")}
@@ -224,8 +232,11 @@ export default function Navbar() {
               return (
                 <a
                   key={s}
-                  href={`#${s}`}
-                  onClick={() => setMenuOpen(false)}
+                  href="javascript:void(0)"
+                  onClick={() => {
+                    scrollTo(s);
+                    setMenuOpen(false);
+                  }}
                   style={{
                     textDecoration: "none",
                     color: isActive ? "var(--accent)" : "var(--text-secondary)",
@@ -239,6 +250,7 @@ export default function Navbar() {
                     display: "block",
                     backgroundColor: isActive ? "var(--accent-glow)" : "transparent",
                     outline: "none",
+                    cursor: "pointer",
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {

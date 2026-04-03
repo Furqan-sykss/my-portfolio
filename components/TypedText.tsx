@@ -18,7 +18,7 @@ export default function TypedText() {
   useEffect(() => {
     // Identik dengan new Typed('#typed-text', {...}) di app.js Laravel
     const typed = new Typed(el.current!, {
-      strings: ["Web Developer", "Laravel Developer", "Backend Engineer", "Data Engineer", "System Architect", "API Specialist"],
+      strings: ["Web Developer", "Laravel Developer", "Next.js Developer", "Frontend Developer", "Backend Developer", "Data Engineer", "System Architect", "API integration"],
       typeSpeed: 60,
       backSpeed: 40,
       backDelay: 1500,

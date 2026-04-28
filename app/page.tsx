@@ -124,6 +124,33 @@ const projects = [
   },
 ];
 
+const additionalProjects: Project[] = [
+  {
+    title: "Hands-on Network Security Implementation",
+    period: "Aug 2023 - Dec 2023",
+    tag: "Academic",
+    desc: "Hands-on network security project consisting of 12 practical modules covering firewall configuration, intrusion detection, proxy servers, cryptography, SSL/TLS, and basic security monitoring on Linux environments.",
+    stack: ["Linux", "Security", "IDS", "Firewall", "Proxy", "SSL/TLS", "Cryptography", "GPG", "Tripwire"],
+    detail: {
+      highlights: [
+        "Configured IPTables firewall with SSH/Telnet access control",
+        "Implemented Snort IDS for real-time traffic monitoring",
+        "Deployed HTTPS using self-signed SSL/TLS certificates on Apache2",
+        "Performed SQL Injection testing using SQLMap",
+        "Implemented GPG encryption with RSA 3072-bit keys",
+        "Configured Squid Proxy for website filtering",
+      ],
+      links: [
+        {
+          label: "Project Documentation",
+          href: "https://drive.google.com/drive/folders/1syrjC2Fq90Ms5qCKa3_d_3JFBlPGdExA?usp=sharing",
+          icon: "drive",
+        },
+      ],
+    },
+  },
+];
+
 const experience = [
   {
     role: "Event Crew — Runner",
@@ -1856,7 +1883,7 @@ export default function HomePage() {
   const [rects, setRects] = useState<Rects>({ heading: null, body: null, photo: null });
   const [fromRect, setFromRect] = useState<BRect | null>(null);
   const [phase, setPhase] = useState<"idle" | "zoom-in" | "hold" | "zoom-out" | "done">("idle");
-  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showInternModal, setShowInternModal] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showEducationModal, setShowEducationModal] = useState(false);
@@ -2363,6 +2390,105 @@ export default function HomePage() {
           </section>
         </FadeUp>
         <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════
+            EXPERIENCE — timeline with ring nodes
+        ══════════════════════════════════════════════════════════════════ */}
+        <FadeUp>
+          <section id="experience">
+            <SectionHeader eyebrow="Career" title="Experience" />
+            <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 0 }}>
+              {/* Vertical connector line */}
+              <div style={{ position: "absolute", top: 20, bottom: 20, left: 10, width: 1, backgroundColor: "var(--border)" }} />
+              {experience.map((e, i) => (
+                <FadeUp key={i} delay={i * 100}>
+                  <div style={{ display: "flex", gap: 22, paddingBottom: i < experience.length - 1 ? "0.85rem" : 0 }}>
+                    {/* Ring node */}
+                    <div style={{ flexShrink: 0, paddingTop: 4, zIndex: 1 }}>
+                      <div
+                        style={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          backgroundColor: "var(--bg-card)",
+                          border: `2px solid var(--accent)`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: "0 0 0 4px var(--bg)",
+                        }}
+                      >
+                        <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--accent)" }} />
+                      </div>
+                    </div>
+                    {/* Card — KPU (i===0) and Event Crew (i===1) are clickable */}
+                    <div
+                      className="exp-card"
+                      onClick={i === 0 ? () => setShowEventModal(true) : i === 1 ? () => setShowInternModal(true) : undefined}
+                      style={{
+                        flex: 1,
+                        padding: "1.1rem 1.25rem",
+                        borderRadius: "1rem",
+                        backgroundColor: "var(--bg-card)",
+                        border: "1px solid var(--border)",
+                        marginBottom: i < experience.length - 1 ? "0.5rem" : 0,
+                        cursor: i === 0 || i === 1 ? "pointer" : "default",
+                        transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (i !== 0 && i !== 1) return;
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border-strong)";
+                        el.style.boxShadow = "var(--shadow-md)";
+                        el.style.transform = "translateY(-2px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (i !== 0 && i !== 1) return;
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border)";
+                        el.style.boxShadow = "none";
+                        el.style.transform = "translateY(0)";
+                      }}
+                    >
+                      {/* Top row: role title + View Details */}
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 2 }}>
+                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{e.role}</h3>
+                        {(i === 0 || i === 1) && (
+                          <span
+                            style={{
+                              flexShrink: 0,
+                              fontSize: "0.62rem",
+                              fontWeight: 600,
+                              letterSpacing: "0.08em",
+                              color: "var(--accent)",
+                              opacity: 0.75,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 4,
+                              paddingTop: 2,
+                            }}
+                          >
+                            View Details
+                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                              <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </span>
+                        )}
+                      </div>
+                      {/* Period — own line below role */}
+                      <span style={{ display: "block", fontSize: "0.67rem", color: "var(--text-muted)", marginBottom: 6 }}>{e.period}</span>
+                      <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{e.company}</p>
+                      <p style={{ fontSize: "0.82rem", lineHeight: 1.74, color: "var(--text-secondary)" }}>{e.desc}</p>
+                    </div>
+                  </div>
+                </FadeUp>
+              ))}
+            </div>
+          </section>
+        </FadeUp>
+
+        <Divider />
+
         <FadeUp>
           <section id="projects">
             <SectionHeader eyebrow="Portfolio" title="Projects" />
@@ -2654,100 +2780,79 @@ export default function HomePage() {
           </section>
         </FadeUp>
 
-        <Divider />
-
-        {/* ══════════════════════════════════════════════════════════════════
-            EXPERIENCE — timeline with ring nodes
-        ══════════════════════════════════════════════════════════════════ */}
         <FadeUp>
-          <section id="experience">
-            <SectionHeader eyebrow="Career" title="Experience" />
-            <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 0 }}>
-              {/* Vertical connector line */}
-              <div style={{ position: "absolute", top: 20, bottom: 20, left: 10, width: 1, backgroundColor: "var(--border)" }} />
-              {experience.map((e, i) => (
-                <FadeUp key={i} delay={i * 100}>
-                  <div style={{ display: "flex", gap: 22, paddingBottom: i < experience.length - 1 ? "0.85rem" : 0 }}>
-                    {/* Ring node */}
-                    <div style={{ flexShrink: 0, paddingTop: 4, zIndex: 1 }}>
-                      <div
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: "50%",
-                          backgroundColor: "var(--bg-card)",
-                          border: `2px solid var(--accent)`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 0 0 4px var(--bg)",
-                        }}
-                      >
-                        <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--accent)" }} />
-                      </div>
+          <section id="additional-projects">
+            <SectionHeader eyebrow="Portfolio" title="Additional Projects" />
+            <div
+              className="bento-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 10,
+              }}
+            >
+              <div
+                onClick={() => setSelectedProject(additionalProjects[0])}
+                className="proj-card bento-reveal"
+                style={{
+                  gridColumn: "1 / 4",
+                  backgroundColor: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "1rem",
+                  padding: "1.4rem 1.5rem",
+                  cursor: "pointer",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  minHeight: 220,
+                  animationDelay: "0ms",
+                }}
+              >
+                <div className="proj-card-main">
+                  <div className="proj-card-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
+                    <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <TagBadge>{additionalProjects[0].tag}</TagBadge>
+                      <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>
+                        Additional
+                      </span>
                     </div>
-                    {/* Card — KPU (i===0) and Event Crew (i===1) are clickable */}
-                    <div
-                      className="exp-card"
-                      onClick={i === 0 ? () => setShowEventModal(true) : i === 1 ? () => setShowInternModal(true) : undefined}
-                      style={{
-                        flex: 1,
-                        padding: "1.1rem 1.25rem",
-                        borderRadius: "1rem",
-                        backgroundColor: "var(--bg-card)",
-                        border: "1px solid var(--border)",
-                        marginBottom: i < experience.length - 1 ? "0.5rem" : 0,
-                        cursor: i === 0 || i === 1 ? "pointer" : "default",
-                        transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (i !== 0 && i !== 1) return;
-                        const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "var(--border-strong)";
-                        el.style.boxShadow = "var(--shadow-md)";
-                        el.style.transform = "translateY(-2px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        if (i !== 0 && i !== 1) return;
-                        const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "var(--border)";
-                        el.style.boxShadow = "none";
-                        el.style.transform = "translateY(0)";
-                      }}
-                    >
-                      {/* Top row: role title + View Details */}
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 2 }}>
-                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{e.role}</h3>
-                        {(i === 0 || i === 1) && (
-                          <span
-                            style={{
-                              flexShrink: 0,
-                              fontSize: "0.62rem",
-                              fontWeight: 600,
-                              letterSpacing: "0.08em",
-                              color: "var(--accent)",
-                              opacity: 0.75,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 4,
-                              paddingTop: 2,
-                            }}
-                          >
-                            View Details
-                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                              <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </span>
-                        )}
-                      </div>
-                      {/* Period — own line below role */}
-                      <span style={{ display: "block", fontSize: "0.67rem", color: "var(--text-muted)", marginBottom: 6 }}>{e.period}</span>
-                      <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{e.company}</p>
-                      <p style={{ fontSize: "0.82rem", lineHeight: 1.74, color: "var(--text-secondary)" }}>{e.desc}</p>
-                    </div>
+                    <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
+                      {additionalProjects[0].period}
+                    </span>
                   </div>
-                </FadeUp>
-              ))}
+                  <h3
+                    className="proj-card-title"
+                    style={{
+                      fontFamily: "var(--font-dm-serif)",
+                      fontSize: "clamp(1rem, 3.5vw, 1.25rem)",
+                      fontWeight: 400,
+                      color: "var(--text-primary)",
+                      marginBottom: 10,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {additionalProjects[0].title}
+                  </h3>
+                  <p className="proj-card-desc" style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>
+                    {additionalProjects[0].desc}
+                  </p>
+                </div>
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                    {additionalProjects[0].stack.map((s) => (
+                      <StackChip key={s}>{s}</StackChip>
+                    ))}
+                  </div>
+                  <div
+                    className="proj-card-cta"
+                    style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </FadeUp>

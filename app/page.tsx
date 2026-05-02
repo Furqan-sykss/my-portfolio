@@ -170,7 +170,7 @@ const certifications = [
   {
     name: "National Professional Certification in Web Development",
     issuer: "BNSP",
-    year: "2024",
+    year: "2025",
     category: "Professional",
     link: "https://drive.google.com/file/d/1hVjiQ0Ps4sCtMQZMBPA5kYLhE7BrnrEU/view?usp=sharing",
     badge: "★ Verified",
@@ -178,7 +178,7 @@ const certifications = [
   {
     name: "TOEFL Institutional Testing Program (ITP)",
     issuer: "ETS",
-    year: "2024",
+    year: "2025",
     category: "Language",
     score: "Score: 450",
     link: "https://drive.google.com/file/d/1d5n4anePz795cNpg7w9XFBygqo8n3yqf/view?usp=sharing",
@@ -187,21 +187,21 @@ const certifications = [
   {
     name: "DSF 46 Faculty of Data: Data Engineer",
     issuer: "Dibimbing.id",
-    year: "2024",
+    year: "2025",
     category: "Data",
     link: "https://drive.google.com/file/d/1rkkrpb6TKYstaHnZjpH3aC3xnDAEN9jq/view?usp=drive_link",
   },
   {
     name: "Digital Skill Fair 10.0 — Web Development BackEnd",
     issuer: "Dibimbing.id",
-    year: "2023",
+    year: "2022",
     category: "Web Dev",
     link: "https://drive.google.com/file/d/1-tTniLS-94LRkplidre2eyjIUBGtpmb4/view?usp=sharing",
   },
   {
     name: "Softskill Training & Character Building",
     issuer: "Tandaseru Indonesia",
-    year: "2023",
+    year: "2025",
     category: "Softskill",
     link: "https://drive.google.com/file/d/1v-B2GnD7bOGt0B-OzH4ltwI1e_t3tLSw/view?usp=drive_link",
   },

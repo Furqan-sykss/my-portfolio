@@ -2779,12 +2779,13 @@ export default function HomePage() {
             </div>
           </section>
         </FadeUp>
+        <Divider />
 
         <FadeUp>
           <section id="additional-projects">
             <SectionHeader eyebrow="Portfolio" title="Additional Projects" />
             <div
-              className="bento-grid"
+              className="bento-grid-plain"
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",

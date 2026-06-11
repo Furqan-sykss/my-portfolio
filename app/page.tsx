@@ -2132,8 +2132,12 @@ export default function HomePage() {
 
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                   <a
-                    href="#projects"
+                    href="#"
                     className="btn-p"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+                    }}
                     style={{
                       display: "inline-block",
                       padding: "10px 22px",
@@ -2148,7 +2152,11 @@ export default function HomePage() {
                     View Projects
                   </a>
                   <a
-                    href="#contact"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                    }}
                     className="btn-o"
                     style={{
                       display: "inline-block",

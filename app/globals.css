@@ -38,32 +38,32 @@ html {
 }
 
 .dark {
-  /* DARK — near-black + warm brown + tan + white */
-  --bg: #111712; /* near-black with green undertone */
-  --bg-card: #1a1f1b; /* slightly lighter card */
-  --bg-card-2: #211c17; /* warm card variant */
-  --bg-subtle: #252b22; /* subtle bg for chips */
-  --border: rgba(168, 151, 122, 0.13);
-  --border-mid: rgba(168, 151, 122, 0.22);
-  --border-strong: rgba(168, 151, 122, 0.5);
-  --text-primary: #f5f0e8; /* warm white */
-  --text-secondary: #b8ad9a; /* warm tan */
-  --text-muted: #8b776e; /* improved muted tan for better contrast */
-  --text-faint: #a89c8f; /* WCAG AA compliant faint color for better contrast */
-  --accent: #a8977a; /* warm tan — primary */
-  --status-color: #52d084;
-  --status-bg: rgba(82, 208, 132, 0.12);
-  --accent-2: #7a8b6f; /* muted olive */
-  --accent-warm: #c17d3c; /* amber */
-  --accent-glow: rgba(168, 151, 122, 0.1);
+  /* DARK — rich deep greens & warm tans for old-money warmth in dark mode */
+  --bg: #09140d; /* deep forest tone */
+  --bg-card: #131a15; /* slightly lighter card */
+  --bg-card-2: #1b231d; /* warm card variant */
+  --bg-subtle: #09140d; /* subtle chip background */
+  --border: rgba(194, 172, 141, 0.1);
+  --border-mid: rgba(194, 172, 141, 0.18);
+  --border-strong: rgba(194, 172, 141, 0.45);
+  --text-primary: #efe7d8; /* warm cream for text */
+  --text-secondary: #bfb29a; /* warm tan secondary */
+  --text-muted: #9a8a75; /* muted tan */
+  --text-faint: #b1a694; /* faint warm */
+  --accent: #a9976f; /* tan accent */
+  --status-color: #68d391; /* soft green status */
+  --status-bg: rgba(104, 211, 145, 0.09);
+  --accent-2: #7b8b6f; /* muted olive */
+  --accent-warm: #c17d3c; /* amber highlight */
+  --accent-glow: rgba(169, 144, 108, 0.09);
   --modal-surface-bg: var(--bg-card);
   --modal-surface-overlay: none;
   --modal-header-bg: var(--bg-card);
-  --line-color: rgba(168, 151, 122, 0.22);
-  --line-color-mid: rgba(168, 151, 122, 0.11);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0, 0, 0, 0.25);
+  --line-color: rgba(169, 144, 108, 0.22);
+  --line-color-mid: rgba(169, 144, 108, 0.11);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.36);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.44);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.6), 0 6px 16px rgba(0, 0, 0, 0.28);
 }
 
 /* ── Base ───────────────────────────────────────────────────────────────────── */

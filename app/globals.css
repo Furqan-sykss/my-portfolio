@@ -16,25 +16,25 @@ html {
   --bg-subtle: #ede8d5; /* muted cream for chips */
   --border: #ddd5be;
   --border-mid: #c8bfa5;
-  --border-strong: #4f633d; /* olive on hover */
+  --border-strong: #1f5132; /* olive on hover */
   --text-primary: #1c2214; /* near-black with green tint */
   --text-secondary: #3d4a35; /* dark olive */
   --text-muted: #7a8b6f; /* medium sage */
   --text-faint: #8a9678; /* improved faint sage for better contrast */
-  --accent: #4f633d; /* olive green — primary accent */
+  --accent: #1f5132; /* olive green — primary accent */
   --accent-2: #8ba194; /* sage — secondary accent */
   --accent-warm: #c17d3c; /* amber — highlight */
-  --accent-glow: rgba(79, 99, 61, 0.09);
+  --accent-glow: rgba(31, 81, 50, 0.09);
   --status-color: #10b981;
   --status-bg: rgba(16, 185, 129, 0.07);
   --modal-surface-bg: var(--bg-card);
   --modal-surface-overlay: none;
   --modal-header-bg: var(--bg-card);
-  --line-color: rgba(79, 99, 61, 0.2);
-  --line-color-mid: rgba(79, 99, 61, 0.12);
+  --line-color: rgba(31, 81, 50, 0.2);
+  --line-color-mid: rgba(31, 81, 50, 0.12);
   --shadow-sm: 0 1px 3px rgba(28, 34, 20, 0.06), 0 1px 2px rgba(28, 34, 20, 0.04);
-  --shadow-md: 0 6px 20px rgba(28, 34, 20, 0.07), 0 2px 6px rgba(28, 34, 20, 0.04);
-  --shadow-lg: 0 20px 50px rgba(28, 34, 20, 0.1), 0 6px 16px rgba(28, 34, 20, 0.06);
+  --shadow-md: 0 6px 20px rgba(31, 81, 50, 0.07), 0 2px 6px rgba(31, 81, 50, 0.04);
+  --shadow-lg: 0 20px 50px rgba(31, 81, 50, 0.1), 0 6px 16px rgba(31, 81, 50, 0.06);
 }
 
 .dark {

@@ -13,7 +13,7 @@ const skills = [
   { category: "Languages", items: ["JavaScript", "Python", "PHP", "Dart"], icon: "{ }" },
   { category: "Frameworks", items: ["Laravel", "Next.js", "Flask API", "Flutter"], icon: "⌥" },
   { category: "Frontend", items: ["Tailwind CSS", "Bootstrap", "CSS"], icon: "◈" },
-  { category: "Tools & DB", items: ["MySQL", "Git", "GitHub", "Figma", "Canva", "Selenium", "Laragon", "XAMPP", "MS Office"], icon: "⚙" },
+  { category: "Tools & DB", items: ["MySQL", "Git", "GitHub", "Vercel", "Figma", "Canva", "Selenium", "Laragon", "XAMPP", "MS Office"], icon: "⚙" },
 ];
 
 const projects = [
@@ -126,6 +126,38 @@ const projects = [
 ];
 
 const additionalProjects: Project[] = [
+  {
+    title: "Reusable Portfolio Templates",
+    period: "2026 – Present",
+    tag: "Digital Product",
+    desc: "Designed and developed a collection of reusable portfolio templates using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Embla Carousel. The templates explore different design directions, ranging from developer-focused layouts to editorial-inspired portfolios, and have been published through GitHub and deployed on Vercel for public demonstration. Selected template variations have also been adopted by individual clients.",
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Embla Carousel", "JavaScript", "CSS", "Git", "GitHub", "Vercel", "Figma"],
+    detail: {
+      highlights: [
+        "Developed multiple portfolio templates featuring distinct visual styles, interaction patterns, and presentation approaches",
+        "Implemented configuration-driven content management to simplify portfolio customization from centralized configuration files",
+        "Built reusable sections including hero banners, project showcases, experience timelines, certifications, and contact modules",
+        "Integrated Framer Motion animations, viewport-triggered transitions, modal interactions, and carousel-based showcases",
+        "Implemented theme customization using CSS variables, light/dark appearance support, and reusable animation hooks",
+        "Designed responsive layouts optimized for desktop, tablet, and mobile viewing experiences",
+        "Published source code through GitHub and deployed live demonstrations on Vercel to showcase functionality and design",
+        "Packaged selected templates as reusable digital products and distributed them to individual paying clients",
+      ],
+      links: [
+        {
+          label: "Live Demo #1",
+          href: "https://portfolio-template-1-furqan.vercel.app",
+          icon: "external",
+        },
+        {
+          label: "Live Demo #2",
+          href: "https://portfolio-template-2-furqan.vercel.app",
+          icon: "external",
+        },
+      ],
+    },
+  },
+
   {
     title: "Hands-on Network Security Implementation",
     period: "Aug 2023 - Dec 2023",
@@ -2793,76 +2825,193 @@ export default function HomePage() {
         <FadeUp>
           <section id="additional-projects">
             <SectionHeader eyebrow="Portfolio" title="Additional Projects" />
+
             <div
               className="bento-grid-plain"
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 10,
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: 12,
               }}
             >
-              <div
-                onClick={() => setSelectedProject(additionalProjects[0])}
-                className="proj-card bento-reveal"
-                style={{
-                  gridColumn: "1 / 4",
-                  backgroundColor: "var(--bg-card)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "1rem",
-                  padding: "1.4rem 1.5rem",
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  minHeight: 220,
-                  animationDelay: "0ms",
-                }}
-              >
-                <div className="proj-card-main">
-                  <div className="proj-card-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
-                    <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <TagBadge>{additionalProjects[0].tag}</TagBadge>
-                      <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>
-                        Additional
+              {additionalProjects.map((project, index) => (
+                <div
+                  key={project.title}
+                  onClick={() => setSelectedProject(project)}
+                  className="proj-card bento-reveal"
+                  style={{
+                    backgroundColor: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "1rem",
+                    padding: "1.4rem 1.5rem",
+                    cursor: "pointer",
+
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+
+                    minHeight: 260,
+
+                    transition: "transform .25s ease, border-color .25s ease",
+
+                    animationDelay: `${index * 100}ms`,
+                  }}
+                >
+                  <div className="proj-card-main">
+                    <div
+                      className="proj-card-meta"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 12,
+
+                        flexWrap: "wrap",
+                        gap: 6,
+                      }}
+                    >
+                      <div
+                        className="proj-card-badges"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                        }}
+                      >
+                        <TagBadge>{project.tag}</TagBadge>
+
+                        <span
+                          style={{
+                            fontSize: ".57rem",
+                            fontWeight: 700,
+
+                            letterSpacing: ".12em",
+
+                            textTransform: "uppercase",
+
+                            color: "var(--accent)",
+
+                            opacity: 0.4,
+                          }}
+                        >
+                          Additional
+                        </span>
+                      </div>
+
+                      <span
+                        style={{
+                          fontSize: ".65rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        {project.period}
                       </span>
                     </div>
-                    <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
-                      {additionalProjects[0].period}
-                    </span>
+
+                    <h3
+                      className="proj-card-title"
+                      style={{
+                        fontFamily: "var(--font-dm-serif)",
+
+                        fontSize: "clamp(1rem,3vw,1.25rem)",
+
+                        fontWeight: 400,
+
+                        color: "var(--text-primary)",
+
+                        lineHeight: 1.25,
+
+                        marginBottom: 10,
+                      }}
+                    >
+                      {project.title}
+                    </h3>
+
+                    <p
+                      className="proj-card-desc"
+                      style={{
+                        fontSize: ".82rem",
+
+                        lineHeight: 1.78,
+
+                        color: "var(--text-secondary)",
+
+                        display: "-webkit-box",
+
+                        WebkitLineClamp: 3,
+
+                        WebkitBoxOrient: "vertical",
+
+                        overflow: "hidden",
+
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {project.desc}
+                    </p>
                   </div>
-                  <h3
-                    className="proj-card-title"
+
+                  <div
+                    className="proj-card-footer"
                     style={{
-                      fontFamily: "var(--font-dm-serif)",
-                      fontSize: "clamp(1rem, 3.5vw, 1.25rem)",
-                      fontWeight: 400,
-                      color: "var(--text-primary)",
-                      marginBottom: 10,
-                      lineHeight: 1.25,
+                      display: "flex",
+
+                      alignItems: "center",
+
+                      justifyContent: "space-between",
+
+                      marginTop: 18,
+
+                      gap: 10,
                     }}
                   >
-                    {additionalProjects[0].title}
-                  </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>
-                    {additionalProjects[0].desc}
-                  </p>
-                </div>
-                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
-                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
-                    {additionalProjects[0].stack.map((s) => (
-                      <StackChip key={s}>{s}</StackChip>
-                    ))}
+                    <div
+                      style={{
+                        display: "flex",
+
+                        flexWrap: "wrap",
+
+                        gap: 5,
+
+                        flex: 1,
+
+                        minWidth: 0,
+                      }}
+                    >
+                      {project.stack.slice(0, 5).map((tech) => (
+                        <StackChip key={tech}>{tech}</StackChip>
+                      ))}
+
+                      {project.stack.length > 5 && <StackChip>+{project.stack.length - 5}</StackChip>}
+                    </div>
+
+                    <div
+                      style={{
+                        flexShrink: 0,
+
+                        width: 34,
+                        height: 34,
+
+                        borderRadius: 9,
+
+                        display: "flex",
+
+                        alignItems: "center",
+
+                        justifyContent: "center",
+
+                        backgroundColor: "var(--bg-subtle)",
+
+                        border: "1px solid var(--border)",
+                      }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
                   </div>
-                  <div
-                    className="proj-card-cta"
-                    style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </section>
         </FadeUp>

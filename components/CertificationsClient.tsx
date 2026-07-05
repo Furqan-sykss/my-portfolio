@@ -2,28 +2,38 @@
 
 import React, { useState } from "react";
 import FadeUp from "@/components/FadeUp";
+import { useLanguage } from "@/components/LanguageProvider";
+import { translate } from "@/components/siteTranslations";
+
+type LocalizedText = { id: string; en: string } | string;
 
 type Cert = {
-  name: string;
-  issuer: string;
+  name: LocalizedText;
+  issuer: LocalizedText;
   year: string;
-  category: string;
+  category: LocalizedText;
   link?: string;
-  badge?: string;
-  score?: string;
+  badge?: LocalizedText;
+  score?: LocalizedText;
 };
 
 export default function CertificationsClient({ certifications }: { certifications: Cert[] }) {
   const [showAll, setShowAll] = useState(false);
+  const { lang } = useLanguage();
   const INITIAL_COUNT = 4;
   const visible = showAll ? certifications : certifications.slice(0, INITIAL_COUNT);
   const remaining = Math.max(0, certifications.length - INITIAL_COUNT);
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+  const resolveText = (value?: LocalizedText) => {
+    if (!value) return "";
+    return typeof value === "string" ? value : lang === "id" ? value.id : value.en;
+  };
 
   return (
     <>
       <div style={{ display: "grid", gap: 8 }} className="grid-cols-1 sm:grid-cols-2 cert-grid">
         {visible.map((c, i) => (
-          <FadeUp key={c.name} delay={i * 42}>
+          <FadeUp key={`${resolveText(c.name)}-${i}`} delay={i * 42}>
             <a
               href={c.link}
               target="_blank"
@@ -72,21 +82,21 @@ export default function CertificationsClient({ certifications }: { certification
 
               <div className="cert-content" style={{ minWidth: 0, flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
-                  <p style={{ fontSize: "0.81rem", fontWeight: 500, lineHeight: 1.4, color: "var(--text-primary)" }}>{c.name}</p>
+                  <p style={{ fontSize: "0.81rem", fontWeight: 500, lineHeight: 1.4, color: "var(--text-primary)" }}>{resolveText(c.name)}</p>
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0, marginTop: 3, color: "var(--text-faint)", opacity: 0.5 }}>
                     <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "2px 6px", marginBottom: 6 }}>
-                  <span style={{ fontSize: "0.67rem", color: "var(--text-muted)" }}>{c.issuer}</span>
+                  <span style={{ fontSize: "0.67rem", color: "var(--text-muted)" }}>{resolveText(c.issuer)}</span>
                   {c.score && (
                     <>
-                      <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>·</span>
-                      <span style={{ fontSize: "0.65rem", fontWeight: 600, color: "var(--accent)", opacity: 0.8 }}>{c.score}</span>
+                      <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>|</span>
+                      <span style={{ fontSize: "0.65rem", fontWeight: 600, color: "var(--accent)", opacity: 0.8 }}>{resolveText(c.score)}</span>
                     </>
                   )}
-                  <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>·</span>
+                  <span style={{ fontSize: "0.55rem", color: "var(--text-faint)" }}>|</span>
                   <span style={{ fontSize: "0.62rem", color: "var(--text-faint)" }}>{c.year}</span>
                 </div>
 
@@ -104,7 +114,7 @@ export default function CertificationsClient({ certifications }: { certification
                       border: "1px solid var(--border-mid)",
                     }}
                   >
-                    {c.category}
+                    {resolveText(c.category)}
                   </span>
                   {c.badge && (
                     <span
@@ -119,7 +129,7 @@ export default function CertificationsClient({ certifications }: { certification
                         border: "1px solid rgba(99,178,100,0.25)",
                       }}
                     >
-                      ✓ Verified
+                      {t("verifiedLabel")}
                     </span>
                   )}
                 </div>
@@ -158,7 +168,7 @@ export default function CertificationsClient({ certifications }: { certification
               e.currentTarget.style.backgroundColor = "transparent";
             }}
           >
-            {showAll ? "Show Less ↑" : `Show ${remaining} More Certifications ↓`}
+            {showAll ? t("showLess") : t("showMoreCertifications", remaining)}
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@ import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -10,6 +11,7 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   display: "swap",
 });
+
 const dmSerif = DM_Serif_Display({
   subsets: ["latin"],
   weight: ["400"],
@@ -19,17 +21,19 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Furqan — Portfolio",
-  description: "Furqan — Web Developer",
+  title: "Furqan - Portfolio",
+  description: "Furqan - Web Developer",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${dmSans.variable} ${dmSerif.variable}`} suppressHydrationWarning>
+    <html lang="id" className={`dark ${dmSans.variable} ${dmSerif.variable}`} suppressHydrationWarning>
       <body style={{ backgroundColor: "var(--bg)", color: "var(--text-primary)", fontFamily: "var(--font-dm-sans), ui-sans-serif, system-ui" }} className="antialiased relative overflow-x-hidden min-h-screen">
-        <Navbar />
-        <main className="pt-24 pb-16 px-4">{children}</main>
-        <ScrollToTop />
+        <LanguageProvider>
+          <Navbar />
+          <main className="pt-24 pb-16 px-4">{children}</main>
+          <ScrollToTop />
+        </LanguageProvider>
       </body>
     </html>
   );

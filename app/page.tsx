@@ -1,35 +1,98 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import NextImage from "next/image";
 import TypedText from "@/components/TypedText";
+import { useLanguage } from "@/components/LanguageProvider";
+import { translate } from "@/components/siteTranslations";
 import Counter from "@/components/Counter";
 import FadeUp from "@/components/FadeUp";
 import CertificationsClient from "@/components/CertificationsClient";
 
-// ─── Data ──────────────────────────────────────────────────────────────────────
+// ────── Data ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-const skills = [
-  { category: "Languages", items: ["JavaScript", "Python", "PHP", "Dart"], icon: "{ }" },
-  { category: "Frameworks", items: ["Laravel", "Next.js", "Flask API", "Flutter"], icon: "⌥" },
-  { category: "Frontend", items: ["Tailwind CSS", "Bootstrap", "CSS"], icon: "◈" },
-  { category: "Tools & DB", items: ["MySQL", "Git", "GitHub", "Vercel", "Figma", "Canva", "Selenium", "Laragon", "XAMPP", "MS Office"], icon: "⚙" },
+type Localized = { id: string; en: string };
+type LocalizedText = Localized | string;
+
+const skills: { category: Localized; items: string[]; icon: string }[] = [
+  {
+    category: {
+      id: "Bahasa Pemrograman",
+      en: "Programming Languages",
+    },
+    items: ["JavaScript", "Python", "PHP", "Dart"],
+    icon: "{ }",
+  },
+  {
+    category: {
+      id: "Framework",
+      en: "Frameworks",
+    },
+    items: ["Laravel", "Next.js", "Flask", "Flutter"],
+    icon: "</>",
+  },
+  {
+    category: {
+      id: "Frontend",
+      en: "Frontend",
+    },
+    items: ["HTML5", "CSS3", "Tailwind CSS", "Bootstrap"],
+    icon: "[]",
+  },
+  {
+    category: {
+      id: "Tools & Database",
+      en: "Tools & Databases",
+    },
+    items: ["MySQL", "PostgreSQL", "Git", "GitHub", "Vercel", "Selenium", "Figma", "Canva", "Laragon", "XAMPP", "Microsoft Office"],
+    icon: "DB",
+  },
 ];
 
-const projects = [
+type Project = {
+  title: Localized;
+  period: Localized;
+  tag: Localized;
+  desc: Localized;
+  stack: string[];
+  detail: { highlights: Localized[]; links: { label: LocalizedText; href: string; icon?: string }[] };
+};
+
+const projects: Project[] = [
   {
-    title: "Sentiment Analysis of the Attorney General's Office's Performance",
-    period: "Oct 2024 – Jul 2025",
-    tag: "Final Project",
-    desc: "Conducted sentiment analysis on TikTok public opinion data regarding the Attorney General's Office performance, using Python and Selenium for data collection and machine learning for classification. Delivered results through an integrated Laravel–Flask dashboard.",
-    stack: ["Python", "Selenium", "Scraping", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "Github"],
+    title: {
+      id: "Analisis Sentimen Opini Publik terhadap Kejaksaan Agung",
+      en: "Sentiment Analysis of Public Opinion on the Attorney General's Office",
+    },
+    period: { id: "Okt 2024 - Jul 2025", en: "Oct 2024 - Jul 2025" },
+    tag: { id: "Proyek Akhir", en: "Final Project" },
+    desc: {
+      id: "Melakukan analisis sentimen terhadap opini publik di TikTok mengenai Kejaksaan Agung dengan memanfaatkan Python dan Selenium untuk pengumpulan data otomatis serta model machine learning untuk klasifikasi sentimen. Hasil analisis disajikan melalui dashboard terintegrasi berbasis Laravel dan Flask.",
+      en: "Conducted sentiment analysis on TikTok public opinion regarding the Attorney General's Office by leveraging Python and Selenium for automated data collection and machine learning models for sentiment classification. Presented the results through an integrated Laravel–Flask dashboard.",
+    },
+    stack: ["Python", "Selenium", "Scraping", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "GitHub"],
     detail: {
       highlights: [
-        "Collected over thousands of TikTok comments via automated web scraping using Python & Selenium",
-        "Trained and evaluated multiple machine learning models for Indonesian-language sentiment classification",
-        "Built a REST API bridge between Flask (ML engine) and Laravel (web dashboard)",
-        "Developed an interactive dashboard with real-time sentiment trend visualizations and performance metrics",
-        "Applied data preprocessing techniques including tokenization, stopword removal, and TF-IDF vectorization",
+        {
+          id: "Mengumpulkan ribuan komentar TikTok melalui proses web scraping otomatis menggunakan Python dan Selenium.",
+          en: "Collected thousands of TikTok comments through automated web scraping using Python and Selenium.",
+        },
+        {
+          id: "Melatih dan mengevaluasi beberapa model machine learning untuk klasifikasi sentimen berbahasa Indonesia.",
+          en: "Trained and evaluated multiple machine learning models for Indonesian-language sentiment classification.",
+        },
+        {
+          id: "Membangun integrasi REST API antara Flask sebagai engine machine learning dan Laravel sebagai dashboard web.",
+          en: "Built a REST API integration between Flask as the machine learning engine and Laravel as the web dashboard.",
+        },
+        {
+          id: "Mengembangkan dashboard interaktif yang menampilkan tren sentimen, hasil klasifikasi, dan insight analitis secara real time.",
+          en: "Developed an interactive dashboard featuring real-time sentiment trends, classification results, and analytical insights.",
+        },
+        {
+          id: "Menerapkan tahapan pra-pemrosesan data, termasuk tokenisasi, penghapusan stopword, dan vektorisasi TF-IDF.",
+          en: "Applied data preprocessing techniques including tokenization, stopword removal, and TF-IDF vectorization.",
+        },
       ],
       links: [
         { label: "GitHub", href: "https://github.com/Furqan-sykss/Laravel-sentiment-kejagung", icon: "github" },
@@ -38,87 +101,168 @@ const projects = [
     },
   },
   {
-    title: "Data Recapitulation System",
-    period: "Feb 2024 – Aug 2024",
-    tag: "KPU RI",
-    desc: "Developed a prototype web-based recapitulation system for PPK and PPS electoral body membership data during an internship at the Secretariat General of KPU RI, based on SIAKBA workflow references and built with Laravel and MySQL.",
-    stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "Github"],
+    title: {
+      id: "Sistem Pengelolaan Data Keanggotaan Badan Ad Hoc",
+      en: "Election Workforce Data Management System",
+    },
+    period: { id: "Feb 2024 - Agu 2024", en: "Feb 2024 - Aug 2024" },
+    tag: { id: "KPU RI", en: "KPU RI" },
+    desc: {
+      id: "Mengembangkan prototipe sistem informasi berbasis web untuk mengelola data keanggotaan badan ad hoc (PPK dan PPS) selama program magang di Sekretariat Jenderal KPU RI. Sistem dirancang berdasarkan alur kerja resmi SIAKBA dan dibangun menggunakan Laravel serta MySQL.",
+      en: "Developed a prototype web-based information system for managing PPK and PPS membership data during an internship at the Secretariat General of KPU RI. The system was designed based on the official SIAKBA workflow and implemented using Laravel and MySQL.",
+    },
+    stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "GitHub"],
     detail: {
       highlights: [
-        "Designed and built a prototype recapitulation system for PPK & PPS ad-hoc body membership data (KIP Aceh)",
-        "Analyzed the official SIAKBA system workflow as the primary reference for system architecture",
-        "Implemented role-based access for National Admin, Provincial Admin, and District Operator",
-        "Developed data validation logic to prevent cross-region data entry errors",
-        "Produced comprehensive recapitulation reports with chart visualizations per district and sub-district",
+        {
+          id: "Merancang dan membangun prototipe sistem pengelolaan data keanggotaan badan ad hoc PPK dan PPS untuk KIP Aceh.",
+          en: "Designed and developed a prototype system for managing PPK and PPS electoral workforce membership data for KIP Aceh.",
+        },
+        {
+          id: "Menganalisis alur kerja resmi SIAKBA sebagai acuan utama dalam perancangan arsitektur sistem.",
+          en: "Analyzed the official SIAKBA workflow as the primary reference for designing the system architecture.",
+        },
+        {
+          id: "Mengimplementasikan sistem akses berbasis peran untuk Admin Nasional, Admin Provinsi, dan Operator Kecamatan.",
+          en: "Implemented role-based access control for National Administrators, Provincial Administrators, and District Operators.",
+        },
+        {
+          id: "Mengembangkan mekanisme validasi data untuk meminimalkan kesalahan entri antarwilayah.",
+          en: "Developed data validation mechanisms to minimize cross-region data entry errors.",
+        },
+        {
+          id: "Menghasilkan laporan rekapitulasi lengkap dengan visualisasi grafik untuk mempermudah pemantauan data.",
+          en: "Generated comprehensive reports with graphical summaries to simplify administrative monitoring.",
+        },
       ],
       links: [
         { label: "GitHub", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
-        { label: "Wireframe (Figma)", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
+        { label: { id: "Wireframe (Figma)", en: "Wireframe (Figma)" }, href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
         { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
       ],
     },
   },
   {
-    title: "Car Rental Information System Design",
-    period: "Aug 2023 – Nov 2023",
-    tag: "Academic",
-    desc: "Designed a comprehensive car rental information system in Figma, covering user interface structure, end-to-end user workflows, and interactive prototype for rental booking and management features.",
+    title: { id: "Desain Sistem Informasi Rental Mobil", en: "Car Rental Platform UI/UX Design" },
+    period: { id: "Agu 2023 - Nov 2023", en: "Aug 2023 - Nov 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Merancang sistem informasi rental mobil yang mencakup struktur antarmuka, alur pengguna, serta prototipe interaktif untuk proses pemesanan dan pengelolaan kendaraan.",
+      en: "Designed a comprehensive car rental information system in Figma, including information architecture, end-to-end user flows, and an interactive prototype for vehicle booking and management.",
+    },
     stack: ["Figma"],
     detail: {
       highlights: [
-        "Designed full UI/UX prototype covering vehicle browsing, booking, and payment flows",
-        "Created wireframes, high-fidelity mockups, and interactive prototype in Figma",
-        "Defined user personas and mapped end-to-end user journeys for both customers and admins",
+        {
+          id: "Merancang prototipe UI/UX lengkap yang mencakup katalog kendaraan, proses pemesanan, dan alur pembayaran.",
+          en: "Designed a complete UI/UX prototype covering vehicle catalog browsing, booking, and payment workflows.",
+        },
+        {
+          id: "Membuat wireframe, mockup high-fidelity, dan prototipe interaktif menggunakan Figma.",
+          en: "Created wireframes, high-fidelity mockups, and an interactive prototype in Figma.",
+        },
+        {
+          id: "Menyusun persona pengguna serta memetakan perjalanan pengguna untuk pelanggan dan administrator.",
+          en: "Defined user personas and mapped end-to-end user journeys for both customers and administrators.",
+        },
       ],
-      links: [{ label: "Figma Design", href: "https://www.figma.com/design/h08W9Bf5GYRqWp2c586C0c/Rental-Car-Design?node-id=0-1&t=KWynD5QTHq7jhNhg-1", icon: "figma" }],
+      links: [{ label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/h08W9Bf5GYRqWp2c586C0c/Rental-Car-Design?node-id=0-1&t=KWynD5QTHq7jhNhg-1", icon: "figma" }],
     },
   },
   {
-    title: "History & Philosophy Info System",
-    period: "Feb 2023 – May 2023",
-    tag: "Academic",
-    desc: "Developed a web-based information system using Laravel, XAMPP, and Tailwind CSS to present structured historical and philosophical content with a clean, responsive interface.",
-    stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "Github"],
+    title: {
+      id: "Sistem Informasi Sejarah dan Filsafat",
+      en: "History and Philosophy Information System",
+    },
+    period: { id: "Feb 2023 - Mei 2023", en: "Feb 2023 - May 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Mengembangkan sistem informasi berbasis web menggunakan Laravel, MySQL, dan Tailwind CSS untuk menyajikan konten sejarah dan filsafat secara terstruktur dengan antarmuka yang responsif.",
+      en: "Developed a web-based information system using Laravel, MySQL, and Tailwind CSS to deliver structured historical and philosophical content through a clean, responsive interface.",
+    },
+    stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "GitHub"],
     detail: {
       highlights: [
-        "Built a full-stack web information system for historical and philosophical content",
-        "Implemented a responsive UI with Tailwind CSS, optimized for both desktop and mobile",
-        "Structured content management with Laravel's MVC architecture and MySQL database",
+        {
+          id: "Mengembangkan sistem informasi full-stack untuk mengelola dan menyajikan konten sejarah serta filsafat.",
+          en: "Developed a full-stack web information system for managing and presenting historical and philosophical content.",
+        },
+        {
+          id: "Menerapkan antarmuka responsif menggunakan Tailwind CSS yang dioptimalkan untuk desktop dan perangkat seluler.",
+          en: "Implemented a responsive user interface with Tailwind CSS optimized for both desktop and mobile devices.",
+        },
+        {
+          id: "Mengembangkan modul manajemen konten menggunakan arsitektur MVC Laravel dan basis data MySQL.",
+          en: "Developed a structured content management module using Laravel's MVC architecture and MySQL.",
+        },
       ],
       links: [
         { label: "GitHub", href: "https://github.com/Furqan-sykss/laravel-amerta", icon: "github" },
-        { label: "Figma Design", href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
+        { label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
       ],
     },
   },
   {
-    title: "Coffee Shop Reservation",
-    period: "Feb 2023 – Mar 2023",
-    tag: "Academic",
-    desc: "Built a simple online reservation website for a coffee shop, enabling customers to browse the menu and place orders directly through the web using PHP native and Bootstrap.",
-    stack: ["PHP Native", "Laragon", "MySQL", "Bootstrap", "CSS", "Git", "Github"],
+    title: {
+      id: "Sistem Reservasi Kafe",
+      en: "Coffee Shop Reservation System",
+    },
+    period: { id: "Feb 2023 - Mar 2023", en: "Feb 2023 - Mar 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Mengembangkan sistem reservasi berbasis web untuk kafe yang memungkinkan pelanggan melihat menu serta melakukan reservasi secara online menggunakan Native PHP  dan Bootstrap.",
+      en: "Developed a web-based reservation system for a coffee shop, allowing customers to browse the menu and make reservations through a PHP-based application powered by Bootstrap.",
+    },
+    stack: ["Native PHP", "Laragon", "MySQL", "Bootstrap", "CSS", "Git", "GitHub"],
     detail: {
       highlights: [
-        "Developed an online reservation and ordering system using PHP native without a framework",
-        "Implemented a menu display, order cart, and booking form connected to a MySQL database",
-        "Styled with Bootstrap for a clean and mobile-friendly interface",
+        {
+          id: "Mengembangkan sistem reservasi dan pemesanan online menggunakan Native PHP tanpa framework.",
+          en: "Developed an online reservation and ordering system using native PHP without a framework.",
+        },
+        {
+          id: "Mengimplementasikan katalog menu, formulir reservasi, dan fitur pemesanan yang terintegrasi dengan basis data MySQL.",
+          en: "Implemented menu browsing, reservation forms, and ordering features integrated with a MySQL database.",
+        },
+        {
+          id: "Membangun antarmuka yang responsif dan ramah perangkat seluler menggunakan Bootstrap.",
+          en: "Built a clean, responsive, and mobile-friendly interface using Bootstrap.",
+        },
       ],
       links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/2A_praktikum_2021573010051/tree/main/DeCafe", icon: "github" }],
     },
   },
   {
-    title: "Personal Portfolio Website",
-    period: "Nov 2022 – Dec 2022",
-    tag: "Self-Project",
-    desc: "Developed and continuously refined a personal portfolio website with Next.js to present projects, experience, education, certifications, and contact information in a structured, responsive format.",
-    stack: ["Next.js", "TypeScript", "Tailwind", "CSS", "JavaScript", "Git", "Github"],
+    title: { id: "Situs Portofolio Pribadi", en: "Personal Portfolio Website" },
+    period: { id: "Nov 2022 - Des 2022", en: "Nov 2022 - Dec 2022" },
+    tag: { id: "Proyek Mandiri", en: "Self-Project" },
+    desc: {
+      id: "Mengembangkan dan terus menyempurnakan situs portofolio pribadi berbasis Next.js untuk menampilkan proyek, pengalaman, pendidikan, sertifikasi, keterampilan, dan informasi kontak dalam tampilan yang modern, responsif, dan terstruktur.",
+      en: "Developed and continuously enhanced a personal portfolio website built with Next.js to showcase projects, professional experience, education, certifications, technical skills, and contact information through a modern, responsive interface.",
+    },
+    stack: ["Next.js", "TypeScript", "Tailwind", "CSS", "JavaScript", "Git", "GitHub"],
     detail: {
       highlights: [
-        "Designed a responsive portfolio interface with dedicated sections for projects, technical skills, career experience, education, certifications, and contact information",
-        "Implemented interactive project and experience detail modals with responsive layouts for desktop and mobile viewing",
-        "Added light and dark theme support with a consistent visual system across cards, sections, and modal components",
-        "Refined mobile behavior for stacked project cards, spacing, and content hierarchy to improve readability on smaller screens",
-        "Maintained the site as an ongoing self-project, updating both content and UI details to better reflect current work and presentation standards",
+        {
+          id: "Merancang antarmuka portofolio responsif yang mencakup bagian proyek, keterampilan teknis, pengalaman, pendidikan, sertifikasi, dan informasi kontak.",
+          en: "Designed a responsive portfolio interface featuring dedicated sections for projects, technical skills, professional experience, education, certifications, and contact information.",
+        },
+        {
+          id: "Mengimplementasikan modal interaktif untuk detail proyek dan pengalaman dengan tata letak yang responsif pada desktop maupun perangkat seluler.",
+          en: "Implemented responsive modal dialogs for project and experience details across desktop and mobile devices.",
+        },
+        {
+          id: "Menerapkan dukungan tema terang dan gelap dengan sistem desain yang konsisten di seluruh aplikasi.",
+          en: "Implemented light and dark themes with a consistent design system across the entire application.",
+        },
+        {
+          id: "Mengoptimalkan pengalaman pengguna pada perangkat seluler melalui penyempurnaan tata letak kartu proyek, jarak antarelemen, dan hierarki konten.",
+          en: "Optimized the mobile experience by refining project card layouts, spacing, and content hierarchy for improved readability.",
+        },
+        {
+          id: "Memelihara dan terus mengembangkan portofolio sebagai proyek pribadi dengan memperbarui konten, fitur, serta penyempurnaan antarmuka secara berkala.",
+          en: "Continuously maintained and enhanced the portfolio by updating its content, features, and user interface to reflect ongoing growth and professional work.",
+        },
       ],
       links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/my-portfolio", icon: "github" }],
     },
@@ -127,55 +271,129 @@ const projects = [
 
 const additionalProjects: Project[] = [
   {
-    title: "Reusable Portfolio Templates",
-    period: "2026 – Present",
-    tag: "Digital Product",
-    desc: "Designed and developed a collection of reusable portfolio templates using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Embla Carousel. The templates explore different design directions, ranging from developer-focused layouts to editorial-inspired portfolios, and have been published through GitHub and deployed on Vercel for public demonstration. Selected template variations have also been adopted by individual clients.",
+    title: {
+      id: "Template Website Portofolio",
+      en: "Reusable Portfolio Website Templates",
+    },
+    period: {
+      id: "Maret 2026 - Sekarang",
+      en: "March 2026 - Present",
+    },
+    tag: {
+      id: "Produk Digital",
+      en: "Digital Product",
+    },
+    desc: {
+      id: "Merancang dan mengembangkan template website portofolio yang dapat digunakan kembali menggunakan Next.js, TypeScript, Tailwind CSS, Framer Motion, dan Embla Carousel. Setiap template mengeksplorasi pendekatan desain yang berbeda, mulai dari tata letak berfokus pada pengembang hingga gaya editorial modern. Seluruh template dipublikasikan melalui GitHub, dideploy di Vercel sebagai demonstrasi langsung, dan beberapa variasinya telah digunakan oleh klien individu.",
+      en: "Designed and developed reusable portfolio website templates using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Embla Carousel. Each template explores a distinct design direction, ranging from developer-focused layouts to editorial-inspired portfolios. The templates are published on GitHub, deployed on Vercel for live demonstrations, and selected variations have been delivered to individual clients.",
+    },
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Embla Carousel", "JavaScript", "CSS", "Git", "GitHub", "Vercel", "Figma"],
     detail: {
       highlights: [
-        "Developed multiple portfolio templates featuring distinct visual styles, interaction patterns, and presentation approaches",
-        "Implemented configuration-driven content management to simplify portfolio customization from centralized configuration files",
-        "Built reusable sections including hero banners, project showcases, experience timelines, certifications, and contact modules",
-        "Integrated Framer Motion animations, viewport-triggered transitions, modal interactions, and carousel-based showcases",
-        "Implemented theme customization using CSS variables, light/dark appearance support, and reusable animation hooks",
-        "Designed responsive layouts optimized for desktop, tablet, and mobile viewing experiences",
-        "Published source code through GitHub and deployed live demonstrations on Vercel to showcase functionality and design",
-        "Packaged selected templates as reusable digital products and distributed them to individual paying clients",
+        {
+          id: "Mengembangkan beberapa template website portofolio dengan gaya visual, pola interaksi, dan pendekatan penyajian yang berbeda.",
+          en: "Developed multiple portfolio website templates featuring distinct visual styles, interaction patterns, and presentation approaches.",
+        },
+        {
+          id: "Mengimplementasikan manajemen konten berbasis konfigurasi melalui satu file config.ts untuk mempermudah penyesuaian data dan konten.",
+          en: "Implemented configuration-driven content management through a single config.ts file to simplify content and data customization.",
+        },
+        {
+          id: "Merancang dan mengembangkan komponen yang dapat digunakan kembali, termasuk hero banner, showcase proyek, timeline pengalaman, sertifikasi, dan modul kontak.",
+          en: "Designed and developed reusable UI sections, including hero banners, project showcases, experience timelines, certification displays, and contact modules.",
+        },
+        {
+          id: "Mengintegrasikan animasi menggunakan Framer Motion, transisi berbasis viewport, interaksi modal, serta showcase berbasis carousel.",
+          en: "Integrated Framer Motion animations, viewport-triggered transitions, modal interactions, and carousel-based showcases.",
+        },
+        {
+          id: "Menerapkan sistem tema menggunakan variabel CSS, dukungan mode terang dan gelap, serta hook animasi yang dapat digunakan kembali.",
+          en: "Implemented theme customization using CSS variables, light and dark mode support, and reusable animation hooks.",
+        },
+        {
+          id: "Merancang tata letak responsif yang dioptimalkan untuk pengalaman pengguna di desktop, tablet, dan perangkat seluler.",
+          en: "Designed responsive layouts optimized for desktop, tablet, and mobile user experiences.",
+        },
+        {
+          id: "Mempublikasikan kode sumber melalui GitHub dan melakukan deployment ke Vercel sebagai demonstrasi langsung untuk menampilkan desain dan fungsionalitas.",
+          en: "Published the source code on GitHub and deployed the templates on Vercel for live demonstrations of their functionality and design.",
+        },
+        {
+          id: "Menyesuaikan beberapa template sesuai kebutuhan klien individu dan mendistribusikannya sebagai template website portofolio siap digunakan.",
+          en: "Customized selected templates to meet individual client requirements and delivered them as ready-to-use portfolio website templates.",
+        },
       ],
       links: [
         {
-          label: "Live Demo #1",
+          label: {
+            id: "Demo Langsung #1",
+            en: "Live Demo #1",
+          },
           href: "https://portfolio-template-1-furqan.vercel.app",
           icon: "external",
         },
         {
-          label: "Live Demo #2",
+          label: {
+            id: "Demo Langsung #2",
+            en: "Live Demo #2",
+          },
           href: "https://portfolio-template-2-furqan.vercel.app",
           icon: "external",
         },
       ],
     },
   },
-
   {
-    title: "Hands-on Network Security Implementation",
-    period: "Aug 2023 - Dec 2023",
-    tag: "Academic",
-    desc: "Hands-on network security project consisting of 12 practical modules covering firewall configuration, intrusion detection, proxy servers, cryptography, SSL/TLS, and basic security monitoring on Linux environments.",
-    stack: ["Linux", "Security", "IDS", "Firewall", "Proxy", "SSL/TLS", "Cryptography", "GPG", "Tripwire"],
+    title: {
+      id: "Praktikum Keamanan Jaringan",
+      en: "Practical Network Security Lab",
+    },
+    period: {
+      id: "Agu 2023 - Des 2023",
+      en: "Aug 2023 - Dec 2023",
+    },
+    tag: {
+      id: "Praktikum Akademik",
+      en: "Academic Laboratory",
+    },
+    desc: {
+      id: "Melaksanakan praktikum keamanan jaringan yang terdiri dari 12 modul mencakup konfigurasi firewall, sistem deteksi intrusi (IDS), server proxy, kriptografi, SSL/TLS, pengujian kerentanan, serta pemantauan keamanan pada lingkungan Linux.",
+      en: "Completed a hands-on network security laboratory consisting of twelve practical modules covering firewall configuration, intrusion detection systems (IDS), proxy servers, cryptography, SSL/TLS, vulnerability assessment, and security monitoring in Linux environments.",
+    },
+    stack: ["Linux", "IPTables", "Snort", "SQLMap", "Squid Proxy", "SSL/TLS", "Cryptography", "GPG", "Tripwire"],
     detail: {
       highlights: [
-        "Configured IPTables firewall with SSH/Telnet access control",
-        "Implemented Snort IDS for real-time traffic monitoring",
-        "Deployed HTTPS using self-signed SSL/TLS certificates on Apache2",
-        "Performed SQL Injection testing using SQLMap",
-        "Implemented GPG encryption with RSA 3072-bit keys",
-        "Configured Squid Proxy for website filtering",
+        {
+          id: "Mengonfigurasi firewall IPTables untuk mengendalikan akses SSH dan Telnet.",
+          en: "Configured IPTables firewall to control SSH and Telnet access.",
+        },
+        {
+          id: "Mengimplementasikan Snort IDS untuk pemantauan lalu lintas jaringan secara real-time.",
+          en: "Implemented Snort IDS for real-time network traffic monitoring.",
+        },
+        {
+          id: "Menerapkan HTTPS menggunakan sertifikat SSL/TLS bertanda tangan sendiri pada Apache2.",
+          en: "Deployed HTTPS using self-signed SSL/TLS certificates on Apache2.",
+        },
+        {
+          id: "Melakukan pengujian kerentanan SQL Injection menggunakan SQLMap.",
+          en: "Performed SQL injection vulnerability testing using SQLMap.",
+        },
+        {
+          id: "Mengimplementasikan enkripsi GPG menggunakan kunci RSA 3072-bit.",
+          en: "Implemented GPG encryption using 3072-bit RSA keys.",
+        },
+        {
+          id: "Mengonfigurasi Squid Proxy untuk penyaringan dan pengendalian akses situs web.",
+          en: "Configured Squid Proxy for website filtering and access control.",
+        },
       ],
       links: [
         {
-          label: "Project Documentation",
+          label: {
+            id: "Dokumentasi Proyek",
+            en: "Project Documentation",
+          },
           href: "https://drive.google.com/drive/folders/1syrjC2Fq90Ms5qCKa3_d_3JFBlPGdExA?usp=sharing",
           icon: "drive",
         },
@@ -184,84 +402,192 @@ const additionalProjects: Project[] = [
   },
 ];
 
-const experience = [
+type Experience = {
+  role: Localized;
+  company: Localized;
+  period: Localized;
+  desc: Localized;
+  highlights: Localized[];
+};
+
+const experience: Experience[] = [
   {
-    role: "Event Crew — Runner",
-    company: "PT Fasen Creative Quality × Tokopedia",
-    period: "March 2024",
-    desc: "Supported on-site operations for the Tokopedia Ramadan Extra 2024 Flash Sale event. Responsible for logistics coordination, crowd flow management, and ensuring smooth execution of event activities.",
+    role: {
+      id: "Crew Acara - Runner",
+      en: "Event Crew - Runner",
+    },
+    company: {
+      id: "PT Fasen Creative Quality × Tokopedia",
+      en: "PT Fasen Creative Quality × Tokopedia",
+    },
+    period: {
+      id: "Maret 2024",
+      en: "March 2024",
+    },
+    desc: {
+      id: "Mendukung operasional di lokasi selama acara Tokopedia Ramadan Extra 2024 Flash Sale yang berlangsung selama lima hari. Bertanggung jawab membantu koordinasi logistik, pengelolaan alur pengunjung, serta memastikan seluruh aktivitas acara berjalan dengan tertib dan lancar.",
+      en: "Supported on-site operations throughout the five-day Tokopedia Ramadan Extra 2024 Flash Sale event. Assisted with logistics coordination, crowd flow management, and ensuring the smooth execution of event activities.",
+    },
+    highlights: [
+      {
+        id: "Melaksanakan seluruh tugas operasional yang diberikan oleh Hall Coordinator dengan disiplin dan tanggung jawab.",
+        en: "Executed all assigned operational tasks under the direction of the Hall Coordinator with discipline and accountability.",
+      },
+      {
+        id: "Mendukung koordinasi logistik, pengelolaan keramaian, dan operasional di lokasi selama seluruh rangkaian acara.",
+        en: "Supported logistics coordination, crowd management, and on-site operations throughout the event.",
+      },
+      {
+        id: "Menjaga profesionalisme serta memberikan pelayanan yang baik kepada peserta dan pengunjung acara.",
+        en: "Maintained professionalism and delivered excellent service to event participants and visitors.",
+      },
+      {
+        id: "Memantau area penugasan dan memastikan operasional tetap berjalan tertib di zona venue yang menjadi tanggung jawab.",
+        en: "Monitored assigned areas and ensured orderly operations within the designated venue zones.",
+      },
+      {
+        id: "Berkolaborasi secara efektif dengan sesama kru dan supervisor untuk mencapai target operasional acara.",
+        en: "Collaborated effectively with fellow crew members and supervisors to achieve event operational objectives.",
+      },
+      {
+        id: "Mematuhi standar operasional acara, termasuk kebijakan seragam, prosedur kerja, dan protokol komunikasi.",
+        en: "Adhered to event operational standards, including uniform policies, work procedures, and communication protocols.",
+      },
+    ],
   },
   {
-    role: "Internship — Center for Data & IT",
-    company: "Secretariat General of KPU RI",
-    period: "Feb 2024 – Sep 2024",
-    desc: "Completed a 7-month internship at KPU RI's Center for Data & IT (Pusdatin). Contributed to voter data processing, TPS input across all Indonesian provinces, electoral recapitulation monitoring, and developed a web-based prototype system for ad-hoc electoral body membership data ahead of the 2024 Simultaneous Regional Elections.",
+    role: {
+      id: "Magang - Pusat Data & TI",
+      en: "IT Support Intern – Data & Information Center (Pusdatin)",
+    },
+    company: {
+      id: "Sekretariat Jenderal KPU RI",
+      en: "Secretariat General of KPU RI",
+    },
+    period: {
+      id: "Feb 2024 - Sep 2024",
+      en: "Feb 2024 - Sep 2024",
+    },
+    desc: {
+      id: "Menyelesaikan program magang industri selama tujuh bulan di Pusat Data & Teknologi Informasi (Pusdatin), Sekretariat Jenderal Komisi Pemilihan Umum Republik Indonesia (KPU RI), Jakarta. Berkontribusi di tiga divisi, yaitu Data & Informasi, Aplikasi & Tata Kelola Informasi, serta Infrastruktur TI, dengan terlibat dalam pengelolaan data pemilih, pemutakhiran data TPS, koordinasi administrasi, pemantauan rekapitulasi pemilu, serta pengembangan prototipe sistem berbasis web untuk pengelolaan data keanggotaan badan ad hoc pemilu.",
+      en: "Completed a seven-month industry internship at the Center for Data & Information Technology (Pusdatin), Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI), Jakarta. Contributed across three divisions—Data & Information, Application & Information Governance, and IT Infrastructure—by supporting voter data management, polling station (TPS) data updates, administrative coordination, election recapitulation monitoring, and the development of a web-based prototype for managing ad-hoc election committee membership data.",
+    },
+    highlights: [
+      {
+        id: "Berpartisipasi dalam kegiatan rekapitulasi dan pemantauan data pemilih tingkat nasional yang dikoordinasikan oleh Pusat Data dan Informasi (Pusdatin).",
+        en: "Participated in national voter data recapitulation and monitoring activities coordinated by the Data and Information Center (Pusdatin).",
+      },
+      {
+        id: "Melakukan seleksi, validasi, dan input status pemilih untuk Daftar Pemilih Tetap (DPT), Daftar Pemilih Tambahan (DPTb), dan Daftar Pemilih Khusus (DPK).",
+        en: "Performed voter status selection, validation, and data entry for the Permanent Voter List (DPT), Additional Voter List (DPTb), and Special Voter List (DPK).",
+      },
+      {
+        id: "Membantu penyusunan Daftar Pemilih Tambahan (DPTb), termasuk verifikasi pemilih yang memenuhi syarat namun belum terdaftar dalam Daftar Pemilih Tetap (DPT).",
+        en: "Assisted in compiling the Additional Voter List (DPTb), including verifying eligible voters who had not yet been registered in the Permanent Voter List (DPT).",
+      },
+      {
+        id: "Melakukan input serta verifikasi data Tempat Pemungutan Suara (TPS) berdasarkan provinsi, kabupaten/kota, kecamatan, dan desa/kelurahan untuk memastikan akurasi data.",
+        en: "Entered and verified Polling Station (TPS) data across provinces, regencies/cities, districts, and villages to ensure data accuracy.",
+      },
+      {
+        id: "Mendukung proses sinkronisasi dan penyampaian Data Penduduk Potensial Pemilih Pemilu (DP4) dari Kementerian Dalam Negeri kepada KPU RI sebagai dasar penyusunan daftar pemilih Pilkada Serentak 2024.",
+        en: "Supported the synchronization and submission of Potential Voter Population Data (DP4) from the Ministry of Home Affairs to KPU RI as the basis for preparing voter lists for the 2024 Simultaneous Regional Elections.",
+      },
+      {
+        id: "Berpartisipasi dalam rapat evaluasi pemutakhiran data pemilih Pemilu 2024 serta persiapan pembaruan data pemilih menjelang Pilkada Serentak 2024.",
+        en: "Participated in evaluation meetings for the 2024 Election voter data update and preparations for voter data updates ahead of the 2024 Simultaneous Regional Elections.",
+      },
+      {
+        id: "Mendukung rapat kerja penyusunan pedoman teknis pemutakhiran data pemilih serta sinkronisasi Data Penduduk Potensial Pemilih Pemilu (DP4).",
+        en: "Supported working meetings on technical guidelines for voter data updates and the synchronization of Potential Voter Population Data (DP4).",
+      },
+      {
+        id: "Membantu koordinasi logistik pada pertemuan antara Pusdatin dan Bareskrim Polri terkait keamanan serta integritas data pemilu.",
+        en: "Assisted with logistics coordination for meetings between Pusdatin and the Criminal Investigation Agency (Bareskrim Polri) regarding election data security and integrity.",
+      },
+      {
+        id: "Berpartisipasi dalam rapat kerja simulasi pemutakhiran data pemilih (Pantarlih) untuk persiapan Pilkada Serentak 2024.",
+        en: "Participated in working meetings on voter data update simulations (Pantarlih) for the 2024 Simultaneous Regional Elections.",
+      },
+      {
+        id: "Merancang dan mengembangkan prototipe sistem rekapitulasi berbasis Laravel dan MySQL untuk pengelolaan data keanggotaan PPK dan PPS berdasarkan alur kerja SIAKBA (Proyek Akademik).",
+        en: "Designed and developed a Laravel and MySQL-based prototype recapitulation system for managing PPK and PPS membership data based on the SIAKBA workflow (Academic Project).",
+      },
+      {
+        id: "Mengimplementasikan kontrol akses berbasis peran untuk Admin Nasional, Admin Provinsi, dan Operator Kabupaten/Kota pada sistem prototipe (Proyek Akademik).",
+        en: "Implemented role-based access control for National Administrators, Provincial Administrators, and Regency/City Operators within the prototype system (Academic Project).",
+      },
+      {
+        id: "Menghasilkan laporan rekapitulasi beserta visualisasi grafik pada tingkat kabupaten/kota dan kecamatan untuk mendukung pemantauan data (Proyek Akademik).",
+        en: "Generated recapitulation reports with graphical visualizations at the regency/city and district levels to support data monitoring (Academic Project).",
+      },
+    ],
   },
 ];
 
 const certifications = [
   {
-    name: "National Professional Certification in Web Development",
-    issuer: "BNSP",
+    name: { id: "Pengembang Web di Badan Nasional Sertifikasi Profesi", en: "National Professional Certification in Web Development" },
+    issuer: { id: "BNSP", en: "BNSP" },
     year: "2025",
-    category: "Professional",
+    category: { id: "Profesional", en: "Professional" },
     link: "https://drive.google.com/file/d/1hVjiQ0Ps4sCtMQZMBPA5kYLhE7BrnrEU/view?usp=sharing",
-    badge: "★ Verified",
+    badge: { id: "✓ Terverifikasi", en: "✓ Verified" },
   },
   {
-    name: "TOEFL Institutional Testing Program (ITP)",
-    issuer: "ETS",
+    name: { id: "Program Uji TOEFL Institusional (ITP)", en: "TOEFL Institutional Testing Program (ITP)" },
+    issuer: { id: "ETS", en: "ETS" },
     year: "2025",
-    category: "Language",
-    score: "Score: 450",
+    category: { id: "Bahasa", en: "Language" },
+    score: { id: "Skor: 450", en: "Score: 450" },
     link: "https://drive.google.com/file/d/1d5n4anePz795cNpg7w9XFBygqo8n3yqf/view?usp=sharing",
-    badge: "★ Verified",
+    badge: { id: "✓ Terverifikasi", en: "✓ Verified" },
   },
   {
-    name: "DSF 46 Faculty of Data: Data Engineer",
-    issuer: "Dibimbing.id",
+    name: { id: "DSF 46 Fakultas Data: Data Engineer", en: "DSF 46 Faculty of Data: Data Engineer" },
+    issuer: { id: "Dibimbing.id", en: "Dibimbing.id" },
     year: "2025",
-    category: "Data",
+    category: { id: "Data", en: "Data" },
     link: "https://drive.google.com/file/d/1rkkrpb6TKYstaHnZjpH3aC3xnDAEN9jq/view?usp=drive_link",
   },
   {
-    name: "Digital Skill Fair 10.0 — Web Development BackEnd",
-    issuer: "Dibimbing.id",
+    name: { id: "Digital Skill Fair 10.0 — Pengembangan Web BackEnd", en: "Digital Skill Fair 10.0 — Web Development BackEnd" },
+    issuer: { id: "Dibimbing.id", en: "Dibimbing.id" },
     year: "2022",
-    category: "Web Dev",
+    category: { id: "Web Dev", en: "Web Dev" },
     link: "https://drive.google.com/file/d/1-tTniLS-94LRkplidre2eyjIUBGtpmb4/view?usp=sharing",
   },
   {
-    name: "Softskill Training & Character Building",
-    issuer: "Tandaseru Indonesia",
+    name: { id: "Pelatihan Softskill & Character Building", en: "Softskill Training & Character Building" },
+    issuer: { id: "Tandaseru Indonesia", en: "Tandaseru Indonesia" },
     year: "2025",
-    category: "Softskill",
+    category: { id: "Softskill", en: "Softskill" },
     link: "https://drive.google.com/file/d/1v-B2GnD7bOGt0B-OzH4ltwI1e_t3tLSw/view?usp=drive_link",
   },
   {
-    name: "The Complete Android 12 & Kotlin Masterclass",
-    issuer: "Udemy",
+    name: { id: "The Complete Android 12 & Kotlin Masterclass", en: "The Complete Android 12 & Kotlin Masterclass" },
+    issuer: { id: "Udemy", en: "Udemy" },
     year: "2023",
-    category: "Mobile",
+    category: { id: "Mobile", en: "Mobile" },
     link: "https://drive.google.com/file/d/1TMJ2ztceLbsDEGAKWdR1uy6qVKHcFQrv/view?usp=drive_link",
   },
   {
-    name: "Web Development Courses (HTML, PHP, JavaScript)",
-    issuer: "Sololearn",
+    name: { id: "Kursus Pengembangan Web (HTML, PHP, JavaScript)", en: "Web Development Courses (HTML, PHP, JavaScript)" },
+    issuer: { id: "Sololearn", en: "Sololearn" },
     year: "2022",
-    category: "Web Dev",
+    category: { id: "Web Dev", en: "Web Dev" },
     link: "https://drive.google.com/drive/folders/1REyQNrXFrFkP3GQyg0Qlefe9mjGW4Wzc?usp=sharing",
   },
   {
-    name: "HTML Tutorial for Beginners",
-    issuer: "Udemy",
+    name: { id: "Tutorial HTML untuk Pemula", en: "HTML Tutorial for Beginners" },
+    issuer: { id: "Udemy", en: "Udemy" },
     year: "2022",
-    category: "Web Dev",
+    category: { id: "Web Dev", en: "Web Dev" },
     link: "https://drive.google.com/file/d/1mFuyc4T9vTyPBCBO3yyevZIEJdnNmTje/view?usp=drive_link",
   },
 ];
 
-// ─── UI Primitives ─────────────────────────────────────────────────────────────
+// ────── UI Primitives ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -328,7 +654,7 @@ function Divider() {
   );
 }
 
-// ─── CornerBrackets ────────────────────────────────────────────────────────────
+// ────── CornerBrackets ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 interface BRect {
   top: number;
@@ -373,16 +699,16 @@ function CornerBrackets({ rect, pad = 14, drawn, delay = 0, cl = 22 }: { rect: B
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────────
+// ────── Page ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-// ─── InstagramChip ─────────────────────────────────────────────────────────────
+// ────── InstagramChip ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function InstagramChip({ base }: { base: React.CSSProperties }) {
   const [show, setShow] = useState(false);
 
   return (
     <div style={{ position: "relative" }}>
-      {/* ── Popup ── */}
+      {/* ──── Popup ──── */}
       <div
         style={{
           position: "absolute",
@@ -450,7 +776,7 @@ function InstagramChip({ base }: { base: React.CSSProperties }) {
         />
       </div>
 
-      {/* ── Chip ── */}
+      {/* ──── Chip ──── */}
       <a
         href="https://www.instagram.com/frqann?igsh=MTA1ejJ3amhhZTV5cA=="
         target="_blank"
@@ -470,20 +796,7 @@ function InstagramChip({ base }: { base: React.CSSProperties }) {
   );
 }
 
-// ─── ProjectModal ──────────────────────────────────────────────────────────────
-
-type ProjectDetail = {
-  highlights?: string[];
-  links?: { label: string; href: string; icon: string }[];
-};
-type Project = {
-  title: string;
-  period: string;
-  tag: string;
-  desc: string;
-  stack: string[];
-  detail?: ProjectDetail;
-};
+// ────── ProjectModal ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function LinkIcon({ icon }: { icon: string }) {
   if (icon === "github")
@@ -506,9 +819,9 @@ function LinkIcon({ icon }: { icon: string }) {
   );
 }
 
-// ─── useSwipeToDismiss — drag handle swipe-down to close ──────────────────────
+// ────── useSwipeToDismiss — drag handle swipe-down to close ────────────────────────────────────────────
 
-// ─── useSwipeToDismiss — drag handle swipe-down to close ──────────────────────
+// ────── useSwipeToDismiss — drag handle swipe-down to close ────────────────────────────────────────────
 
 function useSwipeToDismiss(onDismiss: () => void) {
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -658,7 +971,7 @@ function useSwipeToDismiss(onDismiss: () => void) {
   return { sheetRef, dragHandleRef, contentRef, onTouchStart: () => {}, onTouchMove: () => {}, onTouchEnd: () => {} };
 }
 
-// ─── Shared close button ───────────────────────────────────────────────────────
+// ────── Shared close button ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function CloseBtn({ onClose }: { onClose: () => void }) {
   return (
@@ -695,7 +1008,7 @@ function CloseBtn({ onClose }: { onClose: () => void }) {
   );
 }
 
-// ─── Shared modal wrapper — bottom-sheet on mobile, centered on desktop ────────
+// ────── Shared modal wrapper — bottom-sheet on mobile, centered on desktop ────────────────
 
 function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => void; children: (controls: ReturnType<typeof useSwipeToDismiss> & { requestClose: () => void; isClosing: boolean }) => React.ReactNode; maxWidth?: number }) {
   const [isClosing, setIsClosing] = useState(false);
@@ -843,9 +1156,13 @@ function ModalBackdrop({ onClose, children, maxWidth = 560 }: { onClose: () => v
   );
 }
 
-// ─── ProjectModal ──────────────────────────────────────────────────────────────
+// ────── ProjectModal ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  const { lang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+  const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
+  const LT = (value: LocalizedText): string => (typeof value === "string" ? value : L(value));
   return (
     <ModalBackdrop onClose={onClose} maxWidth={560}>
       {({ requestClose }) => (
@@ -857,26 +1174,26 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           >
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
-                <TagBadge>{project.tag}</TagBadge>
-                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{project.period}</span>
+                <TagBadge>{L(project.tag)}</TagBadge>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{L(project.period)}</span>
               </div>
-              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{project.title}</h2>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{L(project.title)}</h2>
             </div>
             <CloseBtn onClose={requestClose} />
           </div>
 
           {/* Body */}
           <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{project.desc}</p>
+            <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{L(project.desc)}</p>
 
             {project.detail?.highlights && (
               <div>
-                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Highlights</p>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("highlights")}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                   {project.detail.highlights.map((h, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
                       <div style={{ flexShrink: 0, marginTop: 5, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                      <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
+                      <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{L(h)}</span>
                     </div>
                   ))}
                 </div>
@@ -884,7 +1201,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             )}
 
             <div>
-              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Tech Stack</p>
+              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("techStack")}</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                 {project.stack.map((s) => (
                   <StackChip key={s}>{s}</StackChip>
@@ -894,11 +1211,11 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
             {project.detail?.links && project.detail.links.length > 0 && (
               <div>
-                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Links</p>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("links")}</p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {project.detail.links.map((l) => (
                     <a
-                      key={l.label}
+                      key={LT(l.label)}
                       href={l.href}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -929,8 +1246,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                         el.style.backgroundColor = "var(--bg-subtle)";
                       }}
                     >
-                      <LinkIcon icon={l.icon} />
-                      {l.label}
+                      <LinkIcon icon={l.icon || "drive"} />
+                      {LT(l.label)}
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
                         <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -946,9 +1263,14 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
   );
 }
 
-// ─── InternModal — KPU Internship with Carousel ───────────────────────────────
+// ────── InternModal — KPU Internship with Carousel ──────────────────────────────────────────────────────────────
 
 function InternModal({ onClose }: { onClose: () => void }) {
+  const { lang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+  const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
+  const LT = (value: LocalizedText): string => (typeof value === "string" ? value : L(value));
+  const description = L(experience[1].desc);
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -956,6 +1278,7 @@ function InternModal({ onClose }: { onClose: () => void }) {
   // Touch swipe
   const touchStartX = useRef<number>(0);
   const imgCount = images.length;
+  const highlights = experience[1].highlights;
 
   // Fetch & shuffle
   useEffect(() => {
@@ -1029,7 +1352,7 @@ function InternModal({ onClose }: { onClose: () => void }) {
         />
       ));
     }
-    // For many images, show 7 slots: first, last, active±1, and ellipsis
+    // For many images, show 7 slots: first, last, activeÂ±1, and ellipsis
     const visible = new Set([0, imgCount - 1, carouselIdx, carouselIdx - 1, carouselIdx + 1].filter((i) => i >= 0 && i < imgCount));
     return Array.from({ length: imgCount })
       .map((_, i) => {
@@ -1076,11 +1399,13 @@ function InternModal({ onClose }: { onClose: () => void }) {
           >
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                <TagBadge>Internship</TagBadge>
+                <TagBadge>{lang === "id" ? "Magang" : "Internship"}</TagBadge>
                 <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>Feb 2024 – Sep 2024</span>
               </div>
-              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>Secretariat General of KPU RI</h2>
-              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>Center for Data &amp; IT (Pusdatin) · Menteng, Central Jakarta, Indonesia</p>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{lang === "id" ? "Sekretariat Jenderal KPU RI" : "Secretariat General of KPU RI"}</h2>
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>
+                {lang === "id" ? "Pusat Data & IT (Pusdatin) · Menteng, Jakarta Pusat, Indonesia" : "Center for Data & IT (Pusdatin) · Menteng, Central Jakarta, Indonesia"}
+              </p>
             </div>
             <CloseBtn onClose={requestClose} />
           </div>
@@ -1088,45 +1413,29 @@ function InternModal({ onClose }: { onClose: () => void }) {
           {/* Scrollable body */}
           <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
             <div style={{ padding: "1rem 1.1rem 0" }}>
-              <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-                Completed a 7-month industry internship at the Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI), Center for Data &amp; Information Technology (Pusdatin), Jakarta. Contributed
-                across three divisions: Data &amp; Information, Application &amp; Information Governance, and IT Infrastructure.
-              </p>
+              <p style={{ fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{description}</p>
               <div style={{ marginTop: "0.9rem" }}>
-                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Highlights</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>{t("highlights")}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {[
-                    "Participated in the national voter data recapitulation and monitoring sessions coordinated by the Data and Information Center (Pusdatin).",
-                    "Selection and input of voter status for the Permanent Voter List (DPT), Special Voter List (DPK), and Additional Voter List (DPTb).",
-                    "Assisted in the process of compiling the Additional Voter List (DPTb), compiling the list of voters not yet registered on the Permanent Voter List (DPT) but eligible to vote.",
-                    "Entered data from Polling Stations (TPS) by Province, Regency/City, Sub-district, and Village/Village and reviewed the inputted data to ensure there were no errors.",
-                    "Assisted in the submission of the Potential Voter List (DP4) from the Ministry of Home Affairs (KEMENDAGRI) to the Indonesian General Elections Commission (KPU) as material for compiling voter lists for the 2024 gubernatorial and vice-gubernatorial elections.",
-                    "Assisted in conducting an evaluation meeting to update voter data for the 2024 Election and preparing for voter data updates for the 2024 Simultaneous Regional Elections.",
-                    "Assisting in conducting a working meeting to discuss technical guidelines for updating voter data for the 2024 elections, as well as synchronizing the DP4 (Voting Data Collection).",
-                    "Assisting with logistics for coordination meetings between Pusdatin and Bareskrim Polri regarding election data security and integrity.",
-                    "Assisting in conducting a working meeting to discuss voter data update simulations (Pantarlih) for the 2024 Simultaneous Regional Elections.",
-                    "Designing and developing a Laravel + MySQL recapitulation system prototype for PPK & PPS membership data, based on the SIAKBA workflow reference (Academic Project).",
-                    "Implementing role-based access control: National Admin, Provincial Admin, and District/City Operator (Academic Project).",
-                    "Generating recapitulation reports with graphic visualizations per district and sub-district level (Academic Project).",
-                  ].map((h, i) => (
+                  {highlights.map((h, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
                       <div style={{ flexShrink: 0, marginTop: 6, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{h}</span>
+                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{L(h)}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div style={{ marginTop: "0.9rem", paddingBottom: "1.1rem", borderBottom: "1px solid var(--border)" }}>
-                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Links</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>{t("links")}</p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
                   {[
                     { label: "GitHub (SIAKBA)", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
                     { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
-                    { label: "Wireframe Figma", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
+                    { label: lang === "id" ? "Wireframe Figma" : "Figma Wireframe", href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
                   ].map((l) => (
                     <a
-                      key={l.label}
+                      key={LT(l.label)}
                       href={l.href}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -1157,8 +1466,8 @@ function InternModal({ onClose }: { onClose: () => void }) {
                         el.style.backgroundColor = "var(--bg-subtle)";
                       }}
                     >
-                      <LinkIcon icon={l.icon} />
-                      {l.label}
+                      <LinkIcon icon={l.icon || "drive"} />
+                      {LT(l.label)}
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.4 }}>
                         <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -1171,7 +1480,10 @@ function InternModal({ onClose }: { onClose: () => void }) {
             {/* Carousel */}
             <div style={{ padding: "1.1rem 1.1rem 1.4rem" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Documentation{imgCount > 0 ? ` — ${imgCount} Photos` : ""}</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>
+                  {t("documentation")}
+                  {imgCount > 0 ? ` | ${imgCount} ${lang === "id" ? "Foto" : "Photos"}` : ""}
+                </p>
                 {imgCount > 0 && !loading && (
                   <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
                     {carouselIdx + 1} / {imgCount}
@@ -1262,9 +1574,9 @@ function InternModal({ onClose }: { onClose: () => void }) {
                     )}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 12, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
-                  <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
+                  <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → {t("keyboardSwipeHint")}</p>
 
-                  {/* ── Confidentiality Notice ─────────────────────────────── */}
+                  {/* ──── Confidentiality Notice ────────────────────────────────────────────────────────────── */}
                   <div
                     style={{
                       marginTop: 18,
@@ -1285,9 +1597,11 @@ function InternModal({ onClose }: { onClose: () => void }) {
                       </svg>
                     </div>
                     <div>
-                      <p style={{ fontSize: "0.63rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: 3, letterSpacing: "0.01em" }}>Confidentiality Notice</p>
+                      <p style={{ fontSize: "0.63rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: 3, letterSpacing: "0.01em" }}>{t("confidentialityNotice")}</p>
                       <p style={{ fontSize: "0.61rem", lineHeight: 1.65, color: "var(--text-muted)" }}>
-                        To safeguard data security and organizational confidentiality, certain documentation from this internship experience cannot be disclosed or distributed to the public.
+                        {lang === "id"
+                          ? "Untuk menjaga keamanan data dan kerahasiaan organisasi, dokumen tertentu dari pengalaman magang ini tidak dapat diungkapkan atau dibagikan ke publik."
+                          : "To safeguard data security and organizational confidentiality, certain documentation from this internship experience cannot be disclosed or distributed to the public."}
                       </p>
                     </div>
                   </div>
@@ -1301,10 +1615,15 @@ function InternModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-// ─── EventModal — Tokopedia Event Crew ────────────────────────────────────────
+// ────── EventModal — Tokopedia Event Crew ────────────────────────────────────────────────────────────────────────────────
 
 function EventModal({ onClose }: { onClose: () => void }) {
-  // ── Carousel state (mirrors InternModal) ──
+  const { lang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+  const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
+  const description = L(experience[0].desc);
+
+  // ──── Carousel state (mirrors InternModal) ────
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -1415,21 +1734,14 @@ function EventModal({ onClose }: { onClose: () => void }) {
   };
 
   const facts = [
-    { label: "Company", value: "PT Fasen Creative Quality" },
-    { label: "Client", value: "Tokopedia (Dyandra Event Solutions)" },
-    { label: "Role", value: "Event Crew — Runner Flash Sale" },
-    { label: "Duration", value: "5 days · Mar 13 – 17, 2024" },
-    { label: "Contract", value: "Fixed-term · Signed 10 March 2024" },
+    { label: lang === "id" ? "Perusahaan" : "Company", value: "PT Fasen Creative Quality" },
+    { label: lang === "id" ? "Klien" : "Client", value: "Tokopedia (Dyandra Event Solutions)" },
+    { label: lang === "id" ? "Peran" : "Role", value: lang === "id" ? "Crew Acara - Runner Flash Sale" : "Event Crew - Runner Flash Sale" },
+    { label: lang === "id" ? "Durasi" : "Duration", value: lang === "id" ? "5 hari | 13 - 17 Mar 2024" : "5 days | Mar 13 - 17, 2024" },
+    { label: lang === "id" ? "Kontrak" : "Contract", value: lang === "id" ? "Kontrak waktu tertentu | Ditandatangani 10 Maret 2024" : "Fixed-term | Signed 10 March 2024" },
   ];
 
-  const responsibilities = [
-    "Executed all assigned operational tasks under the direction of the Hall Coordinator with full discipline and accountability",
-    "Supported logistics flow, crowd management, and on-site coordination throughout the entire 5-day event",
-    "Maintained professionalism and excellent service quality toward event participants and visitors",
-    "Monitored assigned post areas and ensured orderly operations within the designated venue zone",
-    "Collaborated effectively with fellow crew members and supervisors to meet event operational targets",
-    "Adhered strictly to event code of conduct including uniform policy and communication protocols",
-  ];
+  const highlights = experience[0].highlights;
 
   return (
     <ModalBackdrop onClose={onClose} maxWidth={660}>
@@ -1455,12 +1767,16 @@ function EventModal({ onClose }: { onClose: () => void }) {
                     border: "1px solid var(--border-mid)",
                   }}
                 >
-                  Event Crew
+                  {lang === "id" ? "Crew Acara" : "Event Crew"}
                 </span>
-                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>13 – 17 March 2024 · Jakarta</span>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{lang === "id" ? "13 - 17 Maret 2024 | Jakarta" : "13 - 17 March 2024 | Jakarta"}</span>
               </div>
               <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Tokopedia Ramadan Extra 2024 Flash Sale</h2>
-              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>PT Fasen Creative Quality (Dyandra Event Solutions) · Kebayoran Lama, South Jakarta, Indonesia (Pondok Indah Mall 3)</p>
+              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                {lang === "id"
+                  ? "PT Fasen Creative Quality (Dyandra Event Solutions) | Kebayoran Lama, Jakarta Selatan, Indonesia (Pondok Indah Mall 3)"
+                  : "PT Fasen Creative Quality (Dyandra Event Solutions) | Kebayoran Lama, South Jakarta, Indonesia (Pondok Indah Mall 3)"}
+              </p>
             </div>
             <CloseBtn onClose={requestClose} />
           </div>
@@ -1482,7 +1798,7 @@ function EventModal({ onClose }: { onClose: () => void }) {
                   style={{
                     borderRadius: "1rem",
                     border: "1px solid var(--border)",
-                    background: "linear-gradient(180deg, color-mix(in srgb, var(--accent-glow) 70%, transparent) 0%, var(--bg-subtle) 100%)",
+                    backgroundColor: "var(--bg-subtle)",
                     padding: "1rem",
                     display: "flex",
                     flexDirection: "column",
@@ -1492,28 +1808,29 @@ function EventModal({ onClose }: { onClose: () => void }) {
                 >
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
                     <div>
-                      <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.7, marginBottom: 6 }}>Engagement Overview</p>
-                      <p style={{ fontSize: "0.96rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.4 }}>On-site runner support for Tokopedia Ramadan Extra in Jakarta.</p>
+                      <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.7, marginBottom: 6 }}>
+                        {lang === "id" ? "Ringkasan Peran" : "Engagement Overview"}
+                      </p>
+                      <p style={{ fontSize: "0.96rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.4 }}>
+                        {lang === "id" ? "Dukungan runner di lokasi untuk Tokopedia Ramadan Extra di Jakarta." : "On-site runner support for Tokopedia Ramadan Extra in Jakarta."}
+                      </p>
                     </div>
                     <div style={{ padding: "6px 10px", borderRadius: 999, backgroundColor: "var(--bg-primary)", border: "1px solid var(--border)", fontSize: "0.62rem", fontWeight: 700, color: "var(--text-primary)", whiteSpace: "nowrap" }}>
-                      5 Days
+                      {lang === "id" ? "5 Hari" : "5 Days"}
                     </div>
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
                     <div style={{ padding: "10px 12px", borderRadius: 12, backgroundColor: "var(--bg-primary)", border: "1px solid var(--border)" }}>
-                      <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>Contract</p>
-                      <p style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>Fixed-term employment agreement</p>
+                      <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>{lang === "id" ? "Kontrak" : "Contract"}</p>
+                      <p style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{lang === "id" ? "Perjanjian kerja waktu tertentu" : "Fixed-term employment agreement"}</p>
                     </div>
                     <div style={{ padding: "10px 12px", borderRadius: 12, backgroundColor: "var(--bg-primary)", border: "1px solid var(--border)" }}>
-                      <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>Venue</p>
-                      <p style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>Pondok Indah Mall 3, South Jakarta</p>
+                      <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>{lang === "id" ? "Lokasi" : "Venue"}</p>
+                      <p style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{lang === "id" ? "Pondok Indah Mall 3, Jakarta Selatan" : "Pondok Indah Mall 3, South Jakarta"}</p>
                     </div>
                   </div>
                   <div className="ev-desktop-copy" style={{ display: "none", paddingTop: 2 }}>
-                    <p style={{ fontSize: "0.84rem", lineHeight: 1.85, color: "var(--text-secondary)", textWrap: "pretty" as "pretty" }}>
-                      Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong>, a large-scale promotional event organized by PT Fasen
-                      Creative Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across five consecutive days at the Jakarta venue.
-                    </p>
+                    <p style={{ fontSize: "0.84rem", lineHeight: 1.85, color: "var(--text-secondary)", textWrap: "pretty" as "pretty" }}>{description}</p>
                   </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
@@ -1527,18 +1844,17 @@ function EventModal({ onClose }: { onClose: () => void }) {
               </div>
 
               <p className="ev-mobile-copy" style={{ display: "block", fontSize: "0.83rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-                Engaged as an Event Crew (Runner) for the <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>Tokopedia Ramadan Extra 2024 Flash Sale</strong> — a large-scale promotional event organized by PT Fasen Creative
-                Quality under Dyandra Event Solutions. Operated under a fixed-term employment contract, supporting smooth on-site operations across 5 consecutive days at the Jakarta event venue.
+                {description}
               </p>
 
               {/* Responsibilities */}
               <div>
-                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Responsibilities</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("highlights")}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {responsibilities.map((r, i) => (
+                  {highlights.map((h, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
                       <div style={{ flexShrink: 0, marginTop: 7, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{r}</span>
+                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{L(h)}</span>
                     </div>
                   ))}
                 </div>
@@ -1564,18 +1880,23 @@ function EventModal({ onClose }: { onClose: () => void }) {
                   </svg>
                 </div>
                 <div>
-                  <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>Employment Contract Verified</p>
-                  <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>Surat Perjanjian Kerja · PT Fasen Creative Quality · Signed 10 March 2024</p>
+                  <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)" }}>{lang === "id" ? "Kontrak Kerja Terverifikasi" : "Employment Contract Verified"}</p>
+                  <p style={{ fontSize: "0.64rem", color: "var(--text-muted)", marginTop: 1 }}>
+                    {lang === "id" ? "Surat Perjanjian Kerja | PT Fasen Creative Quality | Ditandatangani 10 Maret 2024" : "Employment Agreement | PT Fasen Creative Quality | Signed 10 March 2024"}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* ── Photo Documentation Carousel ─────────────────────────────── */}
+            {/* ──── Photo Documentation Carousel ────────────────────────────────────────────────────────────── */}
             <div style={{ padding: "1.2rem 1.1rem 1.6rem", borderTop: "1px solid var(--border)", marginTop: "1rem" }}>
               {/* Section label + counter */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Documentation{imgCount > 0 ? ` — ${imgCount} Photos` : ""}</p>
+                  <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>
+                    {t("documentation")}
+                    {imgCount > 0 ? ` | ${imgCount} ${lang === "id" ? "Foto" : "Photos"}` : ""}
+                  </p>
                   {imgCount > 0 && !loading && (
                     <span style={{ fontSize: "0.67rem", color: "var(--text-faint)", fontVariantNumeric: "tabular-nums" }}>
                       {carouselIdx + 1} / {imgCount}
@@ -1588,12 +1909,12 @@ function EventModal({ onClose }: { onClose: () => void }) {
               {loading && (
                 <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 10, color: "var(--text-muted)", fontSize: "0.82rem" }}>
                   <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                  Loading photos...
+                  {t("loadingPhotos")}
                 </div>
               )}
 
               {/* No photos */}
-              {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>No photos found.</div>}
+              {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>{t("noPhotosFound")}</div>}
 
               {/* Carousel */}
               {!loading && imgCount > 0 && (
@@ -1680,9 +2001,9 @@ function EventModal({ onClose }: { onClose: () => void }) {
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 12, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
 
                   {/* Keyboard hint */}
-                  <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → keyboard · swipe on mobile</p>
+                  <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → {t("keyboardSwipeHint")}</p>
 
-                  {/* ── Privacy Notice ─────────────────────────────────────── */}
+                  {/* ──── Privacy Notice ────────────────────────────────────────────────────────────────────────────── */}
                   <div
                     style={{
                       marginTop: 18,
@@ -1703,10 +2024,8 @@ function EventModal({ onClose }: { onClose: () => void }) {
                       </svg>
                     </div>
                     <div>
-                      <p style={{ fontSize: "0.63rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: 3, letterSpacing: "0.01em" }}>Confidentiality Notice</p>
-                      <p style={{ fontSize: "0.61rem", lineHeight: 1.65, color: "var(--text-muted)" }}>
-                        In accordance with the terms of the employment contract and the company's confidentiality policy, there is some documentation from this event that cannot be disclosed or distributed to the public.
-                      </p>
+                      <p style={{ fontSize: "0.63rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: 3, letterSpacing: "0.01em" }}>{t("confidentialityNotice")}</p>
+                      <p style={{ fontSize: "0.61rem", lineHeight: 1.65, color: "var(--text-muted)" }}>{t("confidentialityText")}</p>
                     </div>
                   </div>
                 </div>
@@ -1719,21 +2038,31 @@ function EventModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-// ─── EducationModal ────────────────────────────────────────────────────────────
+// ────── EducationModal ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function EducationModal({ onClose }: { onClose: () => void }) {
+  const { lang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
   const coursework: { label: string; color: string; courses: string[] }[] = [
-    { label: "Web Dev", color: "var(--accent)", courses: ["Web Programming", "Web-Based Information Systems", "UI/UX Design"] },
-    { label: "Data", color: "#7c9e87", courses: ["Database Systems", "Data Mining", "Data Structures & Algorithms"] },
-    { label: "Software", color: "#8a7fa8", courses: ["Object-Oriented Programming", "Software Engineering", "System Analysis & Design"] },
-    { label: "Network", color: "#9e8a7c", courses: ["Computer Networks", "Network Security", "Operating Systems"] },
-    { label: "Mobile", color: "#7a9eb0", courses: ["Mobile Application Development"] },
+    {
+      label: lang === "id" ? "Web Dev" : "Web Dev",
+      color: "var(--accent)",
+      courses: lang === "id" ? ["Pemrograman Web", "Sistem Informasi Berbasis Web", "Desain UI/UX"] : ["Web Programming", "Web-Based Information Systems", "UI/UX Design"],
+    },
+    { label: lang === "id" ? "Data" : "Data", color: "#7c9e87", courses: lang === "id" ? ["Sistem Basis Data", "Data Mining", "Struktur Data & Algoritma"] : ["Database Systems", "Data Mining", "Data Structures & Algorithms"] },
+    {
+      label: lang === "id" ? "Perangkat Lunak" : "Software",
+      color: "#8a7fa8",
+      courses: lang === "id" ? ["Pemrograman Berorientasi Objek", "Rekayasa Perangkat Lunak", "Analisis & Perancangan Sistem"] : ["Object-Oriented Programming", "Software Engineering", "System Analysis & Design"],
+    },
+    { label: lang === "id" ? "Jaringan" : "Network", color: "#9e8a7c", courses: lang === "id" ? ["Jaringan Komputer", "Keamanan Jaringan", "Sistem Operasi"] : ["Computer Networks", "Network Security", "Operating Systems"] },
+    { label: lang === "id" ? "Mobile" : "Mobile", color: "#7a9eb0", courses: lang === "id" ? ["Pengembangan Aplikasi Mobile"] : ["Mobile Application Development"] },
   ];
 
   const documents = [
-    { label: "Academic Transcript", icon: "📄", desc: "Full semester grade records", href: "https://drive.google.com/file/d/10aVPxsUkV0j7ZAU7fbV3ZWG7zNgdzc4_/view?usp=drive_link" },
-    { label: "Diploma / Ijazah", icon: "🎓", desc: "Official graduation certificate", href: "https://drive.google.com/file/d/1PlUwjMiyAguZNqbPFsOy3GdmI8ngBPH3/view?usp=drive_link" },
-    { label: "Scientific Journal", icon: "📝", desc: "Published undergraduate research", href: "https://drive.google.com/file/d/1oPKl6xDAVcO336NuP7VrsKrEbNMdt00Z/view?usp=sharing" },
+    { label: t("academicTranscript"), icon: "TR", desc: t("fullSemesterGradeRecords"), href: "https://drive.google.com/file/d/10aVPxsUkV0j7ZAU7fbV3ZWG7zNgdzc4_/view?usp=drive_link" },
+    { label: t("diploma"), icon: "IJ", desc: t("officialGraduationCertificate"), href: "https://drive.google.com/file/d/1PlUwjMiyAguZNqbPFsOy3GdmI8ngBPH3/view?usp=drive_link" },
+    { label: t("scientificJournal"), icon: "JR", desc: t("publishedUndergraduateResearch"), href: "https://drive.google.com/file/d/1oPKl6xDAVcO336NuP7VrsKrEbNMdt00Z/view?usp=sharing" },
   ];
 
   return (
@@ -1769,26 +2098,26 @@ function EducationModal({ onClose }: { onClose: () => void }) {
                     border: "1px solid var(--border-mid)",
                   }}
                 >
-                  D-IV · Applied Bachelor
+                  {lang === "id" ? "D-IV | Sarjana Terapan" : "D-IV | Applied Bachelor"}
                 </span>
-                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>2021 – 2025</span>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>2021 - 2025</span>
               </div>
-              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>Informatics Engineering</h2>
-              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Politeknik Negeri Lhokseumawe · Lhokseumawe, Aceh</p>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25, marginBottom: 2 }}>{lang === "id" ? "Teknik Informatika" : "Informatics Engineering"}</h2>
+              <p style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Politeknik Negeri Lhokseumawe | Lhokseumawe, Aceh</p>
             </div>
             <CloseBtn onClose={requestClose} />
           </div>
 
           {/* Scrollable body */}
           <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {/* Quick facts — 2×2 on mobile, 4-col on sm+ */}
+            {/* Quick facts — 2Ã—2 on mobile, 4-col on sm+ */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 8 }} className="edu-facts">
               <style suppressHydrationWarning>{`@media(min-width:460px){.edu-facts{grid-template-columns:repeat(4,1fr)!important}}`}</style>
               {[
-                { label: "Degree", value: "D-IV" },
-                { label: "Duration", value: "4 Yrs · 8 Sem" },
-                { label: "GPA", value: "3.15 / 4.00" },
-                { label: "Status", value: "Graduated '25" },
+                { label: lang === "id" ? "Jenjang" : "Degree", value: "D-IV" },
+                { label: lang === "id" ? "Durasi" : "Duration", value: lang === "id" ? "4 Tahun | 8 Semester" : "4 Years | 8 Semesters" },
+                { label: lang === "id" ? "IPK" : "GPA", value: "3.15 / 4.00" },
+                { label: lang === "id" ? "Status" : "Status", value: lang === "id" ? "Lulus '25" : "Graduated '25" },
               ].map(({ label, value }) => (
                 <div key={label} style={{ padding: "9px 11px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", textAlign: "center" }}>
                   <p style={{ fontSize: "0.56rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 3 }}>{label}</p>
@@ -1800,7 +2129,7 @@ function EducationModal({ onClose }: { onClose: () => void }) {
             {/* GPA bar */}
             <div style={{ padding: "12px 14px", borderRadius: 10, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: "0.7rem", fontWeight: 500, color: "var(--text-secondary)" }}>Grade Point Average</span>
+                <span style={{ fontSize: "0.7rem", fontWeight: 500, color: "var(--text-secondary)" }}>{lang === "id" ? "Indeks Prestasi Kumulatif" : "Grade Point Average"}</span>
                 <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)" }}>
                   3.15 <span style={{ fontWeight: 400, color: "var(--text-muted)", fontSize: "0.65rem" }}>/ 4.00</span>
                 </span>
@@ -1808,26 +2137,35 @@ function EducationModal({ onClose }: { onClose: () => void }) {
               <div style={{ height: 5, width: "100%", backgroundColor: "var(--border)", borderRadius: 99, overflow: "hidden" }}>
                 <div style={{ height: "100%", width: "78.75%", borderRadius: 99, background: "linear-gradient(90deg, var(--accent), var(--accent))", opacity: 0.7 }} />
               </div>
-              <p style={{ fontSize: "0.62rem", color: "var(--text-faint)", marginTop: 5 }}>D-IV is Indonesia's applied bachelor-level degree — equivalent to S1 (B.Sc.) in the practical engineering track.</p>
+              <p style={{ fontSize: "0.62rem", color: "var(--text-faint)", marginTop: 5 }}>
+                {lang === "id"
+                  ? "D-IV adalah jenjang sarjana terapan di Indonesia yang setara dengan S1 (B.Sc.) pada jalur rekayasa praktis."
+                  : "D-IV is Indonesia's applied bachelor-level degree, equivalent to S1 (B.Sc.) in the practical engineering track."}
+              </p>
             </div>
 
             {/* About + Coursework — stacked mobile, 2-col sm+ */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 14 }} className="edu-split">
               <style suppressHydrationWarning>{`@media(min-width:500px){.edu-split{grid-template-columns:1fr 1.3fr!important}}`}</style>
               <div>
-                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>About</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>{t("about")}</p>
                 <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-                  Completed a 4-year applied bachelor program in Informatics Engineering with a focus on web systems development, data processing, and software engineering. Combines strong theoretical foundations with industry-oriented
-                  practical projects and a mandatory industry internship.
+                  {lang === "id"
+                    ? "Menempuh program sarjana terapan selama 4 tahun di Teknik Informatika dengan fokus pada pengembangan sistem web, pemrosesan data, dan rekayasa perangkat lunak. Menggabungkan fondasi teori yang kuat dengan proyek-proyek berorientasi industri dan magang wajib."
+                    : "Completed a 4-year applied bachelor program in Informatics Engineering with a focus on web systems development, data processing, and software engineering. Combines strong theoretical foundations with industry-oriented practical projects and a mandatory industry internship."}
                 </p>
                 <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 9, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border-mid)" }}>
-                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 4 }}>Final Project (Thesis)</p>
-                  <p style={{ fontSize: "0.76rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 3 }}>Sentiment Analysis of the Attorney General's Office Performance</p>
-                  <p style={{ fontSize: "0.67rem", color: "var(--text-muted)", lineHeight: 1.5 }}>TikTok comment scraping · ML classification · Laravel–Flask dashboard</p>
+                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.55, marginBottom: 4 }}>{t("finalProject")}</p>
+                  <p style={{ fontSize: "0.76rem", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 3 }}>
+                    {lang === "id" ? "Analisis Sentimen terhadap Kinerja Kejaksaan Agung" : "Sentiment Analysis of the Attorney General's Office Performance"}
+                  </p>
+                  <p style={{ fontSize: "0.67rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                    {lang === "id" ? "Scraping komentar TikTok · Klasifikasi ML · Dashboard Laravel-Flask" : "TikTok comment scraping · ML classification · Laravel-Flask dashboard"}
+                  </p>
                 </div>
               </div>
               <div>
-                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>Relevant Coursework</p>
+                <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 8 }}>{t("relevantCoursework")}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {coursework.map((cat) => (
                     <div key={cat.label}>
@@ -1847,7 +2185,7 @@ function EducationModal({ onClose }: { onClose: () => void }) {
 
             {/* Academic Documents — 1-col mobile, 3-col sm+ */}
             <div>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>Academic Documents</p>
+              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("academicDocuments")}</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8 }} className="edu-docs">
                 <style suppressHydrationWarning>{`@media(min-width:380px){.edu-docs{grid-template-columns:repeat(3,1fr)!important}}`}</style>
                 {documents.map((doc) => (
@@ -1890,7 +2228,7 @@ function EducationModal({ onClose }: { onClose: () => void }) {
                       <p style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 2 }}>{doc.label}</p>
                       <p style={{ fontSize: "0.62rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{doc.desc}</p>
                     </div>
-                    <span style={{ fontSize: "0.6rem", color: "var(--accent)", opacity: 0.7 }}>Open ↗</span>
+                    <span style={{ fontSize: "0.6rem", color: "var(--accent)", opacity: 0.7 }}>{t("open")}</span>
                   </a>
                 ))}
               </div>
@@ -1903,6 +2241,9 @@ function EducationModal({ onClose }: { onClose: () => void }) {
 }
 
 export default function HomePage() {
+  const { lang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+  const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
   const heroRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -1969,15 +2310,15 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ── INTERN MODAL ─────────────────────────────────────────────────── */}
+      {/* ──── INTERN MODAL ────────────────────────────────────────────────────────────────────────────────────────────────────── */}
       {showInternModal && <InternModal onClose={() => setShowInternModal(false)} />}
       {showEventModal && <EventModal onClose={() => setShowEventModal(false)} />}
       {showEducationModal && <EducationModal onClose={() => setShowEducationModal(false)} />}
 
-      {/* ── PROJECT MODAL ────────────────────────────────────────────────── */}
+      {/* ──── PROJECT MODAL ──────────────────────────────────────────────────────────────────────────────────────────────────── */}
       {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
 
-      {/* ── BACKDROP ─────────────────────────────────────────────────────── */}
+      {/* ──── BACKDROP ────────────────────────────────────────────────────────────────────────────────────────────────────────────── */}
       {showClone && (
         <div
           style={{
@@ -1994,7 +2335,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* ── PHOTO CLONE ──────────────────────────────────────────────────── */}
+      {/* ──── PHOTO CLONE ──────────────────────────────────────────────────────────────────────────────────────────────────────── */}
       {showClone && cloneRect && (
         <div
           style={{
@@ -2034,17 +2375,17 @@ export default function HomePage() {
               transition: "opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s",
             }}
           >
-            <p style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 4 }}>Web Developer</p>
+            <p style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 4 }}>{t("webDeveloper")}</p>
             <p style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.3rem", color: "rgba(255,255,255,0.92)", fontWeight: 400 }}>Furqan</p>
           </div>
         </div>
       )}
 
-      {/* ── PAGE SHELL ───────────────────────────────────────────────────── */}
+      {/* ──── PAGE SHELL ────────────────────────────────────────────────────────────────────────────────────────────────────────── */}
       <div className="page-container max-w-5xl mx-auto px-5 sm:px-8 pb-32" style={{ display: "flex", flexDirection: "column", gap: "6.5rem" }}>
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             HERO
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <section ref={heroRef} style={{ minHeight: "90vh", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative" }}>
           {/* SVG corner bracket overlay */}
           {(rects.heading || rects.body || rects.photo) && (
@@ -2057,9 +2398,14 @@ export default function HomePage() {
 
           <div className="flex flex-col-reverse sm:flex-row items-center sm:items-start gap-10 sm:gap-16" style={{ position: "relative", zIndex: 2 }}>
             {/* LEFT — text */}
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
               {/* Status */}
-              <div
+              {/* <div
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -2079,10 +2425,11 @@ export default function HomePage() {
                   <span style={{ position: "absolute", inset: 0, borderRadius: "50%", backgroundColor: "var(--status-color)", opacity: 0.5, animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }} />
                   <span style={{ position: "relative", width: 7, height: 7, borderRadius: "50%", backgroundColor: "var(--status-color)" }} />
                 </span>
-                Available for work
-              </div>
+                {t("availableForWork")}
+              </div> */}
 
               {/* BRACKET 1 — heading */}
+              <br />
               <div ref={headingRef}>
                 <h1
                   style={{
@@ -2095,7 +2442,7 @@ export default function HomePage() {
                     letterSpacing: "-0.02em",
                   }}
                 >
-                  Hi, I&apos;m
+                  {t("hiIm")}
                   <br />
                   <em style={{ color: "var(--accent)", fontStyle: "italic" }}>Furqan.</em>
                 </h1>
@@ -2108,9 +2455,7 @@ export default function HomePage() {
 
               {/* BRACKET 2 — body */}
               <div ref={bodyRef}>
-                <p style={{ maxWidth: 410, lineHeight: 1.82, fontSize: "0.88rem", color: "var(--text-secondary)", marginBottom: "1.4rem" }}>
-                  Graduate of Informatics Engineering from Politeknik Negeri Lhokseumawe. I build structured, efficient web systems with hands-on experience in data processing, sentiment analysis, and full-stack development.
-                </p>
+                <p style={{ maxWidth: 410, lineHeight: 1.82, fontSize: "0.88rem", color: "var(--text-secondary)", marginBottom: "1.4rem" }}>{t("heroDescription")}</p>
 
                 <div className="hero-contact-chips" style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: "1.4rem" }}>
                   {[
@@ -2118,7 +2463,7 @@ export default function HomePage() {
                     { icon: "↗", label: "LinkedIn", href: "https://linkedin.com/in/fur-qan-6b1b87242" },
                     { icon: "↗", label: "Instagram", href: "https://www.instagram.com/frqann?igsh=MTA1ejJ3amhhZTV5cA==" },
                     { icon: "↗", label: "GitHub", href: "https://github.com/Furqan-sykss" },
-                    { icon: "◎", label: "East Jakarta", href: null },
+                    { icon: "◎", label: "Lhokseumawe, Aceh", href: null },
                   ].map((c) => {
                     const base: React.CSSProperties = {
                       display: "inline-flex",
@@ -2181,7 +2526,7 @@ export default function HomePage() {
                       textDecoration: "none",
                     }}
                   >
-                    View Projects
+                    {t("viewProjects")}
                   </a>
                   <a
                     href="#"
@@ -2202,7 +2547,7 @@ export default function HomePage() {
                       backgroundColor: "transparent",
                     }}
                   >
-                    Get in Touch
+                    {t("getInTouch")}
                   </a>
                 </div>
               </div>
@@ -2276,9 +2621,9 @@ export default function HomePage() {
 
         <Divider />
 
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             STATS — seamless connected grid, no individual cards
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <div
             className="stats-bento"
@@ -2303,8 +2648,8 @@ export default function HomePage() {
                 animationDelay: "0ms",
               }}
             >
-              <Counter target={6} label="Projects Built" />
-              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>across industries</p>
+              <Counter target={6} label={t("projectsBuilt")} />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("acrossIndustries")}</p>
             </div>
 
             {/* [2] Years Learning */}
@@ -2321,8 +2666,8 @@ export default function HomePage() {
                 animationDelay: "80ms",
               }}
             >
-              <Counter target={3} label="Years Learning" />
-              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>continuous growth</p>
+              <Counter target={3} label={t("yearsLearning")} />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("continuousGrowth")}</p>
             </div>
 
             {/* [3] Certifications — spans 2 rows (tall card on the right) */}
@@ -2360,8 +2705,8 @@ export default function HomePage() {
                 }}
               />
               <div style={{ position: "relative" }}>
-                <Counter target={8} label="Certifications" />
-                <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>verified skills</p>
+                <Counter target={8} label={t("certifications")} />
+                <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("verifiedSkills")}</p>
               </div>
             </div>
 
@@ -2379,8 +2724,8 @@ export default function HomePage() {
                 animationDelay: "240ms",
               }}
             >
-              <Counter target={1} label="Internships" />
-              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>industry exposure</p>
+              <Counter target={1} label={t("Internship")} />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("IndustryExposure")}</p>
             </div>
 
             <div
@@ -2396,33 +2741,33 @@ export default function HomePage() {
                 animationDelay: "320ms",
               }}
             >
-              <Counter target={1} label="Jobs" />
-              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>industry exposure</p>
+              <Counter target={1} label={t("Jobs")} />
+              <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("IndustryExposure")}</p>
             </div>
           </div>
         </FadeUp>
 
         <Divider />
 
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             SKILLS — asymmetric 2-row layout
             Row 1: Languages (5fr) | Frameworks (7fr)
             Row 2: Frontend (4fr)  | Tools (8fr)
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <section id="skills">
-            <SectionHeader eyebrow="Capabilities" title="Tech Stack" />
+            <SectionHeader eyebrow={t("capabilities")} title={t("techStack")} />
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <div style={{ display: "grid", gap: 10 }} className="sm:grid-cols-[5fr_7fr] grid-cols-1">
                 {skills.slice(0, 2).map((g, i) => (
-                  <FadeUp key={g.category} delay={i * 65}>
+                  <FadeUp key={`skill-${i}-${g.category.en}`} delay={i * 65}>
                     <SkillCard group={g} />
                   </FadeUp>
                 ))}
               </div>
               <div style={{ display: "grid", gap: 10 }} className="sm:grid-cols-[4fr_8fr] grid-cols-1">
                 {skills.slice(2).map((g, i) => (
-                  <FadeUp key={g.category} delay={(i + 2) * 65}>
+                  <FadeUp key={`skill-${i + 2}-${g.category.en}`} delay={(i + 2) * 65}>
                     <SkillCard group={g} />
                   </FadeUp>
                 ))}
@@ -2432,12 +2777,12 @@ export default function HomePage() {
         </FadeUp>
         <Divider />
 
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             EXPERIENCE — timeline with ring nodes
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <section id="experience">
-            <SectionHeader eyebrow="Career" title="Experience" />
+            <SectionHeader eyebrow={t("career")} title={t("experience")} />
             <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 0 }}>
               {/* Vertical connector line */}
               <div style={{ position: "absolute", top: 20, bottom: 20, left: 10, width: 1, backgroundColor: "var(--border)" }} />
@@ -2493,7 +2838,7 @@ export default function HomePage() {
                     >
                       {/* Top row: role title + View Details */}
                       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 2 }}>
-                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{e.role}</h3>
+                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{L(e.role)}</h3>
                         {(i === 0 || i === 1) && (
                           <span
                             style={{
@@ -2509,7 +2854,7 @@ export default function HomePage() {
                               paddingTop: 2,
                             }}
                           >
-                            View Details
+                            {t("viewDetails")}
                             <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
                               <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
@@ -2517,9 +2862,22 @@ export default function HomePage() {
                         )}
                       </div>
                       {/* Period — own line below role */}
-                      <span style={{ display: "block", fontSize: "0.67rem", color: "var(--text-muted)", marginBottom: 6 }}>{e.period}</span>
-                      <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{e.company}</p>
-                      <p style={{ fontSize: "0.82rem", lineHeight: 1.74, color: "var(--text-secondary)" }}>{e.desc}</p>
+                      <span style={{ display: "block", fontSize: "0.67rem", color: "var(--text-muted)", marginBottom: 6 }}>{L(e.period)}</span>
+                      <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{L(e.company)}</p>
+                      <p
+                        style={{
+                          fontSize: "0.82rem",
+                          lineHeight: 1.74,
+                          color: "var(--text-secondary)",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {L(e.desc)}
+                      </p>
                     </div>
                   </div>
                 </FadeUp>
@@ -2532,7 +2890,7 @@ export default function HomePage() {
 
         <FadeUp>
           <section id="projects">
-            <SectionHeader eyebrow="Portfolio" title="Projects" />
+            <SectionHeader eyebrow={t("portfolio")} title={t("projects")} />
 
             {/* The grid parent — cards go directly here, no FadeUp wrappers */}
             <div
@@ -2543,7 +2901,7 @@ export default function HomePage() {
                 gap: 10,
               }}
             >
-              {/* ── [0] FEATURED — col 1+2 ────────────────────────────────── */}
+              {/* ──── [0] FEATURED — col 1+2 ──────────────────────────────────────────────────────────────────── */}
               <div
                 className="proj-card proj-card-featured bento-reveal"
                 onClick={() => setSelectedProject(projects[0])}
@@ -2564,13 +2922,13 @@ export default function HomePage() {
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 6 }}>
                     <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <TagBadge>{projects[0].tag}</TagBadge>
+                      <TagBadge>{L(projects[0].tag)}</TagBadge>
                       <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>
-                        Featured
+                        {t("featured")}
                       </span>
                     </div>
                     <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
-                      {projects[0].period}
+                      {L(projects[0].period)}
                     </span>
                   </div>
                   <h3
@@ -2584,10 +2942,22 @@ export default function HomePage() {
                       lineHeight: 1.25,
                     }}
                   >
-                    {projects[0].title}
+                    {L(projects[0].title)}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.82rem", lineHeight: 1.78, color: "var(--text-secondary)" }}>
-                    {projects[0].desc}
+                  <p
+                    className="proj-card-desc"
+                    style={{
+                      fontSize: "0.82rem",
+                      lineHeight: 1.78,
+                      color: "var(--text-secondary)",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {L(projects[0].desc)}
                   </p>
                 </div>
                 {/* Stack chips — max 5, then "+N more" chip */}
@@ -2610,7 +2980,7 @@ export default function HomePage() {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        +{projects[0].stack.length - 5} more
+                        +{projects[0].stack.length - 5}
                       </span>
                     )}
                   </div>
@@ -2625,7 +2995,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* ── [1] col 3, row 1 ──────────────────────────────────────── */}
+              {/* ──── [1] col 3, row 1 ──────────────────────────────────────────────────────────────────────────────── */}
               <div
                 onClick={() => setSelectedProject(projects[1])}
                 className="proj-card bento-reveal"
@@ -2644,26 +3014,54 @@ export default function HomePage() {
               >
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 10 }}>
-                    <TagBadge>{projects[1].tag}</TagBadge>
+                    <TagBadge>{L(projects[1].tag)}</TagBadge>
                     <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
-                      {projects[1].period}
+                      {L(projects[1].period)}
                     </p>
                   </div>
                   <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.88rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 8, lineHeight: 1.35 }}>
-                    {projects[1].title}
+                    {L(projects[1].title)}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.79rem", lineHeight: 1.72, color: "var(--text-secondary)" }}>
-                    {projects[1].desc}
+                  <p
+                    className="proj-card-desc"
+                    style={{
+                      fontSize: "0.79rem",
+                      lineHeight: 1.72,
+                      color: "var(--text-secondary)",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {L(projects[1].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 14 }}>
-                  {projects[1].stack.map((s) => (
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                  {projects[1].stack.slice(0, 5).map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
+                  {projects[1].stack.length > 5 && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 600,
+                        padding: "3px 10px",
+                        borderRadius: 6,
+                        backgroundColor: "var(--accent-glow)",
+                        border: "1px solid var(--border-mid)",
+                        color: "var(--accent)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      +{projects[1].stack.length - 5}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* ── [2] col 1, row 2 ──────────────────────────────────────── */}
+              {/* ──── [2] col 1, row 2 ──────────────────────────────────────────────────────────────────────────────── */}
               <div
                 onClick={() => setSelectedProject(projects[2])}
                 className="proj-card bento-reveal"
@@ -2681,26 +3079,54 @@ export default function HomePage() {
               >
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
-                    <TagBadge>{projects[2].tag}</TagBadge>
+                    <TagBadge>{L(projects[2].tag)}</TagBadge>
                     <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
-                      {projects[2].period}
+                      {L(projects[2].period)}
                     </p>
                   </div>
                   <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
-                    {projects[2].title}
+                    {L(projects[2].title)}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>
-                    {projects[2].desc}
+                  <p
+                    className="proj-card-desc"
+                    style={{
+                      fontSize: "0.78rem",
+                      lineHeight: 1.7,
+                      color: "var(--text-secondary)",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {L(projects[2].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
-                  {projects[2].stack.map((s) => (
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                  {projects[2].stack.slice(0, 5).map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
+                  {projects[2].stack.length > 5 && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 600,
+                        padding: "3px 10px",
+                        borderRadius: 6,
+                        backgroundColor: "var(--accent-glow)",
+                        border: "1px solid var(--border-mid)",
+                        color: "var(--accent)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      +{projects[2].stack.length - 5}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* ── [3] col 2, row 2 ──────────────────────────────────────── */}
+              {/* ──── [3] col 2, row 2 ──────────────────────────────────────────────────────────────────────────────── */}
               <div
                 onClick={() => setSelectedProject(projects[3])}
                 className="proj-card bento-reveal"
@@ -2718,26 +3144,54 @@ export default function HomePage() {
               >
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
-                    <TagBadge>{projects[3].tag}</TagBadge>
+                    <TagBadge>{L(projects[3].tag)}</TagBadge>
                     <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
-                      {projects[3].period}
+                      {L(projects[3].period)}
                     </p>
                   </div>
                   <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
-                    {projects[3].title}
+                    {L(projects[3].title)}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>
-                    {projects[3].desc}
+                  <p
+                    className="proj-card-desc"
+                    style={{
+                      fontSize: "0.78rem",
+                      lineHeight: 1.7,
+                      color: "var(--text-secondary)",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {L(projects[3].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
-                  {projects[3].stack.map((s) => (
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                  {projects[3].stack.slice(0, 5).map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
+                  {projects[3].stack.length > 5 && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 600,
+                        padding: "3px 10px",
+                        borderRadius: 6,
+                        backgroundColor: "var(--accent-glow)",
+                        border: "1px solid var(--border-mid)",
+                        color: "var(--accent)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      +{projects[3].stack.length - 5}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* ── [4] col 3, row 2 ──────────────────────────────────────── */}
+              {/* ──── [4] col 3, row 2 ──────────────────────────────────────────────────────────────────────────────── */}
               <div
                 onClick={() => setSelectedProject(projects[4])}
                 className="proj-card bento-reveal"
@@ -2756,26 +3210,54 @@ export default function HomePage() {
               >
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
-                    <TagBadge>{projects[4].tag}</TagBadge>
+                    <TagBadge>{L(projects[4].tag)}</TagBadge>
                     <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
-                      {projects[4].period}
+                      {L(projects[4].period)}
                     </p>
                   </div>
                   <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
-                    {projects[4].title}
+                    {L(projects[4].title)}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>
-                    {projects[4].desc}
+                  <p
+                    className="proj-card-desc"
+                    style={{
+                      fontSize: "0.78rem",
+                      lineHeight: 1.7,
+                      color: "var(--text-secondary)",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {L(projects[4].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
-                  {projects[4].stack.map((s) => (
+                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                  {projects[4].stack.slice(0, 5).map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
+                  {projects[4].stack.length > 5 && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 600,
+                        padding: "3px 10px",
+                        borderRadius: 6,
+                        backgroundColor: "var(--accent-glow)",
+                        border: "1px solid var(--border-mid)",
+                        color: "var(--accent)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      +{projects[4].stack.length - 5}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* ── [5] LAST — full width, horizontal layout ──────────────── */}
+              {/* ──── [5] LAST — full width, horizontal layout ──────────────────────────────── */}
               <div
                 onClick={() => setSelectedProject(projects[5])}
                 className="proj-card bento-reveal bento-last"
@@ -2794,9 +3276,9 @@ export default function HomePage() {
               >
                 {/* Meta block */}
                 <div className="proj-card-meta" style={{ flexShrink: 0, paddingRight: "1.5rem" }}>
-                  <TagBadge>{projects[5].tag}</TagBadge>
+                  <TagBadge>{L(projects[5].tag)}</TagBadge>
                   <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 5 }}>
-                    {projects[5].period}
+                    {L(projects[5].period)}
                   </p>
                 </div>
                 {/* Vertical separator */}
@@ -2804,17 +3286,45 @@ export default function HomePage() {
                 {/* Title + desc */}
                 <div className="proj-card-main" style={{ flex: 1, minWidth: 0, paddingRight: "1.5rem" }}>
                   <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.87rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 3, lineHeight: 1.3 }}>
-                    {projects[5].title}
+                    {L(projects[5].title)}
                   </h3>
-                  <p className="proj-card-desc" style={{ fontSize: "0.77rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>
-                    {projects[5].desc}
+                  <p
+                    className="proj-card-desc"
+                    style={{
+                      fontSize: "0.77rem",
+                      lineHeight: 1.6,
+                      color: "var(--text-secondary)",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {L(projects[5].desc)}
                   </p>
                 </div>
                 {/* Stack */}
                 <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flexShrink: 0, justifyContent: "flex-end" }}>
-                  {projects[5].stack.map((s) => (
+                  {projects[5].stack.slice(0, 5).map((s) => (
                     <StackChip key={s}>{s}</StackChip>
                   ))}
+                  {projects[5].stack.length > 5 && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 600,
+                        padding: "3px 10px",
+                        borderRadius: 6,
+                        backgroundColor: "var(--accent-glow)",
+                        border: "1px solid var(--border-mid)",
+                        color: "var(--accent)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      +{projects[5].stack.length - 5}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -2824,7 +3334,7 @@ export default function HomePage() {
 
         <FadeUp>
           <section id="additional-projects">
-            <SectionHeader eyebrow="Portfolio" title="Additional Projects" />
+            <SectionHeader eyebrow={t("portfolio")} title={t("additionalProjects")} />
 
             <div
               className="bento-grid-plain"
@@ -2836,7 +3346,7 @@ export default function HomePage() {
             >
               {additionalProjects.map((project, index) => (
                 <div
-                  key={project.title}
+                  key={`additional-${index}-${project.title.en}`}
                   onClick={() => setSelectedProject(project)}
                   className="proj-card bento-reveal"
                   style={{
@@ -2878,7 +3388,7 @@ export default function HomePage() {
                           gap: 8,
                         }}
                       >
-                        <TagBadge>{project.tag}</TagBadge>
+                        <TagBadge>{L(project.tag) as string}</TagBadge>
 
                         <span
                           style={{
@@ -2894,7 +3404,7 @@ export default function HomePage() {
                             opacity: 0.4,
                           }}
                         >
-                          Additional
+                          {t("additional")}
                         </span>
                       </div>
 
@@ -2904,7 +3414,7 @@ export default function HomePage() {
                           color: "var(--text-muted)",
                         }}
                       >
-                        {project.period}
+                        {L(project.period) as string}
                       </span>
                     </div>
 
@@ -2924,7 +3434,7 @@ export default function HomePage() {
                         marginBottom: 10,
                       }}
                     >
-                      {project.title}
+                      {L(project.title) as string}
                     </h3>
 
                     <p
@@ -2947,7 +3457,7 @@ export default function HomePage() {
                         textOverflow: "ellipsis",
                       }}
                     >
-                      {project.desc}
+                      {L(project.desc) as string}
                     </p>
                   </div>
 
@@ -2966,6 +3476,7 @@ export default function HomePage() {
                     }}
                   >
                     <div
+                      className="proj-card-stack"
                       style={{
                         display: "flex",
 
@@ -2982,7 +3493,23 @@ export default function HomePage() {
                         <StackChip key={tech}>{tech}</StackChip>
                       ))}
 
-                      {project.stack.length > 5 && <StackChip>+{project.stack.length - 5}</StackChip>}
+                      {project.stack.length > 5 && (
+                        <span
+                          style={{
+                            fontSize: "0.68rem",
+                            fontWeight: 600,
+                            padding: "3px 10px",
+                            borderRadius: 6,
+                            backgroundColor: "var(--accent-glow)",
+                            border: "1px solid var(--border-mid)",
+                            color: "var(--accent)",
+                            cursor: "pointer",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          +{project.stack.length - 5}
+                        </span>
+                      )}
                     </div>
 
                     <div
@@ -3018,15 +3545,15 @@ export default function HomePage() {
 
         <Divider />
 
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             EDUCATION + LANGUAGES — 3fr | 2fr side by side
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <div style={{ display: "grid", gap: "2.5rem", alignItems: "start" }} className="grid-cols-1 sm:grid-cols-[3fr_2fr]">
             {/* Education */}
             <FadeUp delay={0}>
               <section id="education">
-                <SectionHeader eyebrow="Background" title="Education" />
+                <SectionHeader eyebrow={t("background")} title={t("education")} />
                 <div
                   onClick={() => setShowEducationModal(true)}
                   onMouseEnter={(e) => {
@@ -3060,7 +3587,7 @@ export default function HomePage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 3 }}>
-                      <h3 style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35, minWidth: 0 }}>Informatics Engineering — D-IV</h3>
+                      <h3 style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35, minWidth: 0 }}>{lang === "id" ? "Teknik Informatika - D-IV" : "Informatics Engineering - D-IV"}</h3>
                       <span style={{ flexShrink: 0, fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.08em", color: "var(--accent)", opacity: 0.75, display: "flex", alignItems: "center", gap: 4, paddingTop: 2 }}>
                         View Details
                         <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
@@ -3070,7 +3597,7 @@ export default function HomePage() {
                     </div>
                     <p style={{ fontSize: "0.74rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 9 }}>Politeknik Negeri Lhokseumawe</p>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                      {["2021 – 2025", "GPA 3.15 / 4.00", "Graduated"].map((t) => (
+                      {[lang === "id" ? "2021 - 2025" : "2021 - 2025", lang === "id" ? "IPK 3.15 / 4.00" : "GPA 3.15 / 4.00", lang === "id" ? "Lulus" : "Graduated"].map((t) => (
                         <span key={t} style={{ fontSize: "0.7rem", padding: "2px 9px", borderRadius: 6, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", color: "var(--text-muted)" }}>
                           {t}
                         </span>
@@ -3084,11 +3611,11 @@ export default function HomePage() {
             {/* Languages */}
             <FadeUp delay={100}>
               <section>
-                <SectionHeader eyebrow="Communication" title="Languages" />
+                <SectionHeader eyebrow={t("communication")} title={t("languages")} />
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {[
-                    { lang: "Indonesian", level: "Native", pct: 100 },
-                    { lang: "English", level: "Intermediate · TOEFL 450", pct: 65 },
+                    { lang: lang === "id" ? "Bahasa Indonesia" : "Indonesian", level: t("native"), pct: 100 },
+                    { lang: "English", level: t("intermediateToefl450"), pct: 65 },
                   ].map((l, i) => (
                     <FadeUp key={l.lang} delay={i * 90}>
                       <div style={{ padding: "1.1rem 1.25rem", borderRadius: "1rem", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
@@ -3110,12 +3637,12 @@ export default function HomePage() {
 
         <Divider />
 
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             CERTIFICATIONS — 2-col, numbered boxes, slide-right on hover
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <section id="certifications">
-            <SectionHeader eyebrow="Credentials" title="Certifications" />
+            <SectionHeader eyebrow={t("credentials")} title={t("certifications")} />
 
             {/* Grid & show-more handled by client component */}
             <CertificationsClient certifications={certifications} />
@@ -3124,9 +3651,9 @@ export default function HomePage() {
 
         <Divider />
 
-        {/* ══════════════════════════════════════════════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             CONTACT
-        ══════════════════════════════════════════════════════════════════ */}
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <section id="contact">
             <div style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "clamp(2.5rem,8vw,5rem) clamp(1.25rem,5vw,2rem)", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
@@ -3140,13 +3667,11 @@ export default function HomePage() {
               <div style={{ position: "relative" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14 }}>
                   <div style={{ height: 1, width: 22, backgroundColor: "var(--accent)", opacity: 0.35 }} />
-                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>Get in touch</p>
+                  <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>{t("getInTouch")}</p>
                   <div style={{ height: 1, width: 22, backgroundColor: "var(--accent)", opacity: 0.35 }} />
                 </div>
-                <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "clamp(2rem,5vw,2.8rem)", fontWeight: 400, color: "var(--text-primary)", marginBottom: "0.85rem", lineHeight: 1.1 }}>Let&apos;s Work Together</h2>
-                <p style={{ maxWidth: 360, margin: "0 auto 2.5rem", fontSize: "0.87rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>
-                  Open to freelance projects, collaborations, or full-time opportunities. Let&apos;s build something meaningful.
-                </p>
+                <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "clamp(2rem,5vw,2.8rem)", fontWeight: 400, color: "var(--text-primary)", marginBottom: "0.85rem", lineHeight: 1.1 }}>{t("workTogether")}</h2>
+                <p style={{ maxWidth: 360, margin: "0 auto 2.5rem", fontSize: "0.87rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{t("contactDescription")}</p>
                 <a
                   href="mailto:furqansykss@gmail.com"
                   className="btn-p"
@@ -3185,9 +3710,11 @@ export default function HomePage() {
   );
 }
 
-// ─── SkillCard ─────────────────────────────────────────────────────────────────
+// ────── SkillCard ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-function SkillCard({ group }: { group: { category: string; icon: string; items: string[] } }) {
+function SkillCard({ group }: { group: { category: Localized; icon: string; items: string[] } }) {
+  const { lang } = useLanguage();
+  const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
   return (
     <div
       style={{
@@ -3203,7 +3730,7 @@ function SkillCard({ group }: { group: { category: string; icon: string; items: 
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.85rem" }}>
         <span style={{ fontSize: "0.72rem", color: "var(--accent)", opacity: 0.45, fontFamily: "monospace", letterSpacing: "0.05em" }}>{group.icon}</span>
-        <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.62 }}>{group.category}</p>
+        <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.62 }}>{L(group.category)}</p>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
         {group.items.map((item) => (

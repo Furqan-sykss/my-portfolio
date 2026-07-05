@@ -1,12 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/components/LanguageProvider";
+import { translate } from "@/components/siteTranslations";
 
 export default function Navbar() {
   const [isDark, setIsDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [ignoreObserver, setIgnoreObserver] = useState(false);
+  const scrollTimeoutRef = useRef<number | null>(null);
+  const { lang, toggleLang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+
+  const linkLabels: Record<string, string> = {
+    experience: t("navExperience"),
+    projects: t("navProjects"),
+    certifications: t("navCertifications"),
+    contact: t("navContact"),
+  };
+
+  const themeLabel = isDark ? t("themeLight") : t("themeDark");
+  const themeAria = isDark ? t("switchToLightMode") : t("switchToDarkMode");
+  const navLabel = lang === "id" ? "EN" : "ID";
+  const navAria = lang === "id" ? t("switchToEnglish") : t("switchToIndonesian");
+  const menuAria = menuOpen ? t("closeMenu") : t("openMenu");
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -24,6 +44,15 @@ export default function Navbar() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 640);
+      if (window.innerWidth >= 640) {
+        setMenuOpen(false);
+      }
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+
     // Auto-close menu saat user klik diluar navbar
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -40,25 +69,33 @@ export default function Navbar() {
     const sectionEls = document.querySelectorAll("section[id]");
     const observer = new IntersectionObserver(
       (entries) => {
-        // Cari entry yang paling banyak terlihat di viewport
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (ignoreObserver) {
+          return;
+        }
+        const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length > 0) {
-          setActiveSection(visible[0].target.id);
+          const closest = visible.sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0];
+          setActiveSection(closest.target.id);
+        } else {
+          setActiveSection("");
         }
       },
       {
-        rootMargin: "-30% 0px -40% 0px",
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+        rootMargin: "-40% 0px -40% 0px",
+        threshold: [0, 0.2, 0.5, 0.8, 1],
       },
     );
     sectionEls.forEach((el) => observer.observe(el));
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("click", handleClickOutside);
       observer.disconnect();
     };
   }, [menuOpen]);
+
+  const [langPressed, setLangPressed] = useState(false);
 
   const toggle = () => {
     const html = document.documentElement;
@@ -68,8 +105,23 @@ export default function Navbar() {
     localStorage.setItem("theme", nowDark ? "dark" : "light");
   };
 
+  const handleLangToggle = () => {
+    setLangPressed(true);
+    toggleLang();
+    window.setTimeout(() => setLangPressed(false), 140);
+  };
+
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
+    setActiveSection(id);
+    setIgnoreObserver(true);
+    if (scrollTimeoutRef.current) {
+      window.clearTimeout(scrollTimeoutRef.current);
+    }
+    scrollTimeoutRef.current = window.setTimeout(() => {
+      setIgnoreObserver(false);
+      scrollTimeoutRef.current = null;
+    }, 1200);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
       history.pushState(null, "", window.location.pathname); // hapus # dari URL
@@ -120,7 +172,7 @@ export default function Navbar() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = isActive ? "var(--accent)" : "var(--text-muted)")}
                 >
-                  {s}
+                  {linkLabels[s]}
                 </a>
               );
             })}
@@ -130,7 +182,7 @@ export default function Navbar() {
             {/* Theme toggle */}
             <button
               onClick={toggle}
-              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+              aria-label={themeAria}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -162,68 +214,117 @@ export default function Navbar() {
               }}
             >
               {isDark ? <SunIcon /> : <MoonIcon />}
-              <span className="hidden sm:inline">{isDark ? "Light" : "Dark"}</span>
+              {/* <span className="hidden sm:inline">{themeLabel}</span> */}
+            </button>
+
+            {/* Language toggle */}
+            <button
+              onClick={handleLangToggle}
+              aria-label={navAria}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px 14px",
+                minWidth: 44,
+                borderRadius: 999,
+                fontSize: "0.72rem",
+                fontWeight: 600,
+                border: "1px solid var(--border-mid)",
+                backgroundColor: langPressed ? "rgba(59,130,246,0.08)" : "var(--bg-subtle)",
+                color: langPressed ? "var(--accent)" : "var(--text-secondary)",
+                cursor: "pointer",
+                transition: "all 0.18s ease, transform 0.14s ease",
+                transform: langPressed ? "scale(0.96)" : "scale(1)",
+                outline: "none",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong)";
+                (e.currentTarget as HTMLElement).style.color = "var(--accent)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-mid)";
+                (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+              }}
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)";
+              }}
+              onBlur={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-mid)";
+              }}
+            >
+              {navLabel}
             </button>
 
             {/* Mobile hamburger */}
-            <button
-              className="sm:hidden flex flex-col gap-1.5"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "10px",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 8,
-                outline: "none",
-                transition: "background-color 0.2s ease",
-              }}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-subtle)";
-              }}
-              onBlur={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-subtle)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-              }}
-            >
-              {[0, 1, 2].map((i) => (
-                <span
-                  key={i}
-                  style={{
-                    display: "block",
-                    width: 20,
-                    height: 2,
-                    backgroundColor: "var(--text-secondary)",
-                    borderRadius: 2,
-                    transition: "all 0.25s ease",
-                    transform: menuOpen ? (i === 0 ? "translateY(6px) rotate(45deg)" : i === 2 ? "translateY(-6px) rotate(-45deg)" : "scaleX(0)") : "none",
-                    opacity: menuOpen && i === 1 ? 0 : 1,
-                  }}
-                />
-              ))}
-            </button>
+            {isMobile && (
+              <button
+                className="sm:hidden"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuAria}
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
+                style={{
+                  position: "relative",
+                  width: 38,
+                  height: 38,
+                  background: menuOpen ? "rgba(31,81,50,0.12)" : "transparent",
+                  border: menuOpen ? "1px solid var(--accent)" : "1px solid transparent",
+                  cursor: "pointer",
+                  padding: 0,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 12,
+                  outline: "none",
+                  transition: "background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease",
+                  display: "inline-flex",
+                }}
+                onFocus={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-subtle)";
+                }}
+                onBlur={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = menuOpen ? "rgba(31,81,50,0.12)" : "transparent";
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-subtle)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = menuOpen ? "rgba(31,81,50,0.12)" : "transparent";
+                }}
+              >
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      width: 20,
+                      height: 2,
+                      backgroundColor: menuOpen ? "var(--accent)" : "var(--text-secondary)",
+                      borderRadius: 999,
+                      transition: "transform 0.3s ease, opacity 0.3s ease, background-color 0.25s ease, top 0.3s ease",
+                      transform: menuOpen ? (i === 0 ? "translate(-50%, -50%) rotate(45deg)" : i === 2 ? "translate(-50%, -50%) rotate(-45deg)" : "translate(-50%, -50%) scaleX(0)") : "translateX(-50%)",
+                      top: menuOpen ? "50%" : i === 0 ? 10 : i === 1 ? 18 : 26,
+                      opacity: menuOpen && i === 1 ? 0 : 1,
+                    }}
+                  />
+                ))}
+              </button>
+            )}
           </div>
         </div>
 
         {/* Mobile menu */}
         <div
           id="mobile-menu"
+          className="sm:hidden"
           style={{
+            display: isMobile ? "block" : "none",
             overflow: "hidden",
-            maxHeight: menuOpen ? "500px" : "0",
+            maxHeight: isMobile && menuOpen ? "500px" : "0",
             transition: "max-height 0.35s ease",
             backgroundColor: "var(--bg-card)",
-            borderTop: menuOpen ? "1px solid var(--border)" : "none",
+            borderTop: isMobile && menuOpen ? "1px solid var(--border)" : "none",
           }}
         >
           <nav className="sm:hidden px-5 py-4 flex flex-col gap-2">
@@ -267,19 +368,15 @@ export default function Navbar() {
                   onFocus={(e) => {
                     if (!isActive) {
                       (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-subtle)";
-                      (e.currentTarget as HTMLElement).style.borderLeft = "3px solid var(--accent)";
-                      (e.currentTarget as HTMLElement).style.paddingLeft = "9px";
                     }
                   }}
                   onBlur={(e) => {
                     if (!isActive) {
                       (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                      (e.currentTarget as HTMLElement).style.borderLeft = "none";
-                      (e.currentTarget as HTMLElement).style.paddingLeft = "12px";
                     }
                   }}
                 >
-                  {s}
+                  {linkLabels[s]}
                 </a>
               );
             })}

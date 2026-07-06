@@ -640,6 +640,19 @@ function StackChip({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ProjectCardCta() {
+  return (
+    <div
+      className="proj-card-cta"
+      style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
+    >
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  );
+}
+
 function Divider() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -2984,14 +2997,7 @@ export default function HomePage() {
                       </span>
                     )}
                   </div>
-                  <div
-                    className="proj-card-cta"
-                    style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
+                  <ProjectCardCta />
                 </div>
               </div>
 
@@ -3038,26 +3044,29 @@ export default function HomePage() {
                     {L(projects[1].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                  {projects[1].stack.slice(0, 5).map((s) => (
-                    <StackChip key={s}>{s}</StackChip>
-                  ))}
-                  {projects[1].stack.length > 5 && (
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: 600,
-                        padding: "3px 10px",
-                        borderRadius: 6,
-                        backgroundColor: "var(--accent-glow)",
-                        border: "1px solid var(--border-mid)",
-                        color: "var(--accent)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      +{projects[1].stack.length - 5}
-                    </span>
-                  )}
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                    {projects[1].stack.slice(0, 5).map((s) => (
+                      <StackChip key={s}>{s}</StackChip>
+                    ))}
+                    {projects[1].stack.length > 5 && (
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          padding: "3px 10px",
+                          borderRadius: 6,
+                          backgroundColor: "var(--accent-glow)",
+                          border: "1px solid var(--border-mid)",
+                          color: "var(--accent)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        +{projects[1].stack.length - 5}
+                      </span>
+                    )}
+                  </div>
+                  <ProjectCardCta />
                 </div>
               </div>
 
@@ -3103,26 +3112,29 @@ export default function HomePage() {
                     {L(projects[2].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                  {projects[2].stack.slice(0, 5).map((s) => (
-                    <StackChip key={s}>{s}</StackChip>
-                  ))}
-                  {projects[2].stack.length > 5 && (
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: 600,
-                        padding: "3px 10px",
-                        borderRadius: 6,
-                        backgroundColor: "var(--accent-glow)",
-                        border: "1px solid var(--border-mid)",
-                        color: "var(--accent)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      +{projects[2].stack.length - 5}
-                    </span>
-                  )}
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                    {projects[2].stack.slice(0, 5).map((s) => (
+                      <StackChip key={s}>{s}</StackChip>
+                    ))}
+                    {projects[2].stack.length > 5 && (
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          padding: "3px 10px",
+                          borderRadius: 6,
+                          backgroundColor: "var(--accent-glow)",
+                          border: "1px solid var(--border-mid)",
+                          color: "var(--accent)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        +{projects[2].stack.length - 5}
+                      </span>
+                    )}
+                  </div>
+                  <ProjectCardCta />
                 </div>
               </div>
 
@@ -3168,26 +3180,29 @@ export default function HomePage() {
                     {L(projects[3].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                  {projects[3].stack.slice(0, 5).map((s) => (
-                    <StackChip key={s}>{s}</StackChip>
-                  ))}
-                  {projects[3].stack.length > 5 && (
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: 600,
-                        padding: "3px 10px",
-                        borderRadius: 6,
-                        backgroundColor: "var(--accent-glow)",
-                        border: "1px solid var(--border-mid)",
-                        color: "var(--accent)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      +{projects[3].stack.length - 5}
-                    </span>
-                  )}
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                    {projects[3].stack.slice(0, 5).map((s) => (
+                      <StackChip key={s}>{s}</StackChip>
+                    ))}
+                    {projects[3].stack.length > 5 && (
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          padding: "3px 10px",
+                          borderRadius: 6,
+                          backgroundColor: "var(--accent-glow)",
+                          border: "1px solid var(--border-mid)",
+                          color: "var(--accent)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        +{projects[3].stack.length - 5}
+                      </span>
+                    )}
+                  </div>
+                  <ProjectCardCta />
                 </div>
               </div>
 
@@ -3234,26 +3249,29 @@ export default function HomePage() {
                     {L(projects[4].desc)}
                   </p>
                 </div>
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                  {projects[4].stack.slice(0, 5).map((s) => (
-                    <StackChip key={s}>{s}</StackChip>
-                  ))}
-                  {projects[4].stack.length > 5 && (
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: 600,
-                        padding: "3px 10px",
-                        borderRadius: 6,
-                        backgroundColor: "var(--accent-glow)",
-                        border: "1px solid var(--border-mid)",
-                        color: "var(--accent)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      +{projects[4].stack.length - 5}
-                    </span>
-                  )}
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, gap: 10 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+                    {projects[4].stack.slice(0, 5).map((s) => (
+                      <StackChip key={s}>{s}</StackChip>
+                    ))}
+                    {projects[4].stack.length > 5 && (
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          padding: "3px 10px",
+                          borderRadius: 6,
+                          backgroundColor: "var(--accent-glow)",
+                          border: "1px solid var(--border-mid)",
+                          color: "var(--accent)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        +{projects[4].stack.length - 5}
+                      </span>
+                    )}
+                  </div>
+                  <ProjectCardCta />
                 </div>
               </div>
 
@@ -3305,26 +3323,29 @@ export default function HomePage() {
                   </p>
                 </div>
                 {/* Stack */}
-                <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flexShrink: 0, justifyContent: "flex-end" }}>
-                  {projects[5].stack.slice(0, 5).map((s) => (
-                    <StackChip key={s}>{s}</StackChip>
-                  ))}
-                  {projects[5].stack.length > 5 && (
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: 600,
-                        padding: "3px 10px",
-                        borderRadius: 6,
-                        backgroundColor: "var(--accent-glow)",
-                        border: "1px solid var(--border-mid)",
-                        color: "var(--accent)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      +{projects[5].stack.length - 5}
-                    </span>
-                  )}
+                <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexShrink: 0 }}>
+                  <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0, justifyContent: "flex-end" }}>
+                    {projects[5].stack.slice(0, 5).map((s) => (
+                      <StackChip key={s}>{s}</StackChip>
+                    ))}
+                    {projects[5].stack.length > 5 && (
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 600,
+                          padding: "3px 10px",
+                          borderRadius: 6,
+                          backgroundColor: "var(--accent-glow)",
+                          border: "1px solid var(--border-mid)",
+                          color: "var(--accent)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        +{projects[5].stack.length - 5}
+                      </span>
+                    )}
+                  </div>
+                  <ProjectCardCta />
                 </div>
               </div>
             </div>
@@ -3512,30 +3533,7 @@ export default function HomePage() {
                       )}
                     </div>
 
-                    <div
-                      style={{
-                        flexShrink: 0,
-
-                        width: 34,
-                        height: 34,
-
-                        borderRadius: 9,
-
-                        display: "flex",
-
-                        alignItems: "center",
-
-                        justifyContent: "center",
-
-                        backgroundColor: "var(--bg-subtle)",
-
-                        border: "1px solid var(--border)",
-                      }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
+                    <ProjectCardCta />
                   </div>
                 </div>
               ))}

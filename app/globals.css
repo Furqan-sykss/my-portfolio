@@ -217,6 +217,145 @@ section[id] {
 }
 
 /* ── Modal Drag Handle ──────────────────────────────────────────────────────── */
+.additional-projects-desktop {
+  display: none;
+}
+
+.additional-projects-mobile {
+  display: grid;
+}
+
+@media (min-width: 1024px) {
+  .additional-projects-desktop {
+    display: block;
+    margin-top: 0.25rem;
+    overflow: visible;
+  }
+
+  .additional-projects-mobile {
+    display: none !important;
+  }
+
+  .additional-carousel-stage {
+    position: relative;
+    height: 342px;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+  }
+
+  .additional-carousel-card {
+    position: absolute;
+    top: 18px;
+    width: min(36rem, 44vw);
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+
+  .additional-carousel-card-left,
+  .additional-carousel-card-right {
+    filter: saturate(0.82);
+  }
+
+  .additional-carousel-card-center {
+    filter: saturate(1);
+  }
+
+  .additional-carousel-card .proj-card-title {
+    font-size: clamp(1.05rem, 1.6vw, 1.28rem) !important;
+  }
+
+  .additional-carousel-card-left .proj-card-desc,
+  .additional-carousel-card-right .proj-card-desc {
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .additional-carousel-card-left .proj-card-stack,
+  .additional-carousel-card-right .proj-card-stack {
+    max-height: 3.2rem;
+    overflow: hidden;
+  }
+
+  .additional-carousel-control {
+    position: absolute;
+    top: 44%;
+    z-index: 6;
+    width: 2.45rem;
+    height: 2.45rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .additional-carousel-control:hover {
+    border-color: var(--border-strong);
+    color: var(--accent);
+    background: var(--accent-glow);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .additional-carousel-control-prev {
+    left: clamp(0.2rem, 1.5vw, 1.2rem);
+  }
+
+  .additional-carousel-control-next {
+    right: clamp(0.2rem, 1.5vw, 1.2rem);
+  }
+
+  .additional-carousel-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.42rem;
+    margin-top: 0.2rem;
+  }
+
+  .additional-carousel-pagination button {
+    width: 0.48rem;
+    height: 0.48rem;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    background: var(--border-mid);
+    cursor: pointer;
+    opacity: 0.62;
+    transition:
+      width 0.2s ease,
+      opacity 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .additional-carousel-pagination button[aria-current="true"] {
+    width: 1.2rem;
+    background: var(--accent);
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .additional-carousel-card {
+    width: min(32rem, 37vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .additional-carousel-card,
+  .additional-carousel-control,
+  .additional-carousel-pagination button {
+    transition: none !important;
+  }
+}
+
 .modal-drag-handle {
   transition:
     opacity 0.2s ease,

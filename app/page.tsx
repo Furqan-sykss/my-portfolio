@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, type CSSProperties } from "react";
 import NextImage from "next/image";
 import TypedText from "@/components/TypedText";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -270,6 +270,71 @@ const projects: Project[] = [
 ];
 
 const additionalProjects: Project[] = [
+  {
+    title: {
+      id: "SIRUNTU' Creative Agency Website",
+      en: "SIRUNTU' Creative Agency Website",
+    },
+    period: {
+      id: "Jun 2026 - Sekarang",
+      en: "Jun 2026 - Present",
+    },
+    tag: {
+      id: "Proyek Klien Komersial",
+      en: "Commercial Client Project",
+    },
+    desc: {
+      id: "Merancang dan mengembangkan website single-page premium untuk SIRUNTU' Creative Exploration, sebuah agency kreatif yang bergerak di bidang wedding documentation, brand content, social media strategy, dan visual storytelling. Website ini dibangun dengan pendekatan cinematic dan editorial untuk memperkuat identitas digital agency melalui animasi interaktif, showcase project yang imersif, galeri visual responsif, serta pengalaman pengguna modern yang berfokus pada branding dan konversi calon klien.",
+      en: "Designed and developed a premium single-page website for SIRUNTU' Creative Exploration, a creative agency specializing in wedding documentation, brand content, social media strategy, and visual storytelling. The website was crafted with a cinematic and editorial approach to strengthen the agency's digital identity through immersive animations, interactive project showcases, responsive visual galleries, and a modern user experience focused on branding and client conversion.",
+    },
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Lenis", "Swiper", "Lucide React", "Vercel", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Mengembangkan website agency kreatif premium dengan pendekatan visual cinematic dan editorial.",
+          en: "Developed a premium creative agency website with a cinematic and editorial visual approach.",
+        },
+        {
+          id: "Merancang showcase project interaktif menggunakan sticky stacking cards dan modal animasi.",
+          en: "Designed interactive project showcases using sticky stacking cards and animated modal experiences.",
+        },
+        {
+          id: "Membangun galeri dokumentasi responsif dengan efek parallax pada desktop dan card carousel pada mobile.",
+          en: "Built responsive documentation galleries with parallax effects on desktop and card-based carousel interactions on mobile.",
+        },
+        {
+          id: "Mengimplementasikan animasi lanjutan menggunakan Framer Motion, termasuk preloader sequence, text reveal, dan scroll-triggered transitions.",
+          en: "Implemented advanced animations with Framer Motion, including preloader sequences, text reveals, and scroll-triggered transitions.",
+        },
+        {
+          id: "Menerapkan smooth scrolling, responsive layout, dan dukungan reduced motion untuk meningkatkan pengalaman pengguna.",
+          en: "Integrated smooth scrolling, responsive layouts, and reduced-motion support to enhance user experience.",
+        },
+        {
+          id: "Mengembangkan struktur komponen modular berbasis Next.js App Router dan TypeScript.",
+          en: "Developed a modular component architecture using Next.js App Router and TypeScript.",
+        },
+        {
+          id: "Mengoptimalkan tampilan untuk desktop, tablet, dan mobile dengan pendekatan mobile-first responsive design.",
+          en: "Optimized the interface for desktop, tablet, and mobile devices through a mobile-first responsive design approach.",
+        },
+        {
+          id: "Berhasil menyelesaikan 80% pengerjaan project website komersial untuk memperkuat branding digital dan jalur konversi klien agency.",
+          en: "Completed 80% of the commercial website project to strengthen the agency's digital branding and client conversion strategy.",
+        },
+      ],
+      links: [
+        {
+          label: {
+            id: "Demo Langsung",
+            en: "Live Demo",
+          },
+          href: "https://siruntu.vercel.app",
+          icon: "external",
+        },
+      ],
+    },
+  },
   {
     title: {
       id: "Template Website Portofolio",
@@ -642,10 +707,7 @@ function StackChip({ children }: { children: React.ReactNode }) {
 
 function ProjectCardCta() {
   return (
-    <div
-      className="proj-card-cta"
-      style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}
-    >
+    <div className="proj-card-cta" style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
         <path d="M2 10L10 2M10 2H4.5M10 2V7.5" stroke="var(--accent)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -822,6 +884,13 @@ function LinkIcon({ icon }: { icon: string }) {
     return (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
         <path d="M8 24c2.208 0 4-1.792 4-4v-4H8c-2.208 0-4 1.792-4 4s1.792 4 4 4zm0-20H4c-2.208 0-4 1.792-4 4s1.792 4 4 4h4V4zM12 0H8C5.792 0 4 1.792 4 4s1.792 4 4 4h4V0zm4 8c2.208 0 4-1.792 4-4s-1.792-4-4-4h-4v8h4zm-4 2H8c-2.208 0-4 1.792-4 4s1.792 4 4 4h4c2.208 0 4-1.792 4-4s-1.792-4-4-4z" />
+      </svg>
+    );
+  if (icon === "external")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M14 4h6v6M20 4l-9 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M20 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     );
   // drive
@@ -2271,12 +2340,182 @@ export default function HomePage() {
   const [fromRect, setFromRect] = useState<BRect | null>(null);
   const [phase, setPhase] = useState<"idle" | "zoom-in" | "hold" | "zoom-out" | "done">("idle");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [activeAdditionalProject, setActiveAdditionalProject] = useState(0);
   const [showInternModal, setShowInternModal] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showEducationModal, setShowEducationModal] = useState(false);
 
   const ZOOM_W = 258;
   const ZOOM_H = 338;
+
+  const moveAdditionalProject = (direction: -1 | 1) => {
+    setActiveAdditionalProject((current) => (current + direction + additionalProjects.length) % additionalProjects.length);
+  };
+
+  const getAdditionalProjectSlot = (index: number) => {
+    const offset = (index - activeAdditionalProject + additionalProjects.length) % additionalProjects.length;
+    if (offset === 0) return "center";
+    if (offset === 1) return "right";
+    return "left";
+  };
+
+  const additionalProjectCardStyle = (slot: string, index: number): CSSProperties => {
+    const base: CSSProperties = {
+      backgroundColor: "var(--bg-card)",
+      border: "1px solid var(--border)",
+      borderRadius: "1rem",
+      padding: "1.4rem 1.5rem",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      minHeight: 260,
+      transition: "transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease, border-color .25s ease, box-shadow .25s ease",
+      animationDelay: `${index * 100}ms`,
+    };
+
+    if (slot === "center") {
+      return {
+        ...base,
+        left: "50%",
+        zIndex: 3,
+        opacity: 1,
+        transform: "translate3d(-50%, 0, 72px) scale(1)",
+        borderColor: "var(--border-mid)",
+        boxShadow: "var(--shadow-lg)",
+      };
+    }
+
+    if (slot === "right") {
+      return {
+        ...base,
+        left: "69%",
+        zIndex: 2,
+        opacity: 0.86,
+        transform: "translate3d(-50%, 20px, -120px) rotateY(-18deg) scale(.88)",
+      };
+    }
+
+    return {
+      ...base,
+      left: "31%",
+      zIndex: 1,
+      opacity: 0.86,
+      transform: "translate3d(-50%, 20px, -120px) rotateY(18deg) scale(.88)",
+    };
+  };
+
+  const renderAdditionalProjectCard = (project: Project, index: number, className = "proj-card bento-reveal", style?: CSSProperties) => (
+    <div
+      key={`additional-${index}-${project.title.en}`}
+      onClick={() => setSelectedProject(project)}
+      className={className}
+      style={{
+        backgroundColor: "var(--bg-card)",
+        border: "1px solid var(--border)",
+        borderRadius: "1rem",
+        padding: "1.4rem 1.5rem",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: 260,
+        transition: "transform .25s ease, border-color .25s ease",
+        animationDelay: `${index * 100}ms`,
+        ...style,
+      }}
+    >
+      <div className="proj-card-main">
+        <div
+          className="proj-card-meta"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 12,
+            flexWrap: "wrap",
+            gap: 6,
+          }}
+        >
+          <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <TagBadge>{L(project.tag) as string}</TagBadge>
+            <span
+              style={{
+                fontSize: ".57rem",
+                fontWeight: 700,
+                letterSpacing: ".12em",
+                textTransform: "uppercase",
+                color: "var(--accent)",
+                opacity: 0.4,
+              }}
+            >
+              {t("additional")}
+            </span>
+          </div>
+
+          <span style={{ fontSize: ".65rem", color: "var(--text-muted)" }}>{L(project.period) as string}</span>
+        </div>
+
+        <h3
+          className="proj-card-title"
+          style={{
+            fontFamily: "var(--font-dm-serif)",
+            fontSize: "clamp(1rem,3vw,1.25rem)",
+            fontWeight: 400,
+            color: "var(--text-primary)",
+            lineHeight: 1.25,
+            marginBottom: 10,
+          }}
+        >
+          {L(project.title) as string}
+        </h3>
+
+        <p
+          className="proj-card-desc"
+          style={{
+            fontSize: ".82rem",
+            lineHeight: 1.78,
+            color: "var(--text-secondary)",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {L(project.desc) as string}
+        </p>
+      </div>
+
+      <div className="proj-card-footer" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 18, gap: 10 }}>
+        <div className="proj-card-stack" style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: 1, minWidth: 0 }}>
+          {project.stack.slice(0, 5).map((tech) => (
+            <StackChip key={tech}>{tech}</StackChip>
+          ))}
+
+          {project.stack.length > 5 && (
+            <span
+              style={{
+                fontSize: "0.68rem",
+                fontWeight: 600,
+                padding: "3px 10px",
+                borderRadius: 6,
+                backgroundColor: "var(--accent-glow)",
+                border: "1px solid var(--border-mid)",
+                color: "var(--accent)",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              +{project.stack.length - 5}
+            </span>
+          )}
+        </div>
+
+        <ProjectCardCta />
+      </div>
+    </div>
+  );
 
   const calcRects = useCallback(() => {
     if (!heroRef.current) return;
@@ -3357,186 +3596,46 @@ export default function HomePage() {
           <section id="additional-projects">
             <SectionHeader eyebrow={t("portfolio")} title={t("additionalProjects")} />
 
-            <div
-              className="bento-grid-plain"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-                gap: 12,
-              }}
-            >
-              {additionalProjects.map((project, index) => (
-                <div
-                  key={`additional-${index}-${project.title.en}`}
-                  onClick={() => setSelectedProject(project)}
-                  className="proj-card bento-reveal"
-                  style={{
-                    backgroundColor: "var(--bg-card)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "1rem",
-                    padding: "1.4rem 1.5rem",
-                    cursor: "pointer",
+            <div className="additional-projects-desktop" style={{ position: "relative", minHeight: 390, perspective: "1200px", transformStyle: "preserve-3d" }}>
+              <button
+                type="button"
+                className="additional-carousel-control additional-carousel-control-prev"
+                onClick={() => moveAdditionalProject(-1)}
+                aria-label={lang === "id" ? "Project tambahan sebelumnya" : "Previous additional project"}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
 
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
+              <div className="additional-carousel-stage">
+                {additionalProjects.map((project, index) => {
+                  const slot = getAdditionalProjectSlot(index);
+                  return renderAdditionalProjectCard(project, index, `proj-card additional-carousel-card additional-carousel-card-${slot}`, additionalProjectCardStyle(slot, index));
+                })}
+              </div>
 
-                    minHeight: 260,
+              <button type="button" className="additional-carousel-control additional-carousel-control-next" onClick={() => moveAdditionalProject(1)} aria-label={lang === "id" ? "Project tambahan berikutnya" : "Next additional project"}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
 
-                    transition: "transform .25s ease, border-color .25s ease",
+              <div className="additional-carousel-pagination" aria-label={lang === "id" ? "Navigasi project tambahan" : "Additional project navigation"}>
+                {additionalProjects.map((project, index) => (
+                  <button
+                    key={`additional-dot-${project.title.en}`}
+                    type="button"
+                    aria-label={lang === "id" ? `Tampilkan ${project.title.id}` : `Show ${project.title.en}`}
+                    aria-current={activeAdditionalProject === index ? "true" : undefined}
+                    onClick={() => setActiveAdditionalProject(index)}
+                  />
+                ))}
+              </div>
+            </div>
 
-                    animationDelay: `${index * 100}ms`,
-                  }}
-                >
-                  <div className="proj-card-main">
-                    <div
-                      className="proj-card-meta"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: 12,
-
-                        flexWrap: "wrap",
-                        gap: 6,
-                      }}
-                    >
-                      <div
-                        className="proj-card-badges"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <TagBadge>{L(project.tag) as string}</TagBadge>
-
-                        <span
-                          style={{
-                            fontSize: ".57rem",
-                            fontWeight: 700,
-
-                            letterSpacing: ".12em",
-
-                            textTransform: "uppercase",
-
-                            color: "var(--accent)",
-
-                            opacity: 0.4,
-                          }}
-                        >
-                          {t("additional")}
-                        </span>
-                      </div>
-
-                      <span
-                        style={{
-                          fontSize: ".65rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        {L(project.period) as string}
-                      </span>
-                    </div>
-
-                    <h3
-                      className="proj-card-title"
-                      style={{
-                        fontFamily: "var(--font-dm-serif)",
-
-                        fontSize: "clamp(1rem,3vw,1.25rem)",
-
-                        fontWeight: 400,
-
-                        color: "var(--text-primary)",
-
-                        lineHeight: 1.25,
-
-                        marginBottom: 10,
-                      }}
-                    >
-                      {L(project.title) as string}
-                    </h3>
-
-                    <p
-                      className="proj-card-desc"
-                      style={{
-                        fontSize: ".82rem",
-
-                        lineHeight: 1.78,
-
-                        color: "var(--text-secondary)",
-
-                        display: "-webkit-box",
-
-                        WebkitLineClamp: 3,
-
-                        WebkitBoxOrient: "vertical",
-
-                        overflow: "hidden",
-
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {L(project.desc) as string}
-                    </p>
-                  </div>
-
-                  <div
-                    className="proj-card-footer"
-                    style={{
-                      display: "flex",
-
-                      alignItems: "center",
-
-                      justifyContent: "space-between",
-
-                      marginTop: 18,
-
-                      gap: 10,
-                    }}
-                  >
-                    <div
-                      className="proj-card-stack"
-                      style={{
-                        display: "flex",
-
-                        flexWrap: "wrap",
-
-                        gap: 5,
-
-                        flex: 1,
-
-                        minWidth: 0,
-                      }}
-                    >
-                      {project.stack.slice(0, 5).map((tech) => (
-                        <StackChip key={tech}>{tech}</StackChip>
-                      ))}
-
-                      {project.stack.length > 5 && (
-                        <span
-                          style={{
-                            fontSize: "0.68rem",
-                            fontWeight: 600,
-                            padding: "3px 10px",
-                            borderRadius: 6,
-                            backgroundColor: "var(--accent-glow)",
-                            border: "1px solid var(--border-mid)",
-                            color: "var(--accent)",
-                            cursor: "pointer",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          +{project.stack.length - 5}
-                        </span>
-                      )}
-                    </div>
-
-                    <ProjectCardCta />
-                  </div>
-                </div>
-              ))}
+            <div className="bento-grid-plain additional-projects-mobile" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 12 }}>
+              {additionalProjects.map((project, index) => renderAdditionalProjectCard(project, index))}
             </div>
           </section>
         </FadeUp>
@@ -3587,7 +3686,7 @@ export default function HomePage() {
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 3 }}>
                       <h3 style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35, minWidth: 0 }}>{lang === "id" ? "Teknik Informatika - D-IV" : "Informatics Engineering - D-IV"}</h3>
                       <span style={{ flexShrink: 0, fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.08em", color: "var(--accent)", opacity: 0.75, display: "flex", alignItems: "center", gap: 4, paddingTop: 2 }}>
-                        View Details
+                        {t("viewDetails")}
                         <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
                           <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

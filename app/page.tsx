@@ -61,217 +61,6 @@ type Project = {
 const projects: Project[] = [
   {
     title: {
-      id: "Analisis Sentimen Opini Publik terhadap Kejaksaan Agung",
-      en: "Sentiment Analysis of Public Opinion on the Attorney General's Office",
-    },
-    period: { id: "Okt 2024 - Jul 2025", en: "Oct 2024 - Jul 2025" },
-    tag: { id: "Proyek Akhir", en: "Final Project" },
-    desc: {
-      id: "Melakukan analisis sentimen terhadap opini publik di TikTok mengenai Kejaksaan Agung dengan memanfaatkan Python dan Selenium untuk pengumpulan data otomatis serta model machine learning untuk klasifikasi sentimen. Hasil analisis disajikan melalui dashboard terintegrasi berbasis Laravel dan Flask.",
-      en: "Conducted sentiment analysis on TikTok public opinion regarding the Attorney General's Office by leveraging Python and Selenium for automated data collection and machine learning models for sentiment classification. Presented the results through an integrated Laravel–Flask dashboard.",
-    },
-    stack: ["Python", "Selenium", "Scraping", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "GitHub"],
-    detail: {
-      highlights: [
-        {
-          id: "Mengumpulkan ribuan komentar TikTok melalui proses web scraping otomatis menggunakan Python dan Selenium.",
-          en: "Collected thousands of TikTok comments through automated web scraping using Python and Selenium.",
-        },
-        {
-          id: "Melatih dan mengevaluasi beberapa model machine learning untuk klasifikasi sentimen berbahasa Indonesia.",
-          en: "Trained and evaluated multiple machine learning models for Indonesian-language sentiment classification.",
-        },
-        {
-          id: "Membangun integrasi REST API antara Flask sebagai engine machine learning dan Laravel sebagai dashboard web.",
-          en: "Built a REST API integration between Flask as the machine learning engine and Laravel as the web dashboard.",
-        },
-        {
-          id: "Mengembangkan dashboard interaktif yang menampilkan tren sentimen, hasil klasifikasi, dan insight analitis secara real time.",
-          en: "Developed an interactive dashboard featuring real-time sentiment trends, classification results, and analytical insights.",
-        },
-        {
-          id: "Menerapkan tahapan pra-pemrosesan data, termasuk tokenisasi, penghapusan stopword, dan vektorisasi TF-IDF.",
-          en: "Applied data preprocessing techniques including tokenization, stopword removal, and TF-IDF vectorization.",
-        },
-      ],
-      links: [
-        { label: "GitHub", href: "https://github.com/Furqan-sykss/Laravel-sentiment-kejagung", icon: "github" },
-        { label: "Google Drive", href: "https://drive.google.com/drive/folders/1GJphNTDR8rLGia2Ze8s1n6zV6V1Nc6VA?usp=sharing", icon: "drive" },
-      ],
-    },
-  },
-  {
-    title: {
-      id: "Sistem Pengelolaan Data Keanggotaan Badan Ad Hoc",
-      en: "Election Workforce Data Management System",
-    },
-    period: { id: "Feb 2024 - Agu 2024", en: "Feb 2024 - Aug 2024" },
-    tag: { id: "KPU RI", en: "KPU RI" },
-    desc: {
-      id: "Mengembangkan prototipe sistem informasi berbasis web untuk mengelola data keanggotaan badan ad hoc (PPK dan PPS) selama program magang di Sekretariat Jenderal KPU RI. Sistem dirancang berdasarkan alur kerja resmi SIAKBA dan dibangun menggunakan Laravel serta MySQL.",
-      en: "Developed a prototype web-based information system for managing PPK and PPS membership data during an internship at the Secretariat General of KPU RI. The system was designed based on the official SIAKBA workflow and implemented using Laravel and MySQL.",
-    },
-    stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "GitHub"],
-    detail: {
-      highlights: [
-        {
-          id: "Merancang dan membangun prototipe sistem pengelolaan data keanggotaan badan ad hoc PPK dan PPS untuk KIP Aceh.",
-          en: "Designed and developed a prototype system for managing PPK and PPS electoral workforce membership data for KIP Aceh.",
-        },
-        {
-          id: "Menganalisis alur kerja resmi SIAKBA sebagai acuan utama dalam perancangan arsitektur sistem.",
-          en: "Analyzed the official SIAKBA workflow as the primary reference for designing the system architecture.",
-        },
-        {
-          id: "Mengimplementasikan sistem akses berbasis peran untuk Admin Nasional, Admin Provinsi, dan Operator Kecamatan.",
-          en: "Implemented role-based access control for National Administrators, Provincial Administrators, and District Operators.",
-        },
-        {
-          id: "Mengembangkan mekanisme validasi data untuk meminimalkan kesalahan entri antarwilayah.",
-          en: "Developed data validation mechanisms to minimize cross-region data entry errors.",
-        },
-        {
-          id: "Menghasilkan laporan rekapitulasi lengkap dengan visualisasi grafik untuk mempermudah pemantauan data.",
-          en: "Generated comprehensive reports with graphical summaries to simplify administrative monitoring.",
-        },
-      ],
-      links: [
-        { label: "GitHub", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
-        { label: { id: "Wireframe (Figma)", en: "Wireframe (Figma)" }, href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
-        { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
-      ],
-    },
-  },
-  {
-    title: { id: "Desain Sistem Informasi Rental Mobil", en: "Car Rental Platform UI/UX Design" },
-    period: { id: "Agu 2023 - Nov 2023", en: "Aug 2023 - Nov 2023" },
-    tag: { id: "Akademik", en: "Academic" },
-    desc: {
-      id: "Merancang sistem informasi rental mobil yang mencakup struktur antarmuka, alur pengguna, serta prototipe interaktif untuk proses pemesanan dan pengelolaan kendaraan.",
-      en: "Designed a comprehensive car rental information system in Figma, including information architecture, end-to-end user flows, and an interactive prototype for vehicle booking and management.",
-    },
-    stack: ["Figma"],
-    detail: {
-      highlights: [
-        {
-          id: "Merancang prototipe UI/UX lengkap yang mencakup katalog kendaraan, proses pemesanan, dan alur pembayaran.",
-          en: "Designed a complete UI/UX prototype covering vehicle catalog browsing, booking, and payment workflows.",
-        },
-        {
-          id: "Membuat wireframe, mockup high-fidelity, dan prototipe interaktif menggunakan Figma.",
-          en: "Created wireframes, high-fidelity mockups, and an interactive prototype in Figma.",
-        },
-        {
-          id: "Menyusun persona pengguna serta memetakan perjalanan pengguna untuk pelanggan dan administrator.",
-          en: "Defined user personas and mapped end-to-end user journeys for both customers and administrators.",
-        },
-      ],
-      links: [{ label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/h08W9Bf5GYRqWp2c586C0c/Rental-Car-Design?node-id=0-1&t=KWynD5QTHq7jhNhg-1", icon: "figma" }],
-    },
-  },
-  {
-    title: {
-      id: "Sistem Informasi Sejarah dan Filsafat",
-      en: "History and Philosophy Information System",
-    },
-    period: { id: "Feb 2023 - Mei 2023", en: "Feb 2023 - May 2023" },
-    tag: { id: "Akademik", en: "Academic" },
-    desc: {
-      id: "Mengembangkan sistem informasi berbasis web menggunakan Laravel, MySQL, dan Tailwind CSS untuk menyajikan konten sejarah dan filsafat secara terstruktur dengan antarmuka yang responsif.",
-      en: "Developed a web-based information system using Laravel, MySQL, and Tailwind CSS to deliver structured historical and philosophical content through a clean, responsive interface.",
-    },
-    stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "GitHub"],
-    detail: {
-      highlights: [
-        {
-          id: "Mengembangkan sistem informasi full-stack untuk mengelola dan menyajikan konten sejarah serta filsafat.",
-          en: "Developed a full-stack web information system for managing and presenting historical and philosophical content.",
-        },
-        {
-          id: "Menerapkan antarmuka responsif menggunakan Tailwind CSS yang dioptimalkan untuk desktop dan perangkat seluler.",
-          en: "Implemented a responsive user interface with Tailwind CSS optimized for both desktop and mobile devices.",
-        },
-        {
-          id: "Mengembangkan modul manajemen konten menggunakan arsitektur MVC Laravel dan basis data MySQL.",
-          en: "Developed a structured content management module using Laravel's MVC architecture and MySQL.",
-        },
-      ],
-      links: [
-        { label: "GitHub", href: "https://github.com/Furqan-sykss/laravel-amerta", icon: "github" },
-        { label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
-      ],
-    },
-  },
-  {
-    title: {
-      id: "Sistem Reservasi Kafe",
-      en: "Coffee Shop Reservation System",
-    },
-    period: { id: "Feb 2023 - Mar 2023", en: "Feb 2023 - Mar 2023" },
-    tag: { id: "Akademik", en: "Academic" },
-    desc: {
-      id: "Mengembangkan sistem reservasi berbasis web untuk kafe yang memungkinkan pelanggan melihat menu serta melakukan reservasi secara online menggunakan Native PHP  dan Bootstrap.",
-      en: "Developed a web-based reservation system for a coffee shop, allowing customers to browse the menu and make reservations through a PHP-based application powered by Bootstrap.",
-    },
-    stack: ["Native PHP", "Laragon", "MySQL", "Bootstrap", "CSS", "Git", "GitHub"],
-    detail: {
-      highlights: [
-        {
-          id: "Mengembangkan sistem reservasi dan pemesanan online menggunakan Native PHP tanpa framework.",
-          en: "Developed an online reservation and ordering system using native PHP without a framework.",
-        },
-        {
-          id: "Mengimplementasikan katalog menu, formulir reservasi, dan fitur pemesanan yang terintegrasi dengan basis data MySQL.",
-          en: "Implemented menu browsing, reservation forms, and ordering features integrated with a MySQL database.",
-        },
-        {
-          id: "Membangun antarmuka yang responsif dan ramah perangkat seluler menggunakan Bootstrap.",
-          en: "Built a clean, responsive, and mobile-friendly interface using Bootstrap.",
-        },
-      ],
-      links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/2A_praktikum_2021573010051/tree/main/DeCafe", icon: "github" }],
-    },
-  },
-  {
-    title: { id: "Situs Portofolio Pribadi", en: "Personal Portfolio Website" },
-    period: { id: "Nov 2022 - Des 2022", en: "Nov 2022 - Dec 2022" },
-    tag: { id: "Proyek Mandiri", en: "Self-Project" },
-    desc: {
-      id: "Mengembangkan dan terus menyempurnakan situs portofolio pribadi berbasis Next.js untuk menampilkan proyek, pengalaman, pendidikan, sertifikasi, keterampilan, dan informasi kontak dalam tampilan yang modern, responsif, dan terstruktur.",
-      en: "Developed and continuously enhanced a personal portfolio website built with Next.js to showcase projects, professional experience, education, certifications, technical skills, and contact information through a modern, responsive interface.",
-    },
-    stack: ["Next.js", "TypeScript", "Tailwind", "CSS", "JavaScript", "Git", "GitHub"],
-    detail: {
-      highlights: [
-        {
-          id: "Merancang antarmuka portofolio responsif yang mencakup bagian proyek, keterampilan teknis, pengalaman, pendidikan, sertifikasi, dan informasi kontak.",
-          en: "Designed a responsive portfolio interface featuring dedicated sections for projects, technical skills, professional experience, education, certifications, and contact information.",
-        },
-        {
-          id: "Mengimplementasikan modal interaktif untuk detail proyek dan pengalaman dengan tata letak yang responsif pada desktop maupun perangkat seluler.",
-          en: "Implemented responsive modal dialogs for project and experience details across desktop and mobile devices.",
-        },
-        {
-          id: "Menerapkan dukungan tema terang dan gelap dengan sistem desain yang konsisten di seluruh aplikasi.",
-          en: "Implemented light and dark themes with a consistent design system across the entire application.",
-        },
-        {
-          id: "Mengoptimalkan pengalaman pengguna pada perangkat seluler melalui penyempurnaan tata letak kartu proyek, jarak antarelemen, dan hierarki konten.",
-          en: "Optimized the mobile experience by refining project card layouts, spacing, and content hierarchy for improved readability.",
-        },
-        {
-          id: "Memelihara dan terus mengembangkan portofolio sebagai proyek pribadi dengan memperbarui konten, fitur, serta penyempurnaan antarmuka secara berkala.",
-          en: "Continuously maintained and enhanced the portfolio by updating its content, features, and user interface to reflect ongoing growth and professional work.",
-        },
-      ],
-      links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/my-portfolio", icon: "github" }],
-    },
-  },
-];
-
-const additionalProjects: Project[] = [
-  {
-    title: {
       id: "SIRUNTU' Creative Agency Website",
       en: "SIRUNTU' Creative Agency Website",
     },
@@ -410,6 +199,89 @@ const additionalProjects: Project[] = [
   },
   {
     title: {
+      id: "Analisis Sentimen Opini Publik terhadap Kejaksaan Agung",
+      en: "Sentiment Analysis of Public Opinion on the Attorney General's Office",
+    },
+    period: { id: "Okt 2024 - Jul 2025", en: "Oct 2024 - Jul 2025" },
+    tag: { id: "Proyek Akhir", en: "Final Project" },
+    desc: {
+      id: "Melakukan analisis sentimen terhadap opini publik di TikTok mengenai Kejaksaan Agung dengan memanfaatkan Python dan Selenium untuk pengumpulan data otomatis serta model machine learning untuk klasifikasi sentimen. Hasil analisis disajikan melalui dashboard terintegrasi berbasis Laravel dan Flask.",
+      en: "Conducted sentiment analysis on TikTok public opinion regarding the Attorney General's Office by leveraging Python and Selenium for automated data collection and machine learning models for sentiment classification. Presented the results through an integrated Laravel–Flask dashboard.",
+    },
+    stack: ["Python", "Selenium", "Scraping", "Laravel", "Flask-API", "MySQL", "Machine Learning", "JavaScript", "CSS", "Tailwind", "XAMPP", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Mengumpulkan ribuan komentar TikTok melalui proses web scraping otomatis menggunakan Python dan Selenium.",
+          en: "Collected thousands of TikTok comments through automated web scraping using Python and Selenium.",
+        },
+        {
+          id: "Melatih dan mengevaluasi beberapa model machine learning untuk klasifikasi sentimen berbahasa Indonesia.",
+          en: "Trained and evaluated multiple machine learning models for Indonesian-language sentiment classification.",
+        },
+        {
+          id: "Membangun integrasi REST API antara Flask sebagai engine machine learning dan Laravel sebagai dashboard web.",
+          en: "Built a REST API integration between Flask as the machine learning engine and Laravel as the web dashboard.",
+        },
+        {
+          id: "Mengembangkan dashboard interaktif yang menampilkan tren sentimen, hasil klasifikasi, dan insight analitis secara real time.",
+          en: "Developed an interactive dashboard featuring real-time sentiment trends, classification results, and analytical insights.",
+        },
+        {
+          id: "Menerapkan tahapan pra-pemrosesan data, termasuk tokenisasi, penghapusan stopword, dan vektorisasi TF-IDF.",
+          en: "Applied data preprocessing techniques including tokenization, stopword removal, and TF-IDF vectorization.",
+        },
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/Laravel-sentiment-kejagung", icon: "github" },
+        { label: "Google Drive", href: "https://drive.google.com/drive/folders/1GJphNTDR8rLGia2Ze8s1n6zV6V1Nc6VA?usp=sharing", icon: "drive" },
+      ],
+    },
+  },
+  {
+    title: {
+      id: "Sistem Pengelolaan Data Keanggotaan Badan Ad Hoc",
+      en: "Election Workforce Data Management System",
+    },
+    period: { id: "Feb 2024 - Agu 2024", en: "Feb 2024 - Aug 2024" },
+    tag: { id: "KPU RI", en: "KPU RI" },
+    desc: {
+      id: "Mengembangkan prototipe sistem informasi berbasis web untuk mengelola data keanggotaan badan ad hoc (PPK dan PPS) selama program magang di Sekretariat Jenderal KPU RI. Sistem dirancang berdasarkan alur kerja resmi SIAKBA dan dibangun menggunakan Laravel serta MySQL.",
+      en: "Developed a prototype web-based information system for managing PPK and PPS membership data during an internship at the Secretariat General of KPU RI. The system was designed based on the official SIAKBA workflow and implemented using Laravel and MySQL.",
+    },
+    stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Merancang dan membangun prototipe sistem pengelolaan data keanggotaan badan ad hoc PPK dan PPS untuk KIP Aceh.",
+          en: "Designed and developed a prototype system for managing PPK and PPS electoral workforce membership data for KIP Aceh.",
+        },
+        {
+          id: "Menganalisis alur kerja resmi SIAKBA sebagai acuan utama dalam perancangan arsitektur sistem.",
+          en: "Analyzed the official SIAKBA workflow as the primary reference for designing the system architecture.",
+        },
+        {
+          id: "Mengimplementasikan sistem akses berbasis peran untuk Admin Nasional, Admin Provinsi, dan Operator Kecamatan.",
+          en: "Implemented role-based access control for National Administrators, Provincial Administrators, and District Operators.",
+        },
+        {
+          id: "Mengembangkan mekanisme validasi data untuk meminimalkan kesalahan entri antarwilayah.",
+          en: "Developed data validation mechanisms to minimize cross-region data entry errors.",
+        },
+        {
+          id: "Menghasilkan laporan rekapitulasi lengkap dengan visualisasi grafik untuk mempermudah pemantauan data.",
+          en: "Generated comprehensive reports with graphical summaries to simplify administrative monitoring.",
+        },
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/siakba", icon: "github" },
+        { label: { id: "Wireframe (Figma)", en: "Wireframe (Figma)" }, href: "https://www.figma.com/design/tA7R82I0PJWt3K05d93f0E/Wireframe--Based-on-SIAKBA-Project--?node-id=0-1&t=ERBAlDshXXiCShwP-1", icon: "figma" },
+        { label: "Google Drive", href: "https://drive.google.com/drive/folders/1kkZ7vN0Gf6zV3KUKFzoIBgeujkCfRp6Y?usp=sharing", icon: "drive" },
+      ],
+    },
+  },
+  {
+    title: {
       id: "Praktikum Keamanan Jaringan",
       en: "Practical Network Security Lab",
     },
@@ -463,6 +335,134 @@ const additionalProjects: Project[] = [
           icon: "drive",
         },
       ],
+    },
+  },
+  {
+    title: {
+      id: "Sistem Informasi Sejarah dan Filsafat",
+      en: "History and Philosophy Information System",
+    },
+    period: { id: "Feb 2023 - Mei 2023", en: "Feb 2023 - May 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Mengembangkan sistem informasi berbasis web menggunakan Laravel, MySQL, dan Tailwind CSS untuk menyajikan konten sejarah dan filsafat secara terstruktur dengan antarmuka yang responsif.",
+      en: "Developed a web-based information system using Laravel, MySQL, and Tailwind CSS to deliver structured historical and philosophical content through a clean, responsive interface.",
+    },
+    stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Mengembangkan sistem informasi full-stack untuk mengelola dan menyajikan konten sejarah serta filsafat.",
+          en: "Developed a full-stack web information system for managing and presenting historical and philosophical content.",
+        },
+        {
+          id: "Menerapkan antarmuka responsif menggunakan Tailwind CSS yang dioptimalkan untuk desktop dan perangkat seluler.",
+          en: "Implemented a responsive user interface with Tailwind CSS optimized for both desktop and mobile devices.",
+        },
+        {
+          id: "Mengembangkan modul manajemen konten menggunakan arsitektur MVC Laravel dan basis data MySQL.",
+          en: "Developed a structured content management module using Laravel's MVC architecture and MySQL.",
+        },
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/laravel-amerta", icon: "github" },
+        { label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
+      ],
+    },
+  },
+];
+
+const additionalProjects: Project[] = [
+  {
+    title: { id: "Situs Portofolio Pribadi", en: "Personal Portfolio Website" },
+    period: { id: "Nov 2025 - Sekarang", en: "Nov 2025 - Present" },
+    tag: { id: "Proyek Mandiri", en: "Self-Project" },
+    desc: {
+      id: "Mengembangkan dan terus menyempurnakan situs portofolio pribadi berbasis Next.js untuk menampilkan proyek, pengalaman, pendidikan, sertifikasi, keterampilan, dan informasi kontak dalam tampilan yang modern, responsif, dan terstruktur.",
+      en: "Developed and continuously enhanced a personal portfolio website built with Next.js to showcase projects, professional experience, education, certifications, technical skills, and contact information through a modern, responsive interface.",
+    },
+    stack: ["Next.js", "TypeScript", "Tailwind", "CSS", "JavaScript", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Merancang antarmuka portofolio responsif yang mencakup bagian proyek, keterampilan teknis, pengalaman, pendidikan, sertifikasi, dan informasi kontak.",
+          en: "Designed a responsive portfolio interface featuring dedicated sections for projects, technical skills, professional experience, education, certifications, and contact information.",
+        },
+        {
+          id: "Mengimplementasikan modal interaktif untuk detail proyek dan pengalaman dengan tata letak yang responsif pada desktop maupun perangkat seluler.",
+          en: "Implemented responsive modal dialogs for project and experience details across desktop and mobile devices.",
+        },
+        {
+          id: "Menerapkan dukungan tema terang dan gelap dengan sistem desain yang konsisten di seluruh aplikasi.",
+          en: "Implemented light and dark themes with a consistent design system across the entire application.",
+        },
+        {
+          id: "Mengoptimalkan pengalaman pengguna pada perangkat seluler melalui penyempurnaan tata letak kartu proyek, jarak antarelemen, dan hierarki konten.",
+          en: "Optimized the mobile experience by refining project card layouts, spacing, and content hierarchy for improved readability.",
+        },
+        {
+          id: "Memelihara dan terus mengembangkan portofolio sebagai proyek pribadi dengan memperbarui konten, fitur, serta penyempurnaan antarmuka secara berkala.",
+          en: "Continuously maintained and enhanced the portfolio by updating its content, features, and user interface to reflect ongoing growth and professional work.",
+        },
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/my-portfolio", icon: "github" }],
+    },
+  },
+  {
+    title: { id: "Desain Sistem Informasi Rental Mobil", en: "Car Rental Platform UI/UX Design" },
+    period: { id: "Agu 2023 - Nov 2023", en: "Aug 2023 - Nov 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Merancang sistem informasi rental mobil yang mencakup struktur antarmuka, alur pengguna, serta prototipe interaktif untuk proses pemesanan dan pengelolaan kendaraan.",
+      en: "Designed a comprehensive car rental information system in Figma, including information architecture, end-to-end user flows, and an interactive prototype for vehicle booking and management.",
+    },
+    stack: ["Figma"],
+    detail: {
+      highlights: [
+        {
+          id: "Merancang prototipe UI/UX lengkap yang mencakup katalog kendaraan, proses pemesanan, dan alur pembayaran.",
+          en: "Designed a complete UI/UX prototype covering vehicle catalog browsing, booking, and payment workflows.",
+        },
+        {
+          id: "Membuat wireframe, mockup high-fidelity, dan prototipe interaktif menggunakan Figma.",
+          en: "Created wireframes, high-fidelity mockups, and an interactive prototype in Figma.",
+        },
+        {
+          id: "Menyusun persona pengguna serta memetakan perjalanan pengguna untuk pelanggan dan administrator.",
+          en: "Defined user personas and mapped end-to-end user journeys for both customers and administrators.",
+        },
+      ],
+      links: [{ label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/h08W9Bf5GYRqWp2c586C0c/Rental-Car-Design?node-id=0-1&t=KWynD5QTHq7jhNhg-1", icon: "figma" }],
+    },
+  },
+  {
+    title: {
+      id: "Sistem Reservasi Kafe",
+      en: "Coffee Shop Reservation System",
+    },
+    period: { id: "Feb 2023 - Mar 2023", en: "Feb 2023 - Mar 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Mengembangkan sistem reservasi berbasis web untuk kafe yang memungkinkan pelanggan melihat menu serta melakukan reservasi secara online menggunakan Native PHP  dan Bootstrap.",
+      en: "Developed a web-based reservation system for a coffee shop, allowing customers to browse the menu and make reservations through a PHP-based application powered by Bootstrap.",
+    },
+    stack: ["Native PHP", "Laragon", "MySQL", "Bootstrap", "CSS", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Mengembangkan sistem reservasi dan pemesanan online menggunakan Native PHP tanpa framework.",
+          en: "Developed an online reservation and ordering system using native PHP without a framework.",
+        },
+        {
+          id: "Mengimplementasikan katalog menu, formulir reservasi, dan fitur pemesanan yang terintegrasi dengan basis data MySQL.",
+          en: "Implemented menu browsing, reservation forms, and ordering features integrated with a MySQL database.",
+        },
+        {
+          id: "Membangun antarmuka yang responsif dan ramah perangkat seluler menggunakan Bootstrap.",
+          en: "Built a clean, responsive, and mobile-friendly interface using Bootstrap.",
+        },
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/Furqan-sykss/2A_praktikum_2021573010051/tree/main/DeCafe", icon: "github" }],
     },
   },
 ];

@@ -522,7 +522,7 @@ const experience: Experience[] = [
   },
   {
     role: {
-      id: "Magang - Pusat Data & TI",
+      id: "Magang - Pusat Data & TI (Biro pusdatin)",
       en: "IT Support Intern – Data & Information Center (Pusdatin)",
     },
     company: {
@@ -2900,7 +2900,7 @@ export default function HomePage() {
                 animationDelay: "0ms",
               }}
             >
-              <Counter target={6} label={t("projectsBuilt")} />
+              <Counter target={9} label={t("projectsBuilt")} />
               <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("acrossIndustries")}</p>
             </div>
 

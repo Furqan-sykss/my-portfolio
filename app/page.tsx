@@ -65,8 +65,8 @@ const projects: Project[] = [
       en: "SIRUNTU' Creative Agency Website",
     },
     period: {
-      id: "Jun 2026 - Sekarang",
-      en: "Jun 2026 - Present",
+      id: "Jun 2026 - Juli 2026",
+      en: "Jun 2026 - July 2026",
     },
     tag: {
       id: "Proyek Klien Komersial",
@@ -108,8 +108,8 @@ const projects: Project[] = [
           en: "Optimized the interface for desktop, tablet, and mobile devices through a mobile-first responsive design approach.",
         },
         {
-          id: "Berhasil menyelesaikan 80% pengerjaan project website komersial untuk memperkuat branding digital dan jalur konversi klien agency.",
-          en: "Completed 80% of the commercial website project to strengthen the agency's digital branding and client conversion strategy.",
+          id: "Berhasil menyelesaikan pengerjaan project website komersial untuk memperkuat branding digital dan jalur konversi klien agency.",
+          en: "Completed  the commercial website project to strengthen the agency's digital branding and client conversion strategy.",
         },
       ],
       links: [
@@ -1268,29 +1268,6 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", padding: "1rem 1.1rem 2rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
             <p style={{ fontSize: "0.84rem", lineHeight: 1.8, color: "var(--text-secondary)" }}>{L(project.desc)}</p>
 
-            {project.detail?.highlights && (
-              <div>
-                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("highlights")}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {project.detail.highlights.map((h, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                      <div style={{ flexShrink: 0, marginTop: 5, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
-                      <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{L(h)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div>
-              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("techStack")}</p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                {project.stack.map((s) => (
-                  <StackChip key={s}>{s}</StackChip>
-                ))}
-              </div>
-            </div>
-
             {project.detail?.links && project.detail.links.length > 0 && (
               <div>
                 <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("links")}</p>
@@ -1338,6 +1315,29 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                 </div>
               </div>
             )}
+
+            {project.detail?.highlights && (
+              <div>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("highlights")}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {project.detail.highlights.map((h, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <div style={{ flexShrink: 0, marginTop: 5, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                      <span style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{L(h)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("techStack")}</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                {project.stack.map((s) => (
+                  <StackChip key={s}>{s}</StackChip>
+                ))}
+              </div>
+            </div>
           </div>
         </>
       )}

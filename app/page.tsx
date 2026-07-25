@@ -2841,7 +2841,7 @@ export default function HomePage() {
                     boxShadow: "var(--shadow-md)",
                   }}
                 >
-                  <div style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.35rem", lineHeight: 1, color: "var(--accent)" }}>3+</div>
+                  <div style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.35rem", lineHeight: 1, color: "var(--accent)" }}>4+</div>
                   <div style={{ fontSize: "0.52rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 2 }}>yrs exp</div>
                 </div>
                 {/* Badge — open */}

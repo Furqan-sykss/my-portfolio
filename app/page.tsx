@@ -491,6 +491,7 @@ const additionalProjects: Project[] = [
 
 type Experience = {
   role: Localized;
+  tag: Localized;
   company: Localized;
   period: Localized;
   desc: Localized;
@@ -502,6 +503,10 @@ const experience: Experience[] = [
     role: {
       id: "Crew Acara - Runner",
       en: "Event Crew - Runner",
+    },
+    tag: {
+      id: "Kontrak",
+      en: "Contract",
     },
     company: {
       id: "PT Fasen Creative Quality × Tokopedia",
@@ -544,12 +549,16 @@ const experience: Experience[] = [
   },
   {
     role: {
-      id: "Magang - Pusat Data & TI (Biro pusdatin)",
-      en: "IT Support Intern – Data & Information Center (Pusdatin)",
+      id: "IT Support - Biro Pusat Data & Teknologi Informasi (Pusdatin)",
+      en: "IT Support - Data & Information Technology Center (Pusdatin)",
+    },
+    tag: {
+      id: "Magang",
+      en: "Intern",
     },
     company: {
-      id: "Sekretariat Jenderal KPU RI",
-      en: "Secretariat General of KPU RI",
+      id: "Sekretariat Jenderal Komisi Pemilihan Umum Republik Indonesia (KPU RI)",
+      en: "Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI)",
     },
     period: {
       id: "Feb 2024 - Sep 2024",
@@ -1506,9 +1515,11 @@ function InternModal({ onClose }: { onClose: () => void }) {
                 <TagBadge>{lang === "id" ? "Magang" : "Internship"}</TagBadge>
                 <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>Feb 2024 – Sep 2024</span>
               </div>
-              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{lang === "id" ? "Sekretariat Jenderal KPU RI" : "Secretariat General of KPU RI"}</h2>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>
+                {lang === "id" ? "Sekretariat Jenderal Komisi Pemilihan Umum Republik Indonesia (KPU RI)" : "Secretariat General of the General Elections Commission of the Republic of Indonesia (KPU RI)"}
+              </h2>
               <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>
-                {lang === "id" ? "Pusat Data & IT (Pusdatin) · Menteng, Jakarta Pusat, Indonesia" : "Center for Data & IT (Pusdatin) · Menteng, Central Jakarta, Indonesia"}
+                {lang === "id" ? "Biro Pusat Data & Teknologi Informasi (Pusdatin) · Menteng, Jakarta Pusat, Indonesia" : "Data & Information Technology Center (Pusdatin) · Menteng, Central Jakarta, Indonesia"}
               </p>
             </div>
             <CloseBtn onClose={requestClose} />
@@ -3112,8 +3123,14 @@ export default function HomePage() {
                       }}
                     >
                       {/* Top row: role title + View Details */}
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 2 }}>
-                        <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{L(e.role)}</h3>
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, minWidth: 0 }}>
+                          <div className="exp-card-kicker">
+                            <TagBadge>{L(e.tag)}</TagBadge>
+                            <span className="exp-card-period-inline">{L(e.period)}</span>
+                          </div>
+                          <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{L(e.role)}</h3>
+                        </div>
                         {(i === 0 || i === 1) && (
                           <span
                             style={{
@@ -3136,8 +3153,6 @@ export default function HomePage() {
                           </span>
                         )}
                       </div>
-                      {/* Period — own line below role */}
-                      <span style={{ display: "block", fontSize: "0.67rem", color: "var(--text-muted)", marginBottom: 6 }}>{L(e.period)}</span>
                       <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{L(e.company)}</p>
                       <p
                         style={{

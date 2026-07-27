@@ -795,6 +795,27 @@ section[id] {
     transform 0.2s ease;
 }
 
+.exp-card-kicker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.exp-card-period-inline {
+  display: block;
+  font-size: 0.67rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 1024px) {
+  .exp-card-kicker {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.65rem;
+  }
+}
+
 /* ── Certification card ─────────────────────────────────────────────────────── */
 .cert-card {
   transition:

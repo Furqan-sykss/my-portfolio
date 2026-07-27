@@ -31,7 +31,7 @@ export default function AdditionalProjectsClient({ projects, renderProjectCard }
   const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const mediaQuery = window.matchMedia("(max-width: 639px)");
     const updateViewportMode = () => {
       const compact = mediaQuery.matches;
       setIsCompact(compact);
@@ -45,7 +45,7 @@ export default function AdditionalProjectsClient({ projects, renderProjectCard }
 
   return (
     <>
-      <div className="bento-grid-plain additional-projects-mobile" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 12 }}>
+      <div className="bento-grid-plain additional-projects-mobile" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
         {visible.map((project, index) => renderProjectCard(project, index))}
       </div>
 

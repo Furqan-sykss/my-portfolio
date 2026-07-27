@@ -225,7 +225,7 @@ section[id] {
   display: grid;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 640px) {
   .additional-projects-desktop {
     display: block;
     margin-top: 0.25rem;
@@ -246,7 +246,7 @@ section[id] {
   .additional-carousel-card {
     position: absolute;
     top: 18px;
-    width: min(36rem, 44vw);
+    width: min(26rem, 58vw);
     backface-visibility: hidden;
     transform-style: preserve-3d;
   }
@@ -339,6 +339,12 @@ section[id] {
     width: 1.2rem;
     background: var(--accent);
     opacity: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .additional-carousel-card {
+    width: min(36rem, 44vw);
   }
 }
 

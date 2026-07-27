@@ -2402,7 +2402,7 @@ export default function HomePage() {
         left: "50%",
         zIndex: 3,
         opacity: 1,
-        transform: "translate3d(-50%, 0, 72px) scale(1)",
+        transform: "translateX(-50%) translateY(0) scale(1)",
         borderColor: "var(--border-mid)",
         boxShadow: "var(--shadow-lg)",
       };

@@ -511,6 +511,15 @@ section[id] {
     opacity: 0.45;
   }
 
+  .additional-projects-mobile .proj-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .additional-projects-mobile .proj-card::before {
+    content: none;
+  }
+
   .proj-card > * {
     position: relative;
     z-index: 1;

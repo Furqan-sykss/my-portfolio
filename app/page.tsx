@@ -1388,21 +1388,57 @@ function InternModal({ onClose }: { onClose: () => void }) {
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [fade, setFade] = useState(true);
+  const [carouselReady, setCarouselReady] = useState(false);
+  const [preloadLimit, setPreloadLimit] = useState(0);
+  const [loadedImageIndexes, setLoadedImageIndexes] = useState<Set<number>>(() => new Set());
   // Touch swipe
   const touchStartX = useRef<number>(0);
   const imgCount = images.length;
   const highlights = experience[1].highlights;
+  const initialPreloadCount = Math.min(6, imgCount);
+  const backgroundPreloadBatchSize = 3;
 
   // Fetch & shuffle
   useEffect(() => {
     fetch("/api/intern-images")
       .then((r) => r.json())
       .then((data: { images: string[] }) => {
-        setImages([...data.images].sort(() => Math.random() - 0.5));
+        const certificateImage = "/intern-image/Sertifikat_Magang_Furqan.png";
+        const otherImages = data.images.filter((image) => image !== certificateImage);
+        setImages([certificateImage, ...otherImages.sort(() => Math.random() - 0.5)]);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (imgCount === 0) return;
+
+    setCarouselReady(false);
+    setLoadedImageIndexes(new Set());
+    setPreloadLimit(initialPreloadCount);
+    setCarouselIdx(0);
+  }, [images, imgCount, initialPreloadCount]);
+
+  useEffect(() => {
+    if (imgCount === 0 || carouselReady || initialPreloadCount === 0) return;
+
+    const initialBatchLoaded = Array.from({ length: initialPreloadCount }).every((_, index) => loadedImageIndexes.has(index));
+    if (initialBatchLoaded) setCarouselReady(true);
+  }, [carouselReady, imgCount, initialPreloadCount, loadedImageIndexes]);
+
+  useEffect(() => {
+    if (!carouselReady || preloadLimit >= imgCount) return;
+
+    const currentBatchLoaded = Array.from({ length: preloadLimit }).every((_, index) => loadedImageIndexes.has(index));
+    if (!currentBatchLoaded) return;
+
+    const timer = window.setTimeout(() => {
+      setPreloadLimit((current) => Math.min(current + backgroundPreloadBatchSize, imgCount));
+    }, 350);
+
+    return () => window.clearTimeout(timer);
+  }, [carouselReady, imgCount, loadedImageIndexes, preloadLimit]);
 
   // Keyboard: Escape = close, ← → = navigate
   useEffect(() => {
@@ -1430,6 +1466,17 @@ function InternModal({ onClose }: { onClose: () => void }) {
   };
   const next = () => {
     if (carouselIdx < imgCount - 1) goTo(carouselIdx + 1);
+  };
+
+  const visibleCarouselImages = [carouselIdx - 1, carouselIdx, carouselIdx + 1].filter((index) => index >= 0 && index < imgCount);
+  const preloadedCarouselImages = Array.from({ length: preloadLimit }, (_, index) => index);
+  const markCarouselImageLoaded = (index: number) => {
+    setLoadedImageIndexes((current) => {
+      if (current.has(index)) return current;
+      const nextLoaded = new Set(current);
+      nextLoaded.add(index);
+      return nextLoaded;
+    });
   };
 
   // Touch swipe handlers
@@ -1613,6 +1660,30 @@ function InternModal({ onClose }: { onClose: () => void }) {
               )}
               {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>Foto tidak ditemukan.</div>}
               {!loading && imgCount > 0 && (
+                <div aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", opacity: 0, pointerEvents: "none" }}>
+                  {preloadedCarouselImages.map((imageIndex) => (
+                    <span key={`kpu-preload-${images[imageIndex]}`} style={{ position: "relative", display: "block", width: 1, height: 1 }}>
+                      <NextImage
+                        src={images[imageIndex]}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) calc(100vw - 2.2rem), 660px"
+                        priority={imageIndex < initialPreloadCount}
+                        onLoad={() => markCarouselImageLoaded(imageIndex)}
+                        onError={() => markCarouselImageLoaded(imageIndex)}
+                        style={{ objectFit: "contain" }}
+                      />
+                    </span>
+                  ))}
+                </div>
+              )}
+              {!loading && imgCount > 0 && !carouselReady && (
+                <div style={{ height: "clamp(200px, 44vw, 380px)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem", flexDirection: "column", gap: 10 }}>
+                  <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                  {lang === "id" ? "Menyiapkan galeri..." : "Preparing gallery..."}
+                </div>
+              )}
+              {!loading && imgCount > 0 && carouselReady && (
                 <div style={{ position: "relative" }}>
                   <div
                     onTouchStart={onTouchStart}
@@ -1628,13 +1699,24 @@ function InternModal({ onClose }: { onClose: () => void }) {
                       userSelect: "none",
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={images[carouselIdx]}
-                      alt={`KPU documentation ${carouselIdx + 1}`}
-                      style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", opacity: fade ? 1 : 0, transition: "opacity 0.14s ease" }}
-                      loading="lazy"
-                    />
+                    {visibleCarouselImages.map((imageIndex) => (
+                      <NextImage
+                        key={images[imageIndex]}
+                        src={images[imageIndex]}
+                        alt={`KPU documentation ${imageIndex + 1}`}
+                        fill
+                        sizes="(max-width: 768px) calc(100vw - 2.2rem), 660px"
+                        priority
+                        onLoad={() => markCarouselImageLoaded(imageIndex)}
+                        onError={() => markCarouselImageLoaded(imageIndex)}
+                        style={{
+                          objectFit: "contain",
+                          opacity: imageIndex === carouselIdx && fade ? 1 : 0,
+                          transition: "opacity 0.14s ease",
+                          pointerEvents: imageIndex === carouselIdx ? "auto" : "none",
+                        }}
+                      />
+                    ))}
                     {carouselIdx > 0 && (
                       <button
                         onClick={prev}
@@ -1743,8 +1825,13 @@ function EventModal({ onClose }: { onClose: () => void }) {
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [fade, setFade] = useState(true);
+  const [carouselReady, setCarouselReady] = useState(false);
+  const [preloadLimit, setPreloadLimit] = useState(0);
+  const [loadedImageIndexes, setLoadedImageIndexes] = useState<Set<number>>(() => new Set());
   const touchStartX = useRef<number>(0);
   const imgCount = images.length;
+  const initialPreloadCount = Math.min(6, imgCount);
+  const backgroundPreloadBatchSize = 3;
 
   // Fetch & shuffle on mount
   useEffect(() => {
@@ -1756,6 +1843,35 @@ function EventModal({ onClose }: { onClose: () => void }) {
       })
       .catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (imgCount === 0) return;
+
+    setCarouselReady(false);
+    setLoadedImageIndexes(new Set());
+    setPreloadLimit(initialPreloadCount);
+    setCarouselIdx(0);
+  }, [images, imgCount, initialPreloadCount]);
+
+  useEffect(() => {
+    if (imgCount === 0 || carouselReady || initialPreloadCount === 0) return;
+
+    const initialBatchLoaded = Array.from({ length: initialPreloadCount }).every((_, index) => loadedImageIndexes.has(index));
+    if (initialBatchLoaded) setCarouselReady(true);
+  }, [carouselReady, imgCount, initialPreloadCount, loadedImageIndexes]);
+
+  useEffect(() => {
+    if (!carouselReady || preloadLimit >= imgCount) return;
+
+    const currentBatchLoaded = Array.from({ length: preloadLimit }).every((_, index) => loadedImageIndexes.has(index));
+    if (!currentBatchLoaded) return;
+
+    const timer = window.setTimeout(() => {
+      setPreloadLimit((current) => Math.min(current + backgroundPreloadBatchSize, imgCount));
+    }, 350);
+
+    return () => window.clearTimeout(timer);
+  }, [carouselReady, imgCount, loadedImageIndexes, preloadLimit]);
 
   // Keyboard: ← → navigate
   useEffect(() => {
@@ -1780,6 +1896,17 @@ function EventModal({ onClose }: { onClose: () => void }) {
   };
   const next = () => {
     if (carouselIdx < imgCount - 1) goTo(carouselIdx + 1);
+  };
+
+  const visibleCarouselImages = [carouselIdx - 1, carouselIdx, carouselIdx + 1].filter((index) => index >= 0 && index < imgCount);
+  const preloadedCarouselImages = Array.from({ length: preloadLimit }, (_, index) => index);
+  const markCarouselImageLoaded = (index: number) => {
+    setLoadedImageIndexes((current) => {
+      if (current.has(index)) return current;
+      const nextLoaded = new Set(current);
+      nextLoaded.add(index);
+      return nextLoaded;
+    });
   };
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -2031,8 +2158,34 @@ function EventModal({ onClose }: { onClose: () => void }) {
               {/* No photos */}
               {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>{t("noPhotosFound")}</div>}
 
-              {/* Carousel */}
               {!loading && imgCount > 0 && (
+                <div aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", opacity: 0, pointerEvents: "none" }}>
+                  {preloadedCarouselImages.map((imageIndex) => (
+                    <span key={`event-preload-${images[imageIndex]}`} style={{ position: "relative", display: "block", width: 1, height: 1 }}>
+                      <NextImage
+                        src={images[imageIndex]}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) calc(100vw - 2.2rem), 620px"
+                        priority={imageIndex < initialPreloadCount}
+                        onLoad={() => markCarouselImageLoaded(imageIndex)}
+                        onError={() => markCarouselImageLoaded(imageIndex)}
+                        style={{ objectFit: "contain" }}
+                      />
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {!loading && imgCount > 0 && !carouselReady && (
+                <div style={{ height: "clamp(200px, 44vw, 380px)", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 10, color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                  <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                  {lang === "id" ? "Menyiapkan galeri..." : "Preparing gallery..."}
+                </div>
+              )}
+
+              {/* Carousel */}
+              {!loading && imgCount > 0 && carouselReady && (
                 <div style={{ position: "relative" }}>
                   {/* Image frame */}
                   <div
@@ -2049,13 +2202,24 @@ function EventModal({ onClose }: { onClose: () => void }) {
                       userSelect: "none",
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={images[carouselIdx]}
-                      alt={`Event crew documentation ${carouselIdx + 1}`}
-                      style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", opacity: fade ? 1 : 0, transition: "opacity 0.14s ease" }}
-                      loading="lazy"
-                    />
+                    {visibleCarouselImages.map((imageIndex) => (
+                      <NextImage
+                        key={images[imageIndex]}
+                        src={images[imageIndex]}
+                        alt={`Event crew documentation ${imageIndex + 1}`}
+                        fill
+                        sizes="(max-width: 768px) calc(100vw - 2.2rem), 620px"
+                        priority
+                        onLoad={() => markCarouselImageLoaded(imageIndex)}
+                        onError={() => markCarouselImageLoaded(imageIndex)}
+                        style={{
+                          objectFit: "contain",
+                          opacity: imageIndex === carouselIdx && fade ? 1 : 0,
+                          transition: "opacity 0.14s ease",
+                          pointerEvents: imageIndex === carouselIdx ? "auto" : "none",
+                        }}
+                      />
+                    ))}
                     {/* Prev button */}
                     {carouselIdx > 0 && (
                       <button
@@ -2363,6 +2527,7 @@ export default function HomePage() {
   const headingRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const photoRef = useRef<HTMLDivElement>(null);
+  const additionalWheelRef = useRef({ delta: 0, locked: false });
 
   interface Rects {
     heading: BRect | null;
@@ -2383,6 +2548,34 @@ export default function HomePage() {
 
   const moveAdditionalProject = (direction: -1 | 1) => {
     setActiveAdditionalProject((current) => (current + direction + additionalProjects.length) % additionalProjects.length);
+  };
+
+  const handleAdditionalProjectWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (additionalProjects.length <= 1) return;
+
+    const horizontalDelta = event.deltaX;
+    const verticalDelta = event.deltaY;
+    const isHorizontalGesture = Math.abs(horizontalDelta) > Math.abs(verticalDelta) * 1.25;
+
+    if (!isHorizontalGesture || Math.abs(horizontalDelta) < 4) {
+      additionalWheelRef.current.delta = 0;
+      return;
+    }
+
+    event.preventDefault();
+
+    if (additionalWheelRef.current.locked) return;
+
+    additionalWheelRef.current.delta += horizontalDelta;
+    if (Math.abs(additionalWheelRef.current.delta) < 42) return;
+
+    moveAdditionalProject(additionalWheelRef.current.delta > 0 ? 1 : -1);
+    additionalWheelRef.current.delta = 0;
+    additionalWheelRef.current.locked = true;
+
+    window.setTimeout(() => {
+      additionalWheelRef.current.locked = false;
+    }, 360);
   };
 
   const getAdditionalProjectSlot = (index: number) => {
@@ -3639,7 +3832,7 @@ export default function HomePage() {
           <section id="additional-projects">
             <SectionHeader eyebrow={t("portfolio")} title={t("additionalProjects")} />
 
-            <div className="additional-projects-desktop" style={{ position: "relative", minHeight: 390, perspective: "1200px", transformStyle: "preserve-3d" }}>
+            <div className="additional-projects-desktop" onWheel={handleAdditionalProjectWheel} style={{ position: "relative", minHeight: 390, perspective: "1200px", transformStyle: "preserve-3d" }}>
               <button
                 type="button"
                 className="additional-carousel-control additional-carousel-control-prev"

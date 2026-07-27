@@ -8,6 +8,7 @@ import { translate } from "@/components/siteTranslations";
 import Counter from "@/components/Counter";
 import FadeUp from "@/components/FadeUp";
 import CertificationsClient from "@/components/CertificationsClient";
+import AdditionalProjectsClient from "@/components/AdditionalProjectsClient";
 
 // ────── Data ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -121,6 +122,11 @@ const projects: Project[] = [
           href: "https://siruntu.vercel.app",
           icon: "external",
         },
+        {
+          label: "GitHub",
+          href: "https://github.com/Furqan-sykss/siruntu-official",
+          icon: "github",
+        },
       ],
     },
   },
@@ -188,11 +194,27 @@ const projects: Project[] = [
         },
         {
           label: {
+            id: "GitHub Template 1",
+            en: "GitHub Template 1",
+          },
+          href: "https://github.com/Furqan-sykss/template-1",
+          icon: "github",
+        },
+        {
+          label: {
             id: "Demo Langsung #2",
             en: "Live Demo #2",
           },
           href: "https://portfolio-template-2-furqan.vercel.app",
           icon: "external",
+        },
+        {
+          label: {
+            id: "GitHub Template 2",
+            en: "GitHub Template 2",
+          },
+          href: "https://github.com/Furqan-sykss/portfolio",
+          icon: "github",
         },
       ],
     },
@@ -249,7 +271,7 @@ const projects: Project[] = [
       id: "Mengembangkan prototipe sistem informasi berbasis web untuk mengelola data keanggotaan badan ad hoc (PPK dan PPS) selama program magang di Sekretariat Jenderal KPU RI. Sistem dirancang berdasarkan alur kerja resmi SIAKBA dan dibangun menggunakan Laravel serta MySQL.",
       en: "Developed a prototype web-based information system for managing PPK and PPS membership data during an internship at the Secretariat General of KPU RI. The system was designed based on the official SIAKBA workflow and implemented using Laravel and MySQL.",
     },
-    stack: ["Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "GitHub"],
+    stack: ["Microsoft Office", "Laravel", "MySQL", "XAMPP", "JavaScript", "CSS", "Git", "GitHub"],
     detail: {
       highlights: [
         {
@@ -2546,6 +2568,7 @@ export default function HomePage() {
       }, 3100);
       return () => [t1, t2, t3, t4].forEach(clearTimeout);
     }, 200);
+
     window.addEventListener("resize", calcRects);
     return () => {
       clearTimeout(init);
@@ -3176,7 +3199,7 @@ export default function HomePage() {
                     <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <TagBadge>{L(projects[0].tag)}</TagBadge>
                       <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>
-                        {t("featured")}
+                        {t("latest")}
                       </span>
                     </div>
                     <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
@@ -3327,10 +3350,15 @@ export default function HomePage() {
               >
                 <div className="proj-card-main">
                   <div className="proj-card-meta" style={{ marginBottom: 9 }}>
-                    <TagBadge>{L(projects[2].tag)}</TagBadge>
-                    <p className="proj-card-period" style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 6 }}>
+                    <div className="proj-card-badges" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <TagBadge>{L(projects[2].tag)}</TagBadge>
+                      <span className="proj-card-label" style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.4 }}>
+                        {t("featured")}
+                      </span>
+                    </div>
+                    <span className="proj-card-period" style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
                       {L(projects[2].period)}
-                    </p>
+                    </span>
                   </div>
                   <h3 className="proj-card-title" style={{ fontFamily: "var(--font-dm-serif)", fontSize: "0.85rem", fontWeight: 400, color: "var(--text-primary)", marginBottom: 7, lineHeight: 1.35 }}>
                     {L(projects[2].title)}
@@ -3634,9 +3662,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="bento-grid-plain additional-projects-mobile" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 12 }}>
-              {additionalProjects.map((project, index) => renderAdditionalProjectCard(project, index))}
-            </div>
+            <AdditionalProjectsClient projects={additionalProjects} renderProjectCard={renderAdditionalProjectCard} />
           </section>
         </FadeUp>
 

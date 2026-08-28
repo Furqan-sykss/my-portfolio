@@ -653,7 +653,6 @@ const certifications = [
     category: { id: "Web Dev", en: "Web Dev" },
     link: "https://drive.google.com/file/d/1-tTniLS-94LRkplidre2eyjIUBGtpmb4/view?usp=sharing",
   },
-  [
   {
     name: { 
       id: "Mulai Menggunakan Analisis Data", 
@@ -684,7 +683,6 @@ const certifications = [
     category: { id: "Data Analytics", en: "Data Analytics" },
     link: "https://drive.google.com/file/d/1DcwFKG67d-YyKMnPVN9NKealQ9x6F9I4/view?usp=drive_link",
   },
-]
   {
     name: { id: "Pelatihan Softskill & Character Building", en: "Softskill Training & Character Building" },
     issuer: { id: "Tandaseru Indonesia", en: "Tandaseru Indonesia" },

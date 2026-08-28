@@ -655,6 +655,16 @@ const certifications = [
   },
   {
     name: { 
+      id: "SQL Tingkat Menengah", 
+      en: "Intermediate SQL" 
+    },
+    issuer: { id: "DataCamp", en: "DataCamp" },
+    year: "2026",
+    category: { id: "Data Analytics", en: "Data Analytics" },
+    link: "https://drive.google.com/file/d/1fO-om4-pLd0fnGkl3xK4w2FF-bwuDC1B/view?usp=drive_link",
+  },
+  {
+    name: { 
       id: "Mulai Menggunakan Analisis Data", 
       en: "Get Started With Data Analytics" 
     },

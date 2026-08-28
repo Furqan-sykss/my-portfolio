@@ -653,6 +653,38 @@ const certifications = [
     category: { id: "Web Dev", en: "Web Dev" },
     link: "https://drive.google.com/file/d/1-tTniLS-94LRkplidre2eyjIUBGtpmb4/view?usp=sharing",
   },
+  [
+  {
+    name: { 
+      id: "Mulai Menggunakan Analisis Data", 
+      en: "Get Started With Data Analytics" 
+    },
+    issuer: { id: "Microsoft Learn", en: "Microsoft Learn" },
+    year: "2026",
+    category: { id: "Data Analytics", en: "Data Analytics" },
+    link: "https://drive.google.com/file/d/1q8UXnDgHY6ETt9AlvaS9a1ELShCrN28D/view?usp=drive_link",
+  },
+  {
+    name: { 
+      id: "Mulai Menggunakan Konsep Data", 
+      en: "Get Started With Data Concepts" 
+    },
+    issuer: { id: "Microsoft Learn", en: "Microsoft Learn" },
+    year: "2026",
+    category: { id: "Data Analytics", en: "Data Analytics" },
+    link: "https://drive.google.com/file/d/1obN8GwkYO5au2inltSv2dRst1nG9HHLV/view?usp=drive_link",
+  },
+  {
+    name: { 
+      id: "Mulai Menggunakan Analisis Data Microsoft", 
+      en: "Get Started With Microsoft Data Analytics" 
+    },
+    issuer: { id: "Microsoft Learn", en: "Microsoft Learn" },
+    year: "2026",
+    category: { id: "Data Analytics", en: "Data Analytics" },
+    link: "https://drive.google.com/file/d/1DcwFKG67d-YyKMnPVN9NKealQ9x6F9I4/view?usp=drive_link",
+  },
+]
   {
     name: { id: "Pelatihan Softskill & Character Building", en: "Softskill Training & Character Building" },
     issuer: { id: "Tandaseru Indonesia", en: "Tandaseru Indonesia" },

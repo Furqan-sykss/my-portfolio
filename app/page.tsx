@@ -670,7 +670,7 @@ const certifications = [
     },
     issuer: { id: "DataCamp", en: "DataCamp" },
     year: "2026",
-    category: { id: "Data Analytics", en: "Data Analytics" },
+    category: { id: "Data Entry", en: "Data Entry" },
     link: "https://drive.google.com/file/d/1_0JOajukLF8tsQky1RwoQ-Rvm01Mlamu/view?usp=drive_link",
   },
   {

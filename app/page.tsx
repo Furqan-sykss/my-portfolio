@@ -704,6 +704,16 @@ const certifications = [
     link: "https://drive.google.com/file/d/1DcwFKG67d-YyKMnPVN9NKealQ9x6F9I4/view?usp=drive_link",
   },
   {
+    name: { 
+      id: "Pengantar Git", 
+      en: "Introduction to Git" 
+    },
+    issuer: { id: "DataCamp", en: "DataCamp" },
+    year: "2026",
+    category: { id: "Web Dev", en: "Web Dev" },
+    link: "",
+  },
+  {
     name: { id: "Pelatihan Softskill & Character Building", en: "Softskill Training & Character Building" },
     issuer: { id: "Tandaseru Indonesia", en: "Tandaseru Indonesia" },
     year: "2025",

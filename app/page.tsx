@@ -711,7 +711,7 @@ const certifications = [
     issuer: { id: "DataCamp", en: "DataCamp" },
     year: "2026",
     category: { id: "Web Dev", en: "Web Dev" },
-    link: "",
+    link: "https://drive.google.com/file/d/13y-hatoPvFdU5gBUkLHaGh_Qw4gndBhe/view?usp=drive_link",
   },
   {
     name: { id: "Pelatihan Softskill & Character Building", en: "Softskill Training & Character Building" },

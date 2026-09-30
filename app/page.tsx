@@ -2921,11 +2921,11 @@ export default function HomePage() {
       )}
 
       {/* ──── PAGE SHELL ────────────────────────────────────────────────────────────────────────────────────────────────────────── */}
-      <div className="page-container max-w-5xl mx-auto px-5 sm:px-8 pb-32" style={{ display: "flex", flexDirection: "column", gap: "6.5rem" }}>
+      <div className="page-container page-enter max-w-5xl mx-auto px-5 sm:px-8 pb-32" style={{ display: "flex", flexDirection: "column", gap: "6.5rem" }}>
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             HERO
         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-        <section ref={heroRef} style={{ minHeight: "90vh", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative" }}>
+        <section ref={heroRef} className="hero-section" style={{ minHeight: "90vh", display: "flex", flexDirection: "column", justifyContent: "center", position: "relative" }}>
           {/* SVG corner bracket overlay */}
           {(rects.heading || rects.body || rects.photo) && (
             <svg aria-hidden style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible", pointerEvents: "none", zIndex: 1 }}>
@@ -3094,12 +3094,13 @@ export default function HomePage() {
 
             {/* RIGHT — photo */}
             <div style={{ flexShrink: 0 }}>
-              <div style={{ position: "relative", width: 204, height: 264 }} className="sm:w-[218px] sm:h-[284px]">
+              <div style={{ position: "relative", width: 204, height: 264 }} className="hero-portrait-group sm:w-[218px] sm:h-[284px]">
                 {/* glow */}
                 <div style={{ position: "absolute", inset: -18, borderRadius: "2rem", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", filter: "blur(26px)", opacity: 0.85 }} />
                 {/* photo wrapper — bracket 3 ref */}
                 <div
                   ref={photoRef}
+                  className="hero-photo"
                   style={{
                     position: "relative",
                     width: "100%",
@@ -4047,7 +4048,7 @@ export default function HomePage() {
         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <section id="contact">
-            <div style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "clamp(2.5rem,8vw,5rem) clamp(1.25rem,5vw,2rem)", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+            <div className="contact-panel" style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "clamp(2.5rem,8vw,5rem) clamp(1.25rem,5vw,2rem)", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
               <div style={{ position: "absolute", top: -80, right: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", opacity: 0.7, pointerEvents: "none" }} />
               <div style={{ position: "absolute", bottom: -60, left: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", opacity: 0.4, pointerEvents: "none" }} />
               {/* Corner marks */}

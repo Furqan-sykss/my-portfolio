@@ -10,9 +10,11 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [isMobile, setIsMobile] = useState(false);
-  const [ignoreObserver, setIgnoreObserver] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const scrollTimeoutRef = useRef<number | null>(null);
+  const themeButtonRef = useRef<HTMLButtonElement>(null);
   const { lang, toggleLang } = useLanguage();
+  const ignoreObserverRef = useRef(false);
   const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
 
   const linkLabels: Record<string, string> = {
@@ -37,12 +39,15 @@ export default function Navbar() {
 
     const onScroll = () => {
       setScrolled(window.scrollY > 20);
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0);
       // Auto-close menu saat user scroll
       if (menuOpen) {
         setMenuOpen(false);
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
     const onResize = () => {
       setIsMobile(window.innerWidth < 640);
@@ -65,11 +70,11 @@ export default function Navbar() {
     };
     document.addEventListener("click", handleClickOutside);
 
-    // ── Scroll Spy — IntersectionObserver ──────────────────────────────────
+    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Scroll Spy ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â IntersectionObserver ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
     const sectionEls = document.querySelectorAll("section[id]");
     const observer = new IntersectionObserver(
       (entries) => {
-        if (ignoreObserver) {
+        if (ignoreObserverRef.current) {
           return;
         }
         const visible = entries.filter((e) => e.isIntersecting);
@@ -98,12 +103,49 @@ export default function Navbar() {
   const [langPressed, setLangPressed] = useState(false);
 
   const toggle = () => {
-    const html = document.documentElement;
-    html.classList.toggle("dark");
-    const nowDark = html.classList.contains("dark");
-    setIsDark(nowDark);
-    localStorage.setItem("theme", nowDark ? "dark" : "light");
+    const updateTheme = () => {
+      const html = document.documentElement;
+      html.classList.toggle("dark");
+      const nowDark = html.classList.contains("dark");
+      setIsDark(nowDark);
+      localStorage.setItem("theme", nowDark ? "dark" : "light");
+    };
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const viewTransitionDocument = document as Document & {
+      startViewTransition?: (callback: () => void) => { ready: Promise<void>; finished: Promise<void> };
+    };
+
+    if (reducedMotion || !viewTransitionDocument.startViewTransition || !themeButtonRef.current) {
+      updateTheme();
+      return;
+    }
+
+    const rect = themeButtonRef.current.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+    const radius = Math.hypot(
+      Math.max(originX, window.innerWidth - originX),
+      Math.max(originY, window.innerHeight - originY),
+    );
+
+    const transition = viewTransitionDocument.startViewTransition(updateTheme);
+    transition.ready.then(() => {
+      const start = "circle(0px at " + originX + "px " + originY + "px)";
+      const end = "circle(" + radius + "px at " + originX + "px " + originY + "px)";
+      document.documentElement.animate(
+        { clipPath: [start, end] },
+        {
+          duration: 820,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          fill: "both",
+          pseudoElement: "::view-transition-new(root)",
+        } as KeyframeAnimationOptions & { pseudoElement: string },
+      );
+    });
+
   };
+
 
   const handleLangToggle = () => {
     setLangPressed(true);
@@ -114,12 +156,12 @@ export default function Navbar() {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     setActiveSection(id);
-    setIgnoreObserver(true);
+    ignoreObserverRef.current = true;
     if (scrollTimeoutRef.current) {
       window.clearTimeout(scrollTimeoutRef.current);
     }
     scrollTimeoutRef.current = window.setTimeout(() => {
-      setIgnoreObserver(false);
+      ignoreObserverRef.current = false;
       scrollTimeoutRef.current = null;
     }, 1200);
     if (el) {
@@ -133,6 +175,7 @@ export default function Navbar() {
   return (
     <>
       <nav
+        className="site-nav"
         style={{
           position: "fixed",
           top: 0,
@@ -147,6 +190,7 @@ export default function Navbar() {
           boxShadow: scrolled ? "var(--shadow-sm)" : "none",
         }}
       >
+        <span className="nav-progress" style={{ transform: "scaleX(" + scrollProgress + ")" }} />
         <div className="max-w-5xl mx-auto flex justify-between items-center px-5 sm:px-8 py-4">
           {/* Logo */}
           <a href="/" style={{ fontFamily: "var(--font-dm-serif)", color: "var(--text-primary)", fontSize: "clamp(0.95rem, 3vw, 1.1rem)", fontWeight: 400, letterSpacing: "-0.01em", textDecoration: "none" }}>
@@ -160,7 +204,7 @@ export default function Navbar() {
               return (
                 <a
                   key={s}
-                  href="javascript:void(0)"
+                  href={"#" + s}
                   onClick={() => scrollTo(s)}
                   style={{
                     textDecoration: "none",
@@ -181,6 +225,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {/* Theme toggle */}
             <button
+              ref={themeButtonRef}
               onClick={toggle}
               aria-label={themeAria}
               style={{
@@ -333,7 +378,7 @@ export default function Navbar() {
               return (
                 <a
                   key={s}
-                  href="javascript:void(0)"
+                  href={"#" + s}
                   onClick={() => {
                     scrollTo(s);
                     setMenuOpen(false);

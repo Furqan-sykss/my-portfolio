@@ -34,10 +34,19 @@ export default function CertificationsClient({ certifications }: { certification
       <div style={{ display: "grid", gap: 8 }} className="grid-cols-1 sm:grid-cols-2 cert-grid">
         {visible.map((c, i) => (
           <FadeUp key={`${resolveText(c.name)}-${i}`} delay={i * 42}>
-            <a
-              href={c.link}
-              target="_blank"
-              rel="noopener noreferrer"
+            <div
+              role={c.link ? "link" : undefined}
+              tabIndex={c.link ? 0 : undefined}
+              onClick={() => {
+                if (c.link) window.open(c.link, "_blank", "noopener,noreferrer");
+              }}
+              onKeyDown={(e) => {
+                if (!c.link) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  window.open(c.link, "_blank", "noopener,noreferrer");
+                }
+              }}
               className="cert-card"
               style={{
                 display: "flex",
@@ -48,17 +57,17 @@ export default function CertificationsClient({ certifications }: { certification
                 backgroundColor: "var(--bg-card)",
                 border: "1px solid var(--border)",
                 textDecoration: "none",
-                cursor: "pointer",
+                cursor: c.link ? "pointer" : "default",
                 transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease",
               }}
               onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement;
+                const el = e.currentTarget as HTMLDivElement;
                 el.style.borderColor = "var(--border-strong)";
                 el.style.boxShadow = "var(--shadow-md)";
                 el.style.transform = "translateY(-2px)";
               }}
               onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement;
+                const el = e.currentTarget as HTMLDivElement;
                 el.style.borderColor = "var(--border)";
                 el.style.boxShadow = "none";
                 el.style.transform = "translateY(0)";
@@ -125,16 +134,16 @@ export default function CertificationsClient({ certifications }: { certification
                         padding: "2px 8px",
                         borderRadius: 4,
                         backgroundColor: "rgba(99,178,100,0.12)",
-                        color: "rgb(80,160,80)",
-                        border: "1px solid rgba(99,178,100,0.25)",
+                        color: resolveText(c.badge).toLowerCase().includes("proses") || resolveText(c.badge).toLowerCase().includes("progress") ? "var(--accent)" : "rgb(80,160,80)",
+                        border: resolveText(c.badge).toLowerCase().includes("proses") || resolveText(c.badge).toLowerCase().includes("progress") ? "1px solid var(--border-mid)" : "1px solid rgba(99,178,100,0.25)",
                       }}
                     >
-                      {t("verifiedLabel")}
+                      {resolveText(c.badge)}
                     </span>
                   )}
                 </div>
               </div>
-            </a>
+            </div>
           </FadeUp>
         ))}
       </div>

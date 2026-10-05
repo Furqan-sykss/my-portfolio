@@ -48,6 +48,14 @@ const skills: { category: Localized; items: string[]; icon: string }[] = [
     items: ["MySQL", "PostgreSQL", "Git", "GitHub", "Vercel", "Selenium", "Figma", "Canva", "Laragon", "XAMPP", "Microsoft Office"],
     icon: "DB",
   },
+  {
+    category: {
+      id: "Digital Presence",
+      en: "Digital Presence",
+    },
+    items: ["Digital Branding", "Content Planning", "Instagram", "Google Business Profile", "Link-in-Bio", "Copywriting"],
+    icon: "DM",
+  },
 ];
 
 type Project = {
@@ -60,6 +68,43 @@ type Project = {
 };
 
 const projects: Project[] = [
+  {
+    title: { id: "Sitestaq.id", en: "Sitestaq.id" },
+    period: { id: "Agustus 2026 - Oktober 2026", en: "August 2026 - October 2026" },
+    tag: { id: "Brand Digital Mandiri", en: "Self-Directed Digital Brand" },
+    desc: {
+      id: "Membuat dan mengembangkan Sitestaq.id sebagai proyek brand digital mandiri yang menggabungkan website, positioning layanan, konten Instagram, Linktree, dan kehadiran Google untuk menunjukkan bagaimana sebuah jasa website dapat dibangun sebagai identitas digital yang utuh.",
+      en: "Created and developed Sitestaq.id as a self-directed digital brand project combining a website, service positioning, Instagram content, Linktree, and Google presence to demonstrate how a website service can be shaped into a cohesive digital identity.",
+    },
+    stack: ["Digital Branding", "Website", "Instagram", "Google Business Profile", "Linktree", "Copywriting", "Canva"],
+    detail: {
+      highlights: [
+        {
+          id: "Membangun identitas Sitestaq.id sebagai layanan pembuatan website dengan positioning visual yang konsisten di website, Instagram, dan Linktree.",
+          en: "Built Sitestaq.id's identity as a website creation service with consistent visual positioning across the website, Instagram, and Linktree.",
+        },
+        {
+          id: "Menyusun konten dan pesan pemasaran untuk menjelaskan layanan website secara sederhana, profesional, dan mudah dipahami audiens.",
+          en: "Prepared content and marketing messages that explain website services in a simple, professional, and audience-friendly way.",
+        },
+        {
+          id: "Membuat jalur digital presence melalui Instagram, Linktree, Google Search, dan Google Business Profile berdasarkan bukti screenshot yang tersedia.",
+          en: "Created a digital presence path through Instagram, Linktree, Google Search, and Google Business Profile based on the available screenshot evidence.",
+        },
+        {
+          id: "Menggunakan proyek ini sebagai praktik digital marketing untuk menghubungkan brand, website, media sosial, dan visibilitas pencarian.",
+          en: "Used this project as digital marketing practice to connect brand, website, social media, and search visibility.",
+        },
+      ],
+      links: [
+        { label: { id: "Website", en: "Website" }, href: "http://sitestaq.id", icon: "external" },
+        { label: "Instagram", href: "https://www.instagram.com/sitestaq.id", icon: "external" },
+        { label: { id: "Linktree", en: "Linktree" }, href: "https://tinyurl.com/sitestaq", icon: "external" },
+        { label: { id: "Blog", en: "Blog" }, href: "https://sitestaq.blogspot.com/", icon: "external" },
+      ],
+    },
+  },
+
   {
     title: {
       id: "SIRUNTU' Creative Agency Website",
@@ -359,42 +404,75 @@ const projects: Project[] = [
       ],
     },
   },
-  {
-    title: {
-      id: "Sistem Informasi Sejarah dan Filsafat",
-      en: "History and Philosophy Information System",
-    },
-    period: { id: "Feb 2023 - Mei 2023", en: "Feb 2023 - May 2023" },
-    tag: { id: "Akademik", en: "Academic" },
-    desc: {
-      id: "Mengembangkan sistem informasi berbasis web menggunakan Laravel, MySQL, dan Tailwind CSS untuk menyajikan konten sejarah dan filsafat secara terstruktur dengan antarmuka yang responsif.",
-      en: "Developed a web-based information system using Laravel, MySQL, and Tailwind CSS to deliver structured historical and philosophical content through a clean, responsive interface.",
-    },
-    stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "GitHub"],
-    detail: {
-      highlights: [
-        {
-          id: "Mengembangkan sistem informasi full-stack untuk mengelola dan menyajikan konten sejarah serta filsafat.",
-          en: "Developed a full-stack web information system for managing and presenting historical and philosophical content.",
-        },
-        {
-          id: "Menerapkan antarmuka responsif menggunakan Tailwind CSS yang dioptimalkan untuk desktop dan perangkat seluler.",
-          en: "Implemented a responsive user interface with Tailwind CSS optimized for both desktop and mobile devices.",
-        },
-        {
-          id: "Mengembangkan modul manajemen konten menggunakan arsitektur MVC Laravel dan basis data MySQL.",
-          en: "Developed a structured content management module using Laravel's MVC architecture and MySQL.",
-        },
-      ],
-      links: [
-        { label: "GitHub", href: "https://github.com/Furqan-sykss/laravel-amerta", icon: "github" },
-        { label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
-      ],
-    },
-  },
 ];
 
 const additionalProjects: Project[] = [
+  {
+    title: { id: "Template Website Agensi Kreatif", en: "Creative Agency Website Templates" },
+    period: { id: "Agustus 2026 - Oktober 2026", en: "August 2026 - October 2026" },
+    tag: { id: "Eksplorasi Desain Mandiri", en: "Self-Directed Design Exploration" },
+    desc: {
+      id: "Merancang dua template landing page agensi kreatif, Atelier Noir dan HAVN, dengan konten demo fiktif serta pendekatan editorial dan sinematik. Keduanya dibangun menggunakan Next.js, TypeScript, Tailwind CSS, Framer Motion, dan Lenis, dengan komposisi layout, ritme section, dan bahasa gerak yang berbeda agar dapat digunakan sebagai dasar template agensi yang mudah disesuaikan.",
+      en: "Designed two creative agency landing page templates, Atelier Noir and HAVN, with fictional demo content and an editorial, cinematic direction. Both were built with Next.js, TypeScript, Tailwind CSS, Framer Motion, and Lenis, using distinct layout compositions, section rhythms, and motion languages so they can work as adaptable agency template foundations.",
+    },
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Lenis", "Design System", "Git", "GitHub", "Vercel"],
+    detail: {
+      highlights: [
+        {
+          id: "Membangun preloader, text reveal, scroll-triggered transitions, dan smooth scrolling Lenis pada kedua template.",
+          en: "Built preloaders, text reveals, scroll-triggered transitions, and Lenis smooth scrolling across both templates.",
+        },
+        {
+          id: "Memusatkan konten, navigasi, layanan, proyek, dan data visual dalam file data agar template mudah diganti untuk kebutuhan brand lain.",
+          en: "Centralized content, navigation, services, projects, and visual data in data files so each template can be adapted for other brands more easily.",
+        },
+        {
+          id: "Menerapkan dukungan reduced motion serta detail aksesibilitas pada HAVN seperti skip link, focus ring, disclosure ARIA, dan menu mobile yang dapat ditutup dengan Escape.",
+          en: "Implemented reduced-motion support plus accessibility details in HAVN such as a skip link, focus rings, ARIA disclosure, and an Escape-close mobile menu.",
+        },
+        {
+          id: "Merancang sistem visual berbasis CSS variables, termasuk permukaan tema dark/wine pada HAVN dan arahan editorial gelap pada Atelier Noir.",
+          en: "Designed CSS-variable-based visual systems, including dark/wine themed surfaces in HAVN and a dark editorial direction in Atelier Noir.",
+        },
+      ],
+      links: [
+        { label: { id: "Demo Langsung: HAVN", en: "Live Demo: HAVN" }, href: "https://furqan-havn.vercel.app", icon: "external" },
+        { label: "GitHub: HAVN", href: "https://github.com/Furqan-sykss/havn-next", icon: "github" },
+        { label: { id: "Demo Langsung: Atelier Noir", en: "Live Demo: Atelier Noir" }, href: "https://furqan-noir-agency.vercel.app", icon: "external" },
+        { label: "GitHub: Atelier Noir", href: "https://github.com/Furqan-sykss/atelier-noir-agency-review-04", icon: "github" },
+      ],
+    },
+  },
+  {
+    title: { id: "Lofi Coffee Digital Presence", en: "Lofi Coffee Digital Presence" },
+    period: { id: "Agustus 2026 - Oktober 2026", en: "August 2026 - October 2026" },
+    tag: { id: "Pendampingan UMKM", en: "UMKM Assistance" },
+    desc: {
+      id: "Membantu Lofi Coffee, sebuah UMKM/kedai kopi yang sudah ada, dalam penguatan kehadiran digital melalui aset online seperti Instagram, Linktree, Google Search, dan Google Maps. Proyek ini diposisikan sebagai pendampingan digital marketing, bukan brand milik pribadi.",
+      en: "Assisted Lofi Coffee, an existing coffee shop/UMKM, in strengthening its digital presence through online assets such as Instagram, Linktree, Google Search, and Google Maps. This project is positioned as digital marketing assistance, not as a personally owned brand.",
+    },
+    stack: ["Digital Marketing", "Instagram", "Google Maps", "Google Business Profile", "Linktree", "Local SEO", "Content Review"],
+    detail: {
+      highlights: [
+        {
+          id: "Membantu mengamati dan merapikan informasi digital Lofi Coffee agar lebih mudah ditemukan melalui kanal pencarian dan media sosial.",
+          en: "Helped review and organize Lofi Coffee's digital information so it could be easier to find through search and social channels.",
+        },
+        {
+          id: "Menggunakan Instagram, Linktree, Google Search, dan Google Maps sebagai bukti kanal digital yang relevan untuk UMKM lokal.",
+          en: "Used Instagram, Linktree, Google Search, and Google Maps as evidence of relevant digital channels for a local UMKM.",
+        },
+        {
+          id: "Menjaga batas klaim secara jelas: Lofi Coffee adalah bisnis yang dibantu, bukan perusahaan atau brand milik pribadi.",
+          en: "Kept the claim boundary clear: Lofi Coffee is an assisted business, not a personal company or owned brand.",
+        },
+      ],
+      links: [
+        { label: "Instagram", href: "https://www.instagram.com/loficoffe.co", icon: "external" },
+        { label: { id: "Linktree", en: "Linktree" }, href: "https://linktr.ee/lofi.co", icon: "external" },
+      ],
+    },
+  },
   {
     title: { id: "Situs Portofolio Pribadi", en: "Personal Portfolio Website" },
     period: { id: "Nov 2025 - Sekarang", en: "Nov 2025 - Present" },
@@ -455,6 +533,39 @@ const additionalProjects: Project[] = [
         },
       ],
       links: [{ label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/h08W9Bf5GYRqWp2c586C0c/Rental-Car-Design?node-id=0-1&t=KWynD5QTHq7jhNhg-1", icon: "figma" }],
+    },
+  },
+  {
+    title: {
+      id: "Sistem Informasi Sejarah dan Filsafat",
+      en: "History and Philosophy Information System",
+    },
+    period: { id: "Feb 2023 - Mei 2023", en: "Feb 2023 - May 2023" },
+    tag: { id: "Akademik", en: "Academic" },
+    desc: {
+      id: "Mengembangkan sistem informasi berbasis web menggunakan Laravel, MySQL, dan Tailwind CSS untuk menyajikan konten sejarah dan filsafat secara terstruktur dengan antarmuka yang responsif.",
+      en: "Developed a web-based information system using Laravel, MySQL, and Tailwind CSS to deliver structured historical and philosophical content through a clean, responsive interface.",
+    },
+    stack: ["Laravel", "Tailwind", "MySQL", "XAMPP", "CSS", "Git", "GitHub"],
+    detail: {
+      highlights: [
+        {
+          id: "Mengembangkan sistem informasi full-stack untuk mengelola dan menyajikan konten sejarah serta filsafat.",
+          en: "Developed a full-stack web information system for managing and presenting historical and philosophical content.",
+        },
+        {
+          id: "Menerapkan antarmuka responsif menggunakan Tailwind CSS yang dioptimalkan untuk desktop dan perangkat seluler.",
+          en: "Implemented a responsive user interface with Tailwind CSS optimized for both desktop and mobile devices.",
+        },
+        {
+          id: "Mengembangkan modul manajemen konten menggunakan arsitektur MVC Laravel dan basis data MySQL.",
+          en: "Developed a structured content management module using Laravel's MVC architecture and MySQL.",
+        },
+      ],
+      links: [
+        { label: "GitHub", href: "https://github.com/Furqan-sykss/laravel-amerta", icon: "github" },
+        { label: { id: "Desain Figma", en: "Figma Design" }, href: "https://www.figma.com/design/fxOiuvB9lH1azJ80ukRjkz/home-desktop-web-amerta-season-2-?node-id=0-1&t=bDoqw3kSCwiuAts9-1", icon: "figma" },
+      ],
     },
   },
   {
@@ -619,9 +730,63 @@ const experience: Experience[] = [
       },
     ],
   },
+  {
+    role: {
+      id: "Pelatihan Digital Marketing",
+      en: "Digital Marketing Training",
+    },
+    tag: {
+      id: "Pelatihan Profesional Terstruktur",
+      en: "Structured Professional Training",
+    },
+    company: {
+      id: "BLKI Aceh Utara - Kemnaker / Skillhub",
+      en: "BLKI Aceh Utara - Kemnaker / Skillhub",
+    },
+    period: {
+      id: "Agustus 2026 - Oktober 2026",
+      en: "August 2026 - October 2026",
+    },
+    desc: {
+      id: "Menyelesaikan program pelatihan Digital Marketing terstruktur di BLKI Aceh Utara (Kemnaker/Skillhub). Program ini mencakup K3 perangkat komputer, identifikasi 7P & model bisnis, digital branding, content planning berbasis pilar & AIDA, social media management, SEO via Google Search Console, serta integrasi omnichannel. Pelatihan ini menghasilkan dua proyek berbasis bukti: pengembangan Sitestaq.id sebagai brand digital mandiri dan pendampingan digital presence untuk UMKM Lofi Coffee.",
+      en: "Completed a structured Digital Marketing training program at BLKI Aceh Utara (Ministry of Manpower / Skillhub). The program covered computer K3 procedures, 7P & business model analysis, digital branding, content planning based on pillars & AIDA, social media management, SEO via Google Search Console, and omnichannel integration. The training delivered two evidence-based projects: developing Sitestaq.id as an independent digital brand and assisting Lofi Coffee with its digital presence.",
+    },
+    highlights: [
+      {
+        id: "Mengembangkan Sitestaq.id sebagai proyek brand utama dengan ekosistem digital terintegrasi (Website, Instagram @sitestaq.id, Linktree, Blogspot, Google Business Profile, dan optimasi SEO URL via Google Search Console).",
+        en: "Developed Sitestaq.id as the primary brand project with an integrated digital ecosystem (Website, Instagram @sitestaq.id, Linktree, Blogspot, Google Business Profile, and URL SEO optimization via Google Search Console).",
+      },
+      {
+        id: "Mendampingi UMKM Lofi Coffee (loficoffe.co) dalam mengoptimalkan visibilitas lokal dan kanal digital melalui Instagram, Linktree, Google Search, serta penandaan lokasi Google Maps.",
+        en: "Assisted Lofi Coffee (loficoffe.co) as an existing local business in optimizing digital presence and local visibility across Instagram, Linktree, Google Search, and Google Maps location tagging.",
+      },
+      {
+        id: "Menerapkan kerangka analisis 7P (Marketing Mix), penetapan buyer persona (B2C & B2B), strategi konversi AIDA, dan content pillar (Brand & Story, Portfolio, Pain Point, Education) secara praktikal.",
+        en: "Applied the 7P Marketing Mix analysis, buyer persona identification (B2C & B2B), AIDA conversion framework, and content pillars (Brand & Story, Portfolio, Pain Point, Education) in practice.",
+      },
+      {
+        id: "Membuat pemisahan konteks yang jelas antara membangun brand digital mandiri (Sitestaq.id) dan mengelola pendampingan digital presence untuk bisnis pihak ketiga (Lofi Coffee).",
+        en: "Maintained a clear contextual distinction between building a self-directed digital brand (Sitestaq.id) and managing digital presence assistance for a third-party business (Lofi Coffee).",
+      },
+    ],
+  },
 ];
 
 const certifications = [
+  {
+    name: { id: "Pelatihan Digital Marketing", en: "Digital Marketing Training" },
+    issuer: { id: "BLKI Aceh Utara - Kemnaker / Skillhub", en: "BLKI Aceh Utara - Kemnaker / Skillhub" },
+    year: "2026",
+    category: { id: "Digital Marketing", en: "Digital Marketing" },
+    badge: { id: "Sertifikat BLKI", en: "BLKI Certificate" },
+  },
+  {
+    name: { id: "Sertifikasi Kompetensi Digital Marketing", en: "Digital Marketing Competency Certification" },
+    issuer: { id: "BNSP", en: "BNSP" },
+    year: "2026",
+    category: { id: "Digital Marketing", en: "Digital Marketing" },
+    badge: { id: "Dalam Proses", en: "In Progress" },
+  },
   {
     name: { id: "Pengembang Web di Badan Nasional Sertifikasi Profesi", en: "National Professional Certification in Web Development" },
     issuer: { id: "BNSP", en: "BNSP" },
@@ -654,9 +819,9 @@ const certifications = [
     link: "https://drive.google.com/file/d/1-tTniLS-94LRkplidre2eyjIUBGtpmb4/view?usp=sharing",
   },
   {
-    name: { 
-      id: "SQL Tingkat Menengah", 
-      en: "Intermediate SQL" 
+    name: {
+      id: "SQL Tingkat Menengah",
+      en: "Intermediate SQL",
     },
     issuer: { id: "DataCamp", en: "DataCamp" },
     year: "2026",
@@ -664,9 +829,9 @@ const certifications = [
     link: "https://drive.google.com/file/d/1fO-om4-pLd0fnGkl3xK4w2FF-bwuDC1B/view?usp=drive_link",
   },
   {
-    name: { 
-      id: "Fungsi Lanjutan Excel", 
-      en: "Advanced Excel Functions" 
+    name: {
+      id: "Fungsi Lanjutan Excel",
+      en: "Advanced Excel Functions",
     },
     issuer: { id: "DataCamp", en: "DataCamp" },
     year: "2026",
@@ -674,9 +839,9 @@ const certifications = [
     link: "https://drive.google.com/file/d/1_0JOajukLF8tsQky1RwoQ-Rvm01Mlamu/view?usp=drive_link",
   },
   {
-    name: { 
-      id: "Mulai Menggunakan Analisis Data", 
-      en: "Get Started With Data Analytics" 
+    name: {
+      id: "Mulai Menggunakan Analisis Data",
+      en: "Get Started With Data Analytics",
     },
     issuer: { id: "Microsoft Learn", en: "Microsoft Learn" },
     year: "2026",
@@ -684,9 +849,9 @@ const certifications = [
     link: "https://drive.google.com/file/d/1q8UXnDgHY6ETt9AlvaS9a1ELShCrN28D/view?usp=drive_link",
   },
   {
-    name: { 
-      id: "Mulai Menggunakan Konsep Data", 
-      en: "Get Started With Data Concepts" 
+    name: {
+      id: "Mulai Menggunakan Konsep Data",
+      en: "Get Started With Data Concepts",
     },
     issuer: { id: "Microsoft Learn", en: "Microsoft Learn" },
     year: "2026",
@@ -694,9 +859,9 @@ const certifications = [
     link: "https://drive.google.com/file/d/1obN8GwkYO5au2inltSv2dRst1nG9HHLV/view?usp=drive_link",
   },
   {
-    name: { 
-      id: "Mulai Menggunakan Analisis Data Microsoft", 
-      en: "Get Started With Microsoft Data Analytics" 
+    name: {
+      id: "Mulai Menggunakan Analisis Data Microsoft",
+      en: "Get Started With Microsoft Data Analytics",
     },
     issuer: { id: "Microsoft Learn", en: "Microsoft Learn" },
     year: "2026",
@@ -704,9 +869,9 @@ const certifications = [
     link: "https://drive.google.com/file/d/1DcwFKG67d-YyKMnPVN9NKealQ9x6F9I4/view?usp=drive_link",
   },
   {
-    name: { 
-      id: "Pengantar Git", 
-      en: "Introduction to Git" 
+    name: {
+      id: "Pengantar Git",
+      en: "Introduction to Git",
     },
     issuer: { id: "DataCamp", en: "DataCamp" },
     year: "2026",
@@ -1428,6 +1593,483 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   <StackChip key={s}>{s}</StackChip>
                 ))}
               </div>
+            </div>
+          </div>
+        </>
+      )}
+    </ModalBackdrop>
+  );
+}
+
+// ────── DigitalMarketingModal — BLKI Aceh Utara structured training ──────────────────────────────────────────────
+
+function DigitalMarketingModal({ onClose }: { onClose: () => void }) {
+  const { lang } = useLanguage();
+  const t = (key: string, ...params: any[]) => translate(lang, key, ...params);
+  const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
+  const training = experience[2];
+  const [carouselIdx, setCarouselIdx] = useState(0);
+  const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fade, setFade] = useState(true);
+  const [carouselReady, setCarouselReady] = useState(false);
+  const [preloadLimit, setPreloadLimit] = useState(0);
+  const [loadedImageIndexes, setLoadedImageIndexes] = useState<Set<number>>(() => new Set());
+  const touchStartX = useRef<number>(0);
+  const imgCount = images.length;
+  const initialPreloadCount = Math.min(1, imgCount);
+  const backgroundPreloadBatchSize = 2;
+
+  useEffect(() => {
+    fetch("/api/dm-images")
+      .then((r) => r.json())
+      .then((data: { images: string[] }) => {
+        setImages([...data.images].sort(() => Math.random() - 0.5));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (imgCount === 0) return;
+
+    setCarouselReady(false);
+    setLoadedImageIndexes(new Set());
+    setPreloadLimit(initialPreloadCount);
+    setCarouselIdx(0);
+  }, [images, imgCount, initialPreloadCount]);
+
+  useEffect(() => {
+    if (imgCount === 0 || carouselReady || initialPreloadCount === 0) return;
+
+    const initialBatchLoaded = Array.from({ length: initialPreloadCount }).every((_, index) => loadedImageIndexes.has(index));
+    if (initialBatchLoaded) setCarouselReady(true);
+  }, [carouselReady, imgCount, initialPreloadCount, loadedImageIndexes]);
+
+  useEffect(() => {
+    if (!carouselReady || preloadLimit >= imgCount) return;
+
+    const currentBatchLoaded = Array.from({ length: preloadLimit }).every((_, index) => loadedImageIndexes.has(index));
+    if (!currentBatchLoaded) return;
+
+    const timer = window.setTimeout(() => {
+      setPreloadLimit((current) => Math.min(current + backgroundPreloadBatchSize, imgCount));
+    }, 350);
+
+    return () => window.clearTimeout(timer);
+  }, [carouselReady, imgCount, loadedImageIndexes, preloadLimit]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") goTo((prev: number) => Math.min(prev + 1, imgCount - 1));
+      if (e.key === "ArrowLeft") goTo((prev: number) => Math.max(prev - 1, 0));
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [imgCount]);
+
+  const goTo = (updater: number | ((prev: number) => number)) => {
+    setFade(false);
+    setTimeout(() => {
+      setCarouselIdx(typeof updater === "function" ? updater : () => updater);
+      setFade(true);
+    }, 140);
+  };
+
+  const prev = () => {
+    if (carouselIdx > 0) goTo(carouselIdx - 1);
+  };
+
+  const next = () => {
+    if (carouselIdx < imgCount - 1) goTo(carouselIdx + 1);
+  };
+
+  const visibleCarouselImages = [carouselIdx - 1, carouselIdx, carouselIdx + 1].filter((index) => index >= 0 && index < imgCount);
+  const preloadedCarouselImages = Array.from({ length: preloadLimit }, (_, index) => index);
+  const markCarouselImageLoaded = (index: number) => {
+    setLoadedImageIndexes((current) => {
+      if (current.has(index)) return current;
+      const nextLoaded = new Set(current);
+      nextLoaded.add(index);
+      return nextLoaded;
+    });
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) next();
+      else prev();
+    }
+  };
+
+  const renderDots = () => {
+    if (imgCount <= 7) {
+      return Array.from({ length: imgCount }).map((_, i) => (
+        <button
+          key={i}
+          onClick={() => goTo(i)}
+          style={{
+            width: i === carouselIdx ? 20 : 6,
+            height: 6,
+            borderRadius: 999,
+            border: "none",
+            padding: 0,
+            cursor: "pointer",
+            backgroundColor: i === carouselIdx ? "var(--accent)" : "var(--border-mid)",
+            transition: "all 0.25s ease",
+            flexShrink: 0,
+          }}
+        />
+      ));
+    }
+
+    const visible = new Set([0, imgCount - 1, carouselIdx, carouselIdx - 1, carouselIdx + 1].filter((i) => i >= 0 && i < imgCount));
+    return Array.from({ length: imgCount })
+      .map((_, i) => {
+        if (!visible.has(i)) {
+          const prevVisible = [...visible].filter((v) => v < i).length > 0 && [...visible].every((v) => v !== i - 1);
+          if (prevVisible)
+            return (
+              <span key={i} style={{ fontSize: "0.5rem", color: "var(--text-muted)", lineHeight: 1 }}>
+                •
+              </span>
+            );
+          return null;
+        }
+
+        return (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            style={{
+              width: i === carouselIdx ? 20 : 6,
+              height: 6,
+              borderRadius: 999,
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              backgroundColor: i === carouselIdx ? "var(--accent)" : "var(--border-mid)",
+              transition: "all 0.25s ease",
+              flexShrink: 0,
+            }}
+          />
+        );
+      })
+      .filter(Boolean);
+  };
+
+  const learningAreas = [
+    { id: "Digital branding", en: "Digital branding" },
+    { id: "Content planning", en: "Content planning" },
+    { id: "Social media management", en: "Social media management" },
+    { id: "Online presence", en: "Online presence" },
+    { id: "Website-related activities", en: "Website-related activities" },
+    { id: "Local business visibility", en: "Local business visibility" },
+  ];
+
+  const practicalProjects = [
+    {
+      title: "Sitestaq.id",
+      label: { id: "Brand digital mandiri", en: "Self-directed digital brand" },
+      body: {
+        id: "Proyek praktikal utama selama pelatihan. Sitestaq.id diposisikan sebagai layanan pembuatan website dengan ekosistem digital yang mencakup website, Instagram, Linktree, Blogspot, dan Google presence.",
+        en: "Main practical project during the training. Sitestaq.id was positioned as a website creation service with a digital ecosystem covering a website, Instagram, Linktree, Blogspot, and Google presence.",
+      },
+      stack: ["Brand Positioning", "Website", "Instagram", "Linktree", "Google Presence"],
+      links: [
+        { label: "Website", href: "http://sitestaq.id" },
+        { label: "Instagram", href: "https://www.instagram.com/sitestaq.id" },
+        { label: "Linktree", href: "https://tinyurl.com/sitestaq" },
+      ],
+    },
+    {
+      title: "Lofi Coffee",
+      label: { id: "Pendampingan UMKM", en: "UMKM assistance" },
+      body: {
+        id: "Kegiatan pendampingan digital presence untuk UMKM/kedai kopi yang sudah ada. Fokusnya adalah membaca dan merapikan kanal digital seperti Instagram, Linktree, Google Search, dan Google Maps tanpa mengklaim kepemilikan bisnis.",
+        en: "Digital presence assistance for an existing coffee shop/UMKM. The focus was reviewing and organizing digital channels such as Instagram, Linktree, Google Search, and Google Maps without claiming ownership of the business.",
+      },
+      stack: ["Instagram", "Google Maps", "Google Business Profile", "Linktree", "Local SEO"],
+      links: [
+        { label: "Instagram", href: "https://www.instagram.com/loficoffe.co" },
+        { label: "Linktree", href: "https://linktr.ee/lofi.co" },
+      ],
+    },
+  ];
+
+  return (
+    <ModalBackdrop onClose={onClose} maxWidth={760}>
+      {({ requestClose }) => (
+        <>
+          <div
+            className="modal-header"
+            style={{
+              flexShrink: 0,
+              padding: "0.9rem 1.1rem 0.8rem",
+              borderBottom: "1px solid var(--border)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              gap: 10,
+              background: "var(--modal-header-bg)",
+            }}
+          >
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                <TagBadge>{L(training.tag)}</TagBadge>
+                <span style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{L(training.period)}</span>
+              </div>
+              <h2 style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.08rem", fontWeight: 400, color: "var(--text-primary)", lineHeight: 1.25 }}>{L(training.role)}</h2>
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 2 }}>{L(training.company)}</p>
+            </div>
+            <CloseBtn onClose={requestClose} />
+          </div>
+
+          <div className="modal-scroll-area" style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+            <div style={{ padding: "1rem 1.1rem 1.4rem", display: "flex", flexDirection: "column", gap: "1.15rem" }}>
+              <section>
+                <p style={{ fontSize: "0.84rem", lineHeight: 1.82, color: "var(--text-secondary)" }}>{L(training.desc)}</p>
+              </section>
+
+              <section
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                  gap: 8,
+                }}
+              >
+                {[
+                  { value: "BLKI", label: { id: "Penyelenggara", en: "Organizer" } },
+                  { value: "Kemnaker", label: { id: "Konteks Program", en: "Program Context" } },
+                  { value: "Skillhub", label: { id: "Platform", en: "Platform" } },
+                  { value: "2", label: { id: "Proyek Praktikal", en: "Practical Projects" } },
+                ].map((item) => (
+                  <div key={item.value} style={{ padding: "0.9rem", borderRadius: 12, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>
+                    <p style={{ fontFamily: "var(--font-dm-serif)", fontSize: "1.25rem", lineHeight: 1, color: "var(--accent)" }}>{item.value}</p>
+                    <p style={{ fontSize: "0.62rem", color: "var(--text-muted)", marginTop: 6, lineHeight: 1.4 }}>{L(item.label)}</p>
+                  </div>
+                ))}
+              </section>
+
+              <section>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{lang === "id" ? "Area Pelatihan" : "Training Areas"}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {learningAreas.map((area) => (
+                    <StackChip key={area.en}>{L(area)}</StackChip>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{lang === "id" ? "Proyek Praktikal" : "Practical Projects"}</p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10 }}>
+                  {practicalProjects.map((project) => (
+                    <article key={project.title} style={{ padding: "1rem", borderRadius: 14, backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
+                          <h3 style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-primary)" }}>{project.title}</h3>
+                          <span style={{ fontSize: "0.58rem", color: "var(--accent)", backgroundColor: "var(--accent-glow)", border: "1px solid var(--line-color-mid)", borderRadius: 999, padding: "2px 8px", whiteSpace: "nowrap" }}>
+                            {L(project.label)}
+                          </span>
+                        </div>
+                        <p style={{ fontSize: "0.78rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{L(project.body)}</p>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                        {project.stack.map((item) => (
+                          <span key={item} style={{ fontSize: "0.62rem", padding: "2px 7px", borderRadius: 6, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)", color: "var(--text-muted)" }}>
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginTop: "auto" }}>
+                        {project.links.map((link) => (
+                          <a
+                            key={`${project.title}-${link.label}`}
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              padding: "7px 11px",
+                              borderRadius: 8,
+                              fontSize: "0.69rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                              color: "var(--text-secondary)",
+                              backgroundColor: "var(--bg-subtle)",
+                              border: "1px solid var(--border)",
+                            }}
+                          >
+                            <LinkIcon icon="external" />
+                            {link.label}
+                          </a>
+                        ))}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6, marginBottom: 10 }}>{t("highlights")}</p>
+                <div style={{ display: "grid", gap: 7 }}>
+                  {training.highlights.map((h, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <div style={{ flexShrink: 0, marginTop: 6, width: 4, height: 4, borderRadius: "50%", backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                      <span style={{ fontSize: "0.81rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{L(h)}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 12 }}>
+                  <p style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.6 }}>
+                    {t("documentation")}
+                    {imgCount > 0 ? ` | ${imgCount} ${lang === "id" ? "Foto" : "Photos"}` : ""}
+                  </p>
+                  {imgCount > 0 && !loading && (
+                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
+                      {carouselIdx + 1} / {imgCount}
+                    </span>
+                  )}
+                </div>
+
+                {loading && (
+                  <div style={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem", flexDirection: "column", gap: 10 }}>
+                    <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                    {t("loadingPhotos")}
+                  </div>
+                )}
+
+                {!loading && imgCount === 0 && <div style={{ height: 160, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>{t("noPhotosFound")}</div>}
+
+                {!loading && imgCount > 0 && (
+                  <div aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", opacity: 0, pointerEvents: "none" }}>
+                    {preloadedCarouselImages.map((imageIndex) => (
+                      <span key={`dm-preload-${images[imageIndex]}`} style={{ position: "relative", display: "block", width: 1, height: 1 }}>
+                        <NextImage
+                          src={images[imageIndex]}
+                          alt=""
+                          fill
+                          sizes="(max-width: 768px) calc(100vw - 2.2rem), 660px"
+                          priority={imageIndex < initialPreloadCount}
+                          onLoad={() => markCarouselImageLoaded(imageIndex)}
+                          onError={() => markCarouselImageLoaded(imageIndex)}
+                          style={{ objectFit: "contain" }}
+                        />
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {!loading && imgCount > 0 && !carouselReady && (
+                  <div style={{ height: "clamp(200px, 44vw, 380px)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.82rem", flexDirection: "column", gap: 10 }}>
+                    <div style={{ width: 24, height: 24, border: "2px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                    {lang === "id" ? "Menyiapkan galeri..." : "Preparing gallery..."}
+                  </div>
+                )}
+
+                {!loading && imgCount > 0 && carouselReady && (
+                  <div style={{ position: "relative" }}>
+                    <div
+                      onTouchStart={onTouchStart}
+                      onTouchEnd={onTouchEnd}
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "clamp(200px, 44vw, 380px)",
+                        borderRadius: "0.85rem",
+                        overflow: "hidden",
+                        backgroundColor: "var(--bg-subtle)",
+                        border: "1px solid var(--border)",
+                        userSelect: "none",
+                      }}
+                    >
+                      {visibleCarouselImages.map((imageIndex) => (
+                        <NextImage
+                          key={images[imageIndex]}
+                          src={images[imageIndex]}
+                          alt={`Digital marketing documentation ${imageIndex + 1}`}
+                          fill
+                          sizes="(max-width: 768px) calc(100vw - 2.2rem), 660px"
+                          priority={imageIndex === carouselIdx}
+                          onLoad={() => markCarouselImageLoaded(imageIndex)}
+                          onError={() => markCarouselImageLoaded(imageIndex)}
+                          style={{
+                            objectFit: "contain",
+                            opacity: imageIndex === carouselIdx && fade ? 1 : 0,
+                            transition: "opacity 0.14s ease",
+                            pointerEvents: imageIndex === carouselIdx ? "auto" : "none",
+                          }}
+                        />
+                      ))}
+                      {carouselIdx > 0 && (
+                        <button
+                          onClick={prev}
+                          style={{
+                            position: "absolute",
+                            left: 8,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            width: 48,
+                            height: 48,
+                            borderRadius: "50%",
+                            backgroundColor: "rgba(0,0,0,0.45)",
+                            border: "1px solid rgba(255,255,255,0.15)",
+                            color: "#fff",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backdropFilter: "blur(4px)",
+                          }}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                            <path d="M15 18l-6-6 6-6" />
+                          </svg>
+                        </button>
+                      )}
+                      {carouselIdx < imgCount - 1 && (
+                        <button
+                          onClick={next}
+                          style={{
+                            position: "absolute",
+                            right: 8,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            width: 48,
+                            height: 48,
+                            borderRadius: "50%",
+                            backgroundColor: "rgba(0,0,0,0.45)",
+                            border: "1px solid rgba(255,255,255,0.15)",
+                            color: "#fff",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backdropFilter: "blur(4px)",
+                          }}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                            <path d="M9 18l6-6-6-6" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 12, flexWrap: "wrap", minHeight: 16 }}>{renderDots()}</div>
+                    <p style={{ textAlign: "center", fontSize: "0.65rem", color: "var(--text-faint)", marginTop: 8 }}>← → {t("keyboardSwipeHint")}</p>
+                  </div>
+                )}
+              </section>
             </div>
           </div>
         </>
@@ -2601,6 +3243,7 @@ export default function HomePage() {
   const [activeAdditionalProject, setActiveAdditionalProject] = useState(0);
   const [showInternModal, setShowInternModal] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
+  const [showDigitalMarketingModal, setShowDigitalMarketingModal] = useState(false);
   const [showEducationModal, setShowEducationModal] = useState(false);
 
   const ZOOM_W = 258;
@@ -2852,6 +3495,7 @@ export default function HomePage() {
       {/* ──── INTERN MODAL ────────────────────────────────────────────────────────────────────────────────────────────────────── */}
       {showInternModal && <InternModal onClose={() => setShowInternModal(false)} />}
       {showEventModal && <EventModal onClose={() => setShowEventModal(false)} />}
+      {showDigitalMarketingModal && <DigitalMarketingModal onClose={() => setShowDigitalMarketingModal(false)} />}
       {showEducationModal && <EducationModal onClose={() => setShowEducationModal(false)} />}
 
       {/* ──── PROJECT MODAL ──────────────────────────────────────────────────────────────────────────────────────────────────── */}
@@ -3188,7 +3832,7 @@ export default function HomePage() {
                 animationDelay: "0ms",
               }}
             >
-              <Counter target={9} label={t("projectsBuilt")} />
+              <Counter target={projects.length + additionalProjects.length} label={t("projectsBuilt")} />
               <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("acrossIndustries")}</p>
             </div>
 
@@ -3245,7 +3889,7 @@ export default function HomePage() {
                 }}
               />
               <div style={{ position: "relative" }}>
-                <Counter target={8} label={t("certifications")} />
+                <Counter target={certifications.length} label={t("certifications")} />
                 <p style={{ fontSize: "0.58rem", color: "var(--text-faint)", marginTop: 5, letterSpacing: "0.05em" }}>{t("verifiedSkills")}</p>
               </div>
             </div>
@@ -3326,106 +3970,111 @@ export default function HomePage() {
             <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 0 }}>
               {/* Vertical connector line */}
               <div style={{ position: "absolute", top: 20, bottom: 20, left: 10, width: 1, backgroundColor: "var(--border)" }} />
-              {experience.map((e, i) => (
-                <FadeUp key={i} delay={i * 100}>
-                  <div style={{ display: "flex", gap: 22, paddingBottom: i < experience.length - 1 ? "0.85rem" : 0 }}>
-                    {/* Ring node */}
-                    <div style={{ flexShrink: 0, paddingTop: 4, zIndex: 1 }}>
-                      <div
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: "50%",
-                          backgroundColor: "var(--bg-card)",
-                          border: `2px solid var(--accent)`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 0 0 4px var(--bg)",
-                        }}
-                      >
-                        <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--accent)" }} />
-                      </div>
-                    </div>
-                    {/* Card — KPU (i===0) and Event Crew (i===1) are clickable */}
-                    <div
-                      className="exp-card"
-                      onClick={i === 0 ? () => setShowEventModal(true) : i === 1 ? () => setShowInternModal(true) : undefined}
-                      style={{
-                        flex: 1,
-                        padding: "1.1rem 1.25rem",
-                        borderRadius: "1rem",
-                        backgroundColor: "var(--bg-card)",
-                        border: "1px solid var(--border)",
-                        marginBottom: i < experience.length - 1 ? "0.5rem" : 0,
-                        cursor: i === 0 || i === 1 ? "pointer" : "default",
-                        transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (i !== 0 && i !== 1) return;
-                        const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "var(--border-strong)";
-                        el.style.boxShadow = "var(--shadow-md)";
-                        el.style.transform = "translateY(-2px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        if (i !== 0 && i !== 1) return;
-                        const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "var(--border)";
-                        el.style.boxShadow = "none";
-                        el.style.transform = "translateY(0)";
-                      }}
-                    >
-                      {/* Top row: role title + View Details */}
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, minWidth: 0 }}>
-                          <div className="exp-card-kicker">
-                            <TagBadge>{L(e.tag)}</TagBadge>
-                            <span className="exp-card-period-inline">{L(e.period)}</span>
-                          </div>
-                          <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{L(e.role)}</h3>
+              {[2, 0, 1].map((sourceIndex, i) => {
+                const e = experience[sourceIndex];
+                const openDetails = sourceIndex === 0 ? () => setShowEventModal(true) : sourceIndex === 1 ? () => setShowInternModal(true) : sourceIndex === 2 ? () => setShowDigitalMarketingModal(true) : undefined;
+
+                return (
+                  <FadeUp key={sourceIndex} delay={i * 100}>
+                    <div style={{ display: "flex", gap: 22, paddingBottom: i < experience.length - 1 ? "0.85rem" : 0 }}>
+                      {/* Ring node */}
+                      <div style={{ flexShrink: 0, paddingTop: 4, zIndex: 1 }}>
+                        <div
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            backgroundColor: "var(--bg-card)",
+                            border: `2px solid var(--accent)`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: "0 0 0 4px var(--bg)",
+                          }}
+                        >
+                          <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--accent)" }} />
                         </div>
-                        {(i === 0 || i === 1) && (
-                          <span
-                            style={{
-                              flexShrink: 0,
-                              fontSize: "0.62rem",
-                              fontWeight: 600,
-                              letterSpacing: "0.08em",
-                              color: "var(--accent)",
-                              opacity: 0.75,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 4,
-                              paddingTop: 2,
-                            }}
-                          >
-                            {t("viewDetails")}
-                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                              <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </span>
-                        )}
                       </div>
-                      <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{L(e.company)}</p>
-                      <p
+                      {/* Card — detailed experience entries are clickable */}
+                      <div
+                        className="exp-card"
+                        onClick={openDetails}
                         style={{
-                          fontSize: "0.82rem",
-                          lineHeight: 1.74,
-                          color: "var(--text-secondary)",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 3,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
+                          flex: 1,
+                          padding: "1.1rem 1.25rem",
+                          borderRadius: "1rem",
+                          backgroundColor: "var(--bg-card)",
+                          border: "1px solid var(--border)",
+                          marginBottom: i < experience.length - 1 ? "0.5rem" : 0,
+                          cursor: openDetails ? "pointer" : "default",
+                          transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!openDetails) return;
+                          const el = e.currentTarget as HTMLElement;
+                          el.style.borderColor = "var(--border-strong)";
+                          el.style.boxShadow = "var(--shadow-md)";
+                          el.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!openDetails) return;
+                          const el = e.currentTarget as HTMLElement;
+                          el.style.borderColor = "var(--border)";
+                          el.style.boxShadow = "none";
+                          el.style.transform = "translateY(0)";
                         }}
                       >
-                        {L(e.desc)}
-                      </p>
+                        {/* Top row: role title + View Details */}
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, minWidth: 0 }}>
+                            <div className="exp-card-kicker">
+                              <TagBadge>{L(e.tag)}</TagBadge>
+                              <span className="exp-card-period-inline">{L(e.period)}</span>
+                            </div>
+                            <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{L(e.role)}</h3>
+                          </div>
+                          {openDetails && (
+                            <span
+                              style={{
+                                flexShrink: 0,
+                                fontSize: "0.62rem",
+                                fontWeight: 600,
+                                letterSpacing: "0.08em",
+                                color: "var(--accent)",
+                                opacity: 0.75,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 4,
+                                paddingTop: 2,
+                              }}
+                            >
+                              {t("viewDetails")}
+                              <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                                <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </span>
+                          )}
+                        </div>
+                        <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{L(e.company)}</p>
+                        <p
+                          style={{
+                            fontSize: "0.82rem",
+                            lineHeight: 1.74,
+                            color: "var(--text-secondary)",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {L(e.desc)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </FadeUp>
-              ))}
+                  </FadeUp>
+                );
+              })}
             </div>
           </section>
         </FadeUp>
@@ -4048,7 +4697,10 @@ export default function HomePage() {
         â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <FadeUp>
           <section id="contact">
-            <div className="contact-panel" style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "clamp(2.5rem,8vw,5rem) clamp(1.25rem,5vw,2rem)", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+            <div
+              className="contact-panel"
+              style={{ position: "relative", overflow: "hidden", borderRadius: 24, padding: "clamp(2.5rem,8vw,5rem) clamp(1.25rem,5vw,2rem)", textAlign: "center", backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}
+            >
               <div style={{ position: "absolute", top: -80, right: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", opacity: 0.7, pointerEvents: "none" }} />
               <div style={{ position: "absolute", bottom: -60, left: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)", opacity: 0.4, pointerEvents: "none" }} />
               {/* Corner marks */}

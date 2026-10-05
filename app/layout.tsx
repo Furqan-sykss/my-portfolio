@@ -22,7 +22,7 @@ const dmSerif = DM_Serif_Display({
 
 export const metadata: Metadata = {
   title: "Furqan - Portfolio",
-  description: "Furqan - Web Developer",
+  description: "Furqan - Web Developer with digital presence and digital branding project experience",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

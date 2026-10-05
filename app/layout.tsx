@@ -27,8 +27,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`dark ${dmSans.variable} ${dmSerif.variable}`} suppressHydrationWarning>
-      <body style={{ backgroundColor: "var(--bg)", color: "var(--text-primary)", fontFamily: "var(--font-dm-sans), ui-sans-serif, system-ui" }} className="antialiased relative overflow-x-hidden min-h-screen">
+    <html lang="id" className={`dark ${dmSans.variable} ${dmSerif.variable}`} data-palette="default" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var root=document.documentElement;var mode=localStorage.getItem("theme");if(mode==="light")root.classList.remove("dark");else if(mode==="dark")root.classList.add("dark");var palette=localStorage.getItem("palette");if(palette==="default"||palette==="ocean"||palette==="rose")root.dataset.palette=palette;}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body style={{ backgroundColor: "var(--bg)", color: "var(--text-primary)", fontFamily: "var(--font-body)" }} className="antialiased relative overflow-x-hidden min-h-screen">
         <LanguageProvider>
           <Navbar />
           <main className="pt-24 pb-16 px-4">{children}</main>

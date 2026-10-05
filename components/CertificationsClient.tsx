@@ -86,7 +86,7 @@ export default function CertificationsClient({ certifications }: { certification
                   justifyContent: "center",
                 }}
               >
-                <span style={{ fontSize: "0.54rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent)", opacity: 0.65 }}>{String(i + 1).padStart(2, "0")}</span>
+                <span style={{ fontSize: "0.54rem", fontWeight: 700, fontFamily: "var(--font-body)", color: "var(--accent)", opacity: 0.65 }}>{String(i + 1).padStart(2, "0")}</span>
               </div>
 
               <div className="cert-content" style={{ minWidth: 0, flex: 1 }}>

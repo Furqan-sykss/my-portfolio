@@ -70,7 +70,7 @@ type Project = {
 const projects: Project[] = [
   {
     title: { id: "Sitestaq.id", en: "Sitestaq.id" },
-    period: { id: "Agustus 2026 - Oktober 2026", en: "August 2026 - October 2026" },
+    period: { id: "Agu 2026 - Okt 2026", en: "Aug 2026 - Oct 2026" },
     tag: { id: "Brand Digital Mandiri", en: "Self-Directed Digital Brand" },
     desc: {
       id: "Membuat dan mengembangkan Sitestaq.id sebagai proyek brand digital mandiri yang menggabungkan website, positioning layanan, konten Instagram, Linktree, dan kehadiran Google untuk menunjukkan bagaimana sebuah jasa website dapat dibangun sebagai identitas digital yang utuh.",
@@ -744,8 +744,8 @@ const experience: Experience[] = [
       en: "BLKI Aceh Utara - Kemnaker / Skillhub",
     },
     period: {
-      id: "Agustus 2026 - Oktober 2026",
-      en: "August 2026 - October 2026",
+      id: "Agu 2026 - Okt 2026",
+      en: "Aug 2026 - Oct 2026",
     },
     desc: {
       id: "Menyelesaikan program pelatihan Digital Marketing terstruktur di BLKI Aceh Utara (Kemnaker/Skillhub). Program ini mencakup K3 perangkat komputer, identifikasi 7P & model bisnis, digital branding, content planning berbasis pilar & AIDA, social media management, SEO via Google Search Console, serta integrasi omnichannel. Pelatihan ini menghasilkan dua proyek berbasis bukti: pengembangan Sitestaq.id sebagai brand digital mandiri dan pendampingan digital presence untuk UMKM Lofi Coffee.",
@@ -922,9 +922,10 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-function TagBadge({ children }: { children: React.ReactNode }) {
+function TagBadge({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span
+      className={className}
       style={{
         display: "inline-block",
         padding: "2px 9px",
@@ -3793,8 +3794,8 @@ export default function HomePage() {
                   }}
                 >
                   <span style={{ position: "relative", display: "inline-flex", width: 6, height: 6 }}>
-                    <span style={{ position: "absolute", inset: 0, borderRadius: "50%", backgroundColor: "#10b981", opacity: 0.5, animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }} />
-                    <span style={{ position: "relative", width: 6, height: 6, borderRadius: "50%", backgroundColor: "#10b981" }} />
+                    <span style={{ position: "absolute", inset: 0, borderRadius: "50%", backgroundColor: "var(--status-color)", opacity: 0.5, animation: "ping 1.5s cubic-bezier(0,0,0.2,1) infinite" }} />
+                    <span style={{ position: "relative", width: 6, height: 6, borderRadius: "50%", backgroundColor: "var(--status-color)" }} />
                   </span>
                   <span style={{ fontSize: "0.6rem", fontWeight: 600, color: "var(--text-secondary)" }}>Open to work</span>
                 </div>
@@ -3949,7 +3950,7 @@ export default function HomePage() {
                   </FadeUp>
                 ))}
               </div>
-              <div style={{ display: "grid", gap: 10 }} className="sm:grid-cols-[4fr_8fr] grid-cols-1">
+              <div style={{ display: "grid", gap: 10 }} className="skills-bottom-grid sm:grid-cols-[4fr_8fr] grid-cols-1">
                 {skills.slice(2).map((g, i) => (
                   <FadeUp key={`skill-${i + 2}-${g.category.en}`} delay={(i + 2) * 65}>
                     <SkillCard group={g} />
@@ -4025,10 +4026,10 @@ export default function HomePage() {
                         }}
                       >
                         {/* Top row: role title + View Details */}
-                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
-                          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, minWidth: 0 }}>
+                        <div className="exp-card-heading" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+                          <div className="exp-card-heading-main" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, minWidth: 0 }}>
                             <div className="exp-card-kicker">
-                              <TagBadge>{L(e.tag)}</TagBadge>
+                              <TagBadge className={sourceIndex === 2 ? "exp-card-training-tag" : undefined}>{L(e.tag)}</TagBadge>
                               <span className="exp-card-period-inline">{L(e.period)}</span>
                             </div>
                             <h3 style={{ fontSize: "0.87rem", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.35 }}>{L(e.role)}</h3>
@@ -4055,7 +4056,9 @@ export default function HomePage() {
                             </span>
                           )}
                         </div>
-                        <p style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>{L(e.company)}</p>
+                        <p className="exp-card-company" style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--accent)", opacity: 0.75, marginBottom: 8 }}>
+                          {L(e.company)}
+                        </p>
                         <p
                           style={{
                             fontSize: "0.82rem",
@@ -4759,8 +4762,10 @@ export default function HomePage() {
 function SkillCard({ group }: { group: { category: Localized; icon: string; items: string[] } }) {
   const { lang } = useLanguage();
   const L = (loc: Localized): string => (lang === "id" ? loc.id : loc.en);
+  const isDigitalPresence = group.category.en === "Digital Presence";
   return (
     <div
+      className={isDigitalPresence ? "skill-card-wide" : undefined}
       style={{
         backgroundColor: "var(--bg-card)",
         border: "1px solid var(--border)",
@@ -4772,11 +4777,11 @@ function SkillCard({ group }: { group: { category: Localized; icon: string; item
       onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.borderColor = "var(--border-mid)")}
       onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.borderColor = "var(--border)")}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.85rem" }}>
-        <span style={{ fontSize: "0.72rem", color: "var(--accent)", opacity: 0.45, fontFamily: "monospace", letterSpacing: "0.05em" }}>{group.icon}</span>
+      <div className="skill-card-heading" style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.85rem" }}>
+        <span style={{ fontSize: "0.72rem", color: "var(--accent)", opacity: 0.45, fontFamily: "var(--font-body)", letterSpacing: "0.05em" }}>{group.icon}</span>
         <p style={{ fontSize: "0.57rem", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--accent)", opacity: 0.62 }}>{L(group.category)}</p>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+      <div className="skill-chip-list" style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
         {group.items.map((item) => (
           <span
             key={item}

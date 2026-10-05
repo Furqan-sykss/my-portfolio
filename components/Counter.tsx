@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export default function Counter({ target, label }: { target: number; label: string }) {
   const [count, setCount] = useState(0);
-  const ref     = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Counter({ target, label }: { target: number; label: stri
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     observer.observe(el);
@@ -42,10 +42,15 @@ export default function Counter({ target, label }: { target: number; label: stri
 
   return (
     <div ref={ref}>
-      <div className="text-4xl font-bold tabular-nums" style={{ color: 'var(--accent)', fontFamily: 'var(--font-dm-serif)' }}>
-        {count}<span className="text-2xl" style={{ color: 'var(--accent)', opacity: 0.5 }}>+</span>
+      <div className="text-4xl font-bold tabular-nums" style={{ color: "var(--accent)", fontFamily: "var(--font-display)" }}>
+        {count}
+        <span className="text-2xl" style={{ color: "var(--accent)", opacity: 0.5 }}>
+          +
+        </span>
       </div>
-      <p className="text-xs mt-1.5 font-medium tracking-wide" style={{ color: 'var(--text-muted)' }}>{label}</p>
+      <p className="text-xs mt-1.5 font-medium tracking-wide" style={{ color: "var(--text-muted)" }}>
+        {label}
+      </p>
     </div>
   );
 }

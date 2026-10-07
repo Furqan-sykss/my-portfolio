@@ -224,7 +224,7 @@ export default function Navbar() {
     }, 1200);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
-      history.pushState(null, "", window.location.pathname); // hapus # dari URL
+      history.replaceState(null, "", window.location.pathname + window.location.search);
     }
   };
 
@@ -263,7 +263,10 @@ export default function Navbar() {
                 <a
                   key={s}
                   href={"#" + s}
-                  onClick={() => scrollTo(s)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollTo(s);
+                  }}
                   style={{
                     textDecoration: "none",
                     color: isActive ? "var(--accent)" : "var(--text-muted)",
@@ -460,7 +463,8 @@ export default function Navbar() {
                 <a
                   key={s}
                   href={"#" + s}
-                  onClick={() => {
+                  onClick={(event) => {
+                    event.preventDefault();
                     scrollTo(s);
                     setMenuOpen(false);
                   }}

@@ -740,33 +740,33 @@ const experience: Experience[] = [
       en: "Structured Professional Training",
     },
     company: {
-      id: "BLKI Aceh Utara - Kemnaker / Skillhub",
-      en: "BLKI Aceh Utara - Kemnaker / Skillhub",
+      id: "BLKI Aceh Utara (BPVP Banda Aceh / Kemnaker)",
+      en: "BLKI Aceh Utara (BPVP Banda Aceh / Ministry of Manpower)",
     },
     period: {
-      id: "Agu 2026 - Okt 2026",
-      en: "Aug 2026 - Oct 2026",
+      id: "Agu - Sep 2026",
+      en: "Aug - Sep 2026",
     },
     desc: {
-      id: "Menyelesaikan program pelatihan Digital Marketing terstruktur di BLKI Aceh Utara (Kemnaker/Skillhub). Program ini mencakup K3 perangkat komputer, identifikasi 7P & model bisnis, digital branding, content planning berbasis pilar & AIDA, social media management, SEO via Google Search Console, serta integrasi omnichannel. Pelatihan ini menghasilkan dua proyek berbasis bukti: pengembangan Sitestaq.id sebagai brand digital mandiri dan pendampingan digital presence untuk UMKM Lofi Coffee.",
-      en: "Completed a structured Digital Marketing training program at BLKI Aceh Utara (Ministry of Manpower / Skillhub). The program covered computer K3 procedures, 7P & business model analysis, digital branding, content planning based on pillars & AIDA, social media management, SEO via Google Search Console, and omnichannel integration. The training delivered two evidence-based projects: developing Sitestaq.id as an independent digital brand and assisting Lofi Coffee with its digital presence.",
+      id: "Menyelesaikan program pelatihan Digital Marketing terstruktur selama 260 JP di BLKI Aceh Utara di bawah naungan BPVP Banda Aceh (Kemnaker/Skillhub). Kurikulum mencakup K3 perangkat komputer, identifikasi elemen pemasaran & model bisnis (7P), digital branding, content planning berbasis pilar & AIDA, social media management, SEO via Google Search Console, e-commerce, pelayanan pelanggan ritel, serta produktivitas & soft skills. Seluruh kompetensi ini diterapkan langsung dalam dua proyek berbasis bukti: membangun brand digital mandiri (Sitestaq.id) dan melakukan pendampingan digital presence untuk UMKM (Lofi Coffee).",
+      en: "Completed 260 hours of structured Digital Marketing training at BLKI Aceh Utara under BPVP Banda Aceh (Ministry of Manpower / Skillhub). The curriculum covered computer safety (K3), marketing mix & business models (7P), digital branding, content planning using pillars & AIDA, social media management, SEO via Google Search Console, e-commerce, retail customer service, productivity, and soft skills. These competencies were practically applied through two evidence-based projects: developing an independent digital brand (Sitestaq.id) and providing digital presence consulting for an SME (Lofi Coffee).",
     },
     highlights: [
       {
-        id: "Mengembangkan Sitestaq.id sebagai proyek brand utama dengan ekosistem digital terintegrasi (Website, Instagram @sitestaq.id, Linktree, Blogspot, Google Business Profile, dan optimasi SEO URL via Google Search Console).",
-        en: "Developed Sitestaq.id as the primary brand project with an integrated digital ecosystem (Website, Instagram @sitestaq.id, Linktree, Blogspot, Google Business Profile, and URL SEO optimization via Google Search Console).",
+        id: "Menyelesaikan 260 JP pelatihan dan dinyatakan lulus pada 9 unit kompetensi resmi Kemnaker, meliputi penggunaan perangkat komputer, elemen pemasaran, pemasaran digital ritel, pelayanan pelanggan, media sosial, aplikasi e-commerce, model e-business, serta soft skill dan produktivitas.",
+        en: "Completed 260 training hours and passed 9 official competency units certified by the Ministry of Manpower, including computer operation, marketing mix, retail digital marketing, customer service, social media, e-commerce applications, e-business models, soft skills, and productivity.",
       },
       {
-        id: "Mendampingi UMKM Lofi Coffee (loficoffe.co) dalam mengoptimalkan visibilitas lokal dan kanal digital melalui Instagram, Linktree, Google Search, serta penandaan lokasi Google Maps.",
-        en: "Assisted Lofi Coffee (loficoffe.co) as an existing local business in optimizing digital presence and local visibility across Instagram, Linktree, Google Search, and Google Maps location tagging.",
+        id: "Mengembangkan Sitestaq.id sebagai proyek brand digital mandiri dengan ekosistem terintegrasi (Website, Instagram @sitestaq.id, Linktree, Blogspot, Google Business Profile, dan optimasi SEO URL via Google Search Console).",
+        en: "Developed Sitestaq.id as an independent digital brand project featuring an integrated ecosystem (Website, Instagram @sitestaq.id, Linktree, Blogspot, Google Business Profile, and URL SEO optimization via Google Search Console).",
       },
       {
-        id: "Menerapkan kerangka analisis 7P (Marketing Mix), penetapan buyer persona (B2C & B2B), strategi konversi AIDA, dan content pillar (Brand & Story, Portfolio, Pain Point, Education) secara praktikal.",
-        en: "Applied the 7P Marketing Mix analysis, buyer persona identification (B2C & B2B), AIDA conversion framework, and content pillars (Brand & Story, Portfolio, Pain Point, Education) in practice.",
+        id: "Mendampingi UMKM Lofi Coffee (loficoffe.co) dalam mengoptimalkan visibilitas lokal dan kanal pemasaran digital melalui penataan Instagram, Linktree, Google Search, serta penandaan lokasi Google Maps.",
+        en: "Assisted SME Lofi Coffee (loficoffe.co) in optimizing local visibility and digital marketing channels through Instagram management, Linktree, Google Search, and Google Maps pin placement.",
       },
       {
-        id: "Membuat pemisahan konteks yang jelas antara membangun brand digital mandiri (Sitestaq.id) dan mengelola pendampingan digital presence untuk bisnis pihak ketiga (Lofi Coffee).",
-        en: "Maintained a clear contextual distinction between building a self-directed digital brand (Sitestaq.id) and managing digital presence assistance for a third-party business (Lofi Coffee).",
+        id: "Menerapkan kerangka kerja strategis secara praktis, meliputi analisis Marketing Mix 7P, penentuan buyer persona (B2C & B2B), formulasi strategi konversi AIDA, dan penyusunan content pillar (Brand Story, Portfolio, Pain Point, Education).",
+        en: "Practically applied strategic frameworks including 7P Marketing Mix analysis, buyer persona formulation (B2C & B2B), AIDA conversion strategies, and content pillar structure (Brand Story, Portfolio, Pain Point, Education).",
       },
     ],
   },
@@ -779,6 +779,7 @@ const certifications = [
     year: "2026",
     category: { id: "Digital Marketing", en: "Digital Marketing" },
     badge: { id: "Sertifikat BLKI", en: "BLKI Certificate" },
+    link: "/SERTIFIKAT%20KELULUSAN%20PELATIHAN%20-%201810111103-DE4ED1E6.pdf",
   },
   {
     name: { id: "Sertifikasi Kompetensi Digital Marketing", en: "Digital Marketing Competency Certification" },
@@ -1765,12 +1766,19 @@ function DigitalMarketingModal({ onClose }: { onClose: () => void }) {
   };
 
   const learningAreas = [
+    { id: "K3 perangkat komputer", en: "Computer safety (K3)" },
+    { id: "Elemen pemasaran organisasi", en: "Organizational marketing elements" },
+    { id: "Aktivitas pemasaran digital ritel", en: "Retail digital marketing activities" },
+    { id: "Pelayanan dan pengalaman pelanggan", en: "Customer service and experience" },
+    { id: "Media sosial untuk menarik pelanggan", en: "Social media for customer acquisition" },
+    { id: "Aplikasi perdagangan daring (e-commerce)", en: "E-commerce applications" },
+    { id: "Model bisnis daring (e-business)", en: "Online business models (e-business)" },
+    { id: "Keterampilan komputer, soft skill, dan produktivitas", en: "Computer skills, soft skills, and productivity" },
     { id: "Digital branding", en: "Digital branding" },
-    { id: "Content planning", en: "Content planning" },
+    { id: "Content planning berbasis pilar dan AIDA", en: "Pillar- and AIDA-based content planning" },
     { id: "Social media management", en: "Social media management" },
-    { id: "Online presence", en: "Online presence" },
-    { id: "Website-related activities", en: "Website-related activities" },
-    { id: "Local business visibility", en: "Local business visibility" },
+    { id: "SEO melalui Google Search Console", en: "SEO using Google Search Console" },
+    { id: "Integrasi omnichannel", en: "Omnichannel integration" },
   ];
 
   const practicalProjects = [
@@ -1835,6 +1843,28 @@ function DigitalMarketingModal({ onClose }: { onClose: () => void }) {
             <div style={{ padding: "1rem 1.1rem 1.4rem", display: "flex", flexDirection: "column", gap: "1.15rem" }}>
               <section>
                 <p style={{ fontSize: "0.84rem", lineHeight: 1.82, color: "var(--text-secondary)" }}>{L(training.desc)}</p>
+                <a
+                  href="/SERTIFIKAT%20KELULUSAN%20PELATIHAN%20-%201810111103-DE4ED1E6.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 7,
+                    marginTop: 12,
+                    padding: "8px 11px",
+                    borderRadius: 8,
+                    border: "1px solid var(--border-mid)",
+                    backgroundColor: "var(--bg-subtle)",
+                    color: "var(--text-primary)",
+                    fontSize: "0.72rem",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                  }}
+                >
+                  <LinkIcon icon="external" />
+                  {lang === "id" ? "Lihat Sertifikat Pelatihan" : "View Training Certificate"}
+                </a>
               </section>
 
               <section
@@ -1846,8 +1876,8 @@ function DigitalMarketingModal({ onClose }: { onClose: () => void }) {
               >
                 {[
                   { value: "BLKI", label: { id: "Penyelenggara", en: "Organizer" } },
-                  { value: "Kemnaker", label: { id: "Konteks Program", en: "Program Context" } },
-                  { value: "Skillhub", label: { id: "Platform", en: "Platform" } },
+                  { value: "260", label: { id: "Jam Pelatihan", en: "Training Hours" } },
+                  { value: "9", label: { id: "Unit Kompetensi", en: "Competency Units" } },
                   { value: "2", label: { id: "Proyek Praktikal", en: "Practical Projects" } },
                 ].map((item) => (
                   <div key={item.value} style={{ padding: "0.9rem", borderRadius: 12, backgroundColor: "var(--bg-subtle)", border: "1px solid var(--border)" }}>

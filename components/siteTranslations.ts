@@ -54,7 +54,7 @@ export const translations: Record<Lang, Translations> = {
     links: "Tautan",
     highlights: "Sorotan",
     heroDescription:
-      "Lulusan Teknik Informatika dari Politeknik Negeri Lhokseumawe. Saya membangun sistem web yang terstruktur dan efisien, dengan pengalaman langsung dalam full-stack development, pemrosesan data, dan praktik digital presence.",
+      "Lulusan Teknik Informatika dari Politeknik Negeri Lhokseumawe. Saya mengembangkan sistem web yang terstruktur dan efisien, dengan pengalaman dalam pengembangan full-stack, pengolahan data, dukungan administrasi, serta penguatan kehadiran digital.",
     openToFreelance: "Terbuka untuk proyek freelance, kolaborasi, atau kesempatan kerja penuh waktu. Mari buat sesuatu yang bermakna.",
     scrollToTop: "Gulir ke atas",
     viewProjectDetails: "Lihat Detail Proyek",
@@ -141,7 +141,8 @@ export const translations: Record<Lang, Translations> = {
     academicDocuments: "Academic Documents",
     links: "Links",
     highlights: "Highlights",
-    heroDescription: "Informatics Engineering Graduate from Politeknik Negeri Lhokseumawe. I build structured, efficient web systems with hands-on experience in full-stack development, data processing, and digital presence practice.",
+    heroDescription:
+      "An Informatics Engineering graduate from Politeknik Negeri Lhokseumawe, I build structured, efficient web systems with experience in full-stack development, data processing, administrative support, and strengthening digital presence.",
     openToFreelance: "Open to freelance projects, collaborations, or full-time opportunities. Let's build something meaningful.",
     scrollToTop: "Scroll to top",
     viewProjectDetails: "View Project Details",

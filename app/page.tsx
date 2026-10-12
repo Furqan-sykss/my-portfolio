@@ -3072,8 +3072,8 @@ function EducationModal({ onClose }: { onClose: () => void }) {
   ];
 
   const documents = [
-    { label: t("academicTranscript"), icon: "TR", desc: t("fullSemesterGradeRecords"), href: "https://drive.google.com/file/d/10aVPxsUkV0j7ZAU7fbV3ZWG7zNgdzc4_/view?usp=drive_link" },
-    { label: t("diploma"), icon: "IJ", desc: t("officialGraduationCertificate"), href: "https://drive.google.com/file/d/1PlUwjMiyAguZNqbPFsOy3GdmI8ngBPH3/view?usp=drive_link" },
+    { label: t("academicTranscript"), icon: "TR", desc: t("fullSemesterGradeRecords"), href: "https://drive.google.com/file/d/1JHXxbva9LFHsxFQX1_SElLxkFeO1q3fC/view?usp=drive_link" },
+    { label: t("diploma"), icon: "IJ", desc: t("officialGraduationCertificate"), href: "https://drive.google.com/file/d/1dxUVki3i7CmERYdxpPjzX-XtW0OVT6y9/view?usp=drive_link" },
     { label: t("scientificJournal"), icon: "JR", desc: t("publishedUndergraduateResearch"), href: "https://drive.google.com/file/d/1oPKl6xDAVcO336NuP7VrsKrEbNMdt00Z/view?usp=sharing" },
   ];
 

@@ -99,7 +99,7 @@ const projects: Project[] = [
       links: [
         { label: { id: "Website", en: "Website" }, href: "http://sitestaq.id", icon: "external" },
         { label: "Instagram", href: "https://www.instagram.com/sitestaq.id", icon: "external" },
-        { label: { id: "Linktree", en: "Linktree" }, href: "https://tinyurl.com/sitestaq", icon: "external" },
+        { label: { id: "Linktree", en: "Linktree" }, href: "linktr.ee/sitestaq.id", icon: "external" },
         { label: { id: "Blog", en: "Blog" }, href: "https://sitestaq.blogspot.com/", icon: "external" },
       ],
     },

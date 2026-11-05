@@ -1,12 +1,14 @@
-﻿"use client";
+﻿﻿"use client";
 
+import { useRef, useState, useEffect, useCallback, type CSSProperties } from "react";
+import NextImage from "next/image";
+import TypedText from "@/components/TypedText";
 import { useLanguage } from "@/components/LanguageProvider";
 import { translate } from "@/components/siteTranslations";
 import Counter from "@/components/Counter";
 import FadeUp from "@/components/FadeUp";
 import CertificationsClient from "@/components/CertificationsClient";
 import AdditionalProjectsClient from "@/components/AdditionalProjectsClient";
-import { useState, useEffect } from 'react'; // Tambahkan useState di sini
 
 // ────── Data ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -784,8 +786,6 @@ const certifications = [
     issuer: { id: "BNSP", en: "BNSP" },
     year: "2026",
     category: { id: "Digital Marketing", en: "Digital Marketing" },
-    
-    link: "https://drive.google.com/file/d/1l-ZV8yzpXMyrFUkB1y5hG2ZrIHH6Ie5t/view?usp=sharing",
     badge: { id: "Dalam Proses", en: "In Progress" },
   },
   {

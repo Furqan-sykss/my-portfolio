@@ -789,7 +789,7 @@ const certifications = [
     issuer: { id: "BNSP", en: "BNSP" },
     year: "2025",
     category: { id: "Profesional", en: "Professional" },
-    link: {"https://drive.google.com/file/d/1hVjiQ0Ps4sCtMQZMBPA5kYLhE7BrnrEU/view?usp=sharing"},
+    link: "https://drive.google.com/file/d/1hVjiQ0Ps4sCtMQZMBPA5kYLhE7BrnrEU/view?usp=sharing",
     badge: { id: "✓ Terverifikasi", en: "✓ Verified" },
   },
   {

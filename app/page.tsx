@@ -4,6 +4,7 @@ import Counter from "@/components/Counter";
 import FadeUp from "@/components/FadeUp";
 import CertificationsClient from "@/components/CertificationsClient";
 import AdditionalProjectsClient from "@/components/AdditionalProjectsClient";
+import { useState, useEffect } from 'react'; // Tambahkan useState di sini
 
 // ────── Data ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 

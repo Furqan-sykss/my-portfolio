@@ -1,4 +1,4 @@
-﻿﻿"use client";
+﻿"use client";
 
 import { useRef, useState, useEffect, useCallback, type CSSProperties } from "react";
 import NextImage from "next/image";
@@ -786,6 +786,7 @@ const certifications = [
     issuer: { id: "BNSP", en: "BNSP" },
     year: "2026",
     category: { id: "Digital Marketing", en: "Digital Marketing" },
+    link: "https://drive.google.com/file/d/1l-ZV8yzpXMyrFUkB1y5hG2ZrIHH6Ie5t/view?usp=drive_link",
     badge: { id: "Dalam Proses", en: "In Progress" },
   },
   {

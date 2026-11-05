@@ -1,4 +1,6 @@
-﻿import { useLanguage } from "@/components/LanguageProvider";
+﻿"use client";
+
+import { useLanguage } from "@/components/LanguageProvider";
 import { translate } from "@/components/siteTranslations";
 import Counter from "@/components/Counter";
 import FadeUp from "@/components/FadeUp";
